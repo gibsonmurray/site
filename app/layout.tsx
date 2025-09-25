@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
 import { Figtree } from "next/font/google"
 import "./globals.css"
-import { cn } from "@/lib/utils"
 import { FC } from "react"
+import { ThemeProvider } from "@/components/theme-provider"
 
 const figtree = Figtree({ subsets: ["latin"] })
 
@@ -33,9 +33,17 @@ type RootLayoutProps = { children: React.ReactNode }
 
 const RootLayout: FC<RootLayoutProps> = ({ children }) => {
     return (
-        <html lang="en">
-            <body className={cn("bg-zinc-50 antialiased", figtree.className)}>
-                {children}
+        <html lang="en" suppressHydrationWarning>
+            <head />
+            <body>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    forcedTheme="dark"
+                    disableTransitionOnChange
+                >
+                    {children}
+                </ThemeProvider>
             </body>
         </html>
     )

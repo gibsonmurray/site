@@ -1,17 +1,16 @@
 import Dock from "@/components/dock"
+import Image from "next/image"
 
 const Home = () => {
     return (
         <div className="relative min-h-svh w-screen overflow-hidden">
-            <video
-                src="https://www.pexels.com/download/video/3121459/"
-                className="h-svh object-cover"
-                autoPlay
-                loop
-                muted
-                playsInline
-            ></video>
-
+            <Image
+                src="https://xs83fzgbku8yujf0.public.blob.vercel-storage.com/macOS-wallpaper.jpg"
+                alt="Background"
+                fill
+                priority
+                className="object-cover"
+            />
             <Dock />
         </div>
     )

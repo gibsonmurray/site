@@ -157,16 +157,7 @@ export const LiquidGlassContent: FC<LiquidGlassContentProps> = ({
     children,
     className,
 }) => {
-    return (
-        <div
-            className={cn(
-                "z-30 flex items-center justify-center gap-2",
-                className,
-            )}
-        >
-            {children}
-        </div>
-    )
+    return <div className={cn("relative z-30", className)}>{children}</div>
 }
 
 export const LiquidGlass: FC<LiquidGlassContentProps> = ({
@@ -176,7 +167,7 @@ export const LiquidGlass: FC<LiquidGlassContentProps> = ({
     return (
         <div
             className={cn(
-                "relative flex overflow-hidden rounded-3xl shadow-md",
+                "relative flex overflow-hidden rounded-3xl shadow-lg",
                 className,
             )}
         >

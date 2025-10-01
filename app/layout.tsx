@@ -38,8 +38,8 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
             <body>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="dark"
-                    forcedTheme="dark"
+                    defaultTheme="light"
+                    forcedTheme="light"
                     disableTransitionOnChange
                 >
                     {children}

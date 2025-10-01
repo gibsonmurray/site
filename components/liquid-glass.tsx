@@ -4,7 +4,12 @@ import { FC, ReactNode } from "react"
 export const LiquidGlassEffect = () => {
     return (
         <>
-            <div className="absolute inset-0 isolate z-0 overflow-hidden filter-[url(#glass-distortion)] backdrop-blur-xs"></div>
+            <div
+                className="absolute inset-0 isolate z-0 overflow-hidden"
+                style={{
+                    backdropFilter: `url(#glass-distortion) brightness(1.1) saturate(1.5)`,
+                }}
+            ></div>
             <svg className="hidden">
                 <filter
                     id="glass-distortion"
@@ -18,16 +23,15 @@ export const LiquidGlassEffect = () => {
                         type="fractalNoise"
                         baseFrequency="0.01 0.01"
                         numOctaves="1"
-                        seed="5"
+                        seed="2"
                         result="turbulence"
                     />
-                    {/* Seeds: 14, 17,  */}
-
+                    {/* Map turbulence into channels similar to the pen */}
                     <feComponentTransfer in="turbulence" result="mapped">
                         <feFuncR
                             type="gamma"
                             amplitude="1"
-                            exponent="10"
+                            exponent="1.5"
                             offset="0.5"
                         />
                         <feFuncG
@@ -44,40 +48,88 @@ export const LiquidGlassEffect = () => {
                         />
                     </feComponentTransfer>
 
+                    {/* Directional maps for Tahoe dock bias */}
                     <feGaussianBlur
-                        in="turbulence"
-                        stdDeviation="3"
-                        result="softMap"
+                        in="mapped"
+                        stdDeviation="10 0"
+                        result="xMap"
+                    />
+                    <feGaussianBlur
+                        in="mapped"
+                        stdDeviation="0 10"
+                        result="yMap"
                     />
 
-                    <feSpecularLighting
-                        in="softMap"
-                        surfaceScale="5"
-                        specularConstant="1"
-                        specularExponent="100"
-                        lightingColor="white"
-                        result="specLight"
-                    >
-                        <fePointLight x="-200" y="-200" z="300" />
-                    </feSpecularLighting>
-
-                    <feComposite
-                        in="specLight"
-                        operator="arithmetic"
-                        k1="0"
-                        k2="1"
-                        k3="1"
-                        k4="0"
-                        result="litImage"
-                    />
-
+                    {/* Chromatic displacement passes */}
                     <feDisplacementMap
                         in="SourceGraphic"
-                        in2="softMap"
-                        scale="150"
+                        in2="xMap"
+                        id="redchannel"
                         xChannelSelector="R"
-                        yChannelSelector="G"
+                        yChannelSelector="B"
+                        result="dispRed"
+                        scale="-160"
                     />
+                    <feColorMatrix
+                        in="dispRed"
+                        type="matrix"
+                        values="1 0 0 0 0
+                                0 0 0 0 0
+                                0 0 0 0 0
+                                0 0 0 1 0"
+                        result="red"
+                    />
+                    <feDisplacementMap
+                        in="SourceGraphic"
+                        in2="xMap"
+                        id="greenchannel"
+                        xChannelSelector="R"
+                        yChannelSelector="B"
+                        result="dispGreen"
+                        scale="-160"
+                    />
+                    <feColorMatrix
+                        in="dispGreen"
+                        type="matrix"
+                        values="0 0 0 0 0
+                                0 1 0 0 0
+                                0 0 0 0 0
+                                0 0 0 1 0"
+                        result="green"
+                    />
+                    <feDisplacementMap
+                        in="SourceGraphic"
+                        in2="yMap"
+                        id="bluechannel"
+                        xChannelSelector="R"
+                        yChannelSelector="B"
+                        result="dispBlue"
+                        scale="-160"
+                    />
+                    <feColorMatrix
+                        in="dispBlue"
+                        type="matrix"
+                        values="0 0 0 0 0
+                                0 0 0 0 0
+                                0 0 1 0 0
+                                0 0 0 1 0"
+                        result="blue"
+                    />
+
+                    {/* Blend channels back together */}
+                    <feBlend in="red" in2="green" mode="screen" result="rg" />
+                    <feBlend in="rg" in2="blue" mode="screen" result="output" />
+
+                    {/* Reduce saturation to merge visible RGB fringes */}
+                    <feColorMatrix
+                        in="output"
+                        type="saturate"
+                        values="0.2"
+                        result="merged"
+                    />
+
+                    {/* Soften output slightly like the pen */}
+                    <feGaussianBlur in="merged" stdDeviation="2" />
                 </filter>
             </svg>
         </>
@@ -86,13 +138,13 @@ export const LiquidGlassEffect = () => {
 
 export const LiquidGlassTint = () => {
     return (
-        <div className="absolute inset-0 z-10 rounded-[inherit] bg-white/25"></div>
+        <div className="absolute inset-0 z-10 rounded-[inherit] bg-white/15"></div>
     )
 }
 
 export const LiquidGlassShine = () => {
     return (
-        <div className="absolute inset-0 z-20 overflow-hidden rounded-[inherit] shadow-[inset_2px_2px_1px_rgba(255,255,255,0.5),inset_-1px_-1px_1px_rgba(255,255,255,0.5)]"></div>
+        <div className="absolute inset-0 z-20 overflow-hidden rounded-[inherit] shadow-[inset_1px_1px_1px_rgba(255,255,255,0.25),inset_-1px_-1px_1px_rgba(255,255,255,0.25)]"></div>
     )
 }
 
@@ -129,7 +181,7 @@ export const LiquidGlass: FC<LiquidGlassContentProps> = ({
             )}
         >
             <LiquidGlassEffect />
-            <LiquidGlassTint />
+            {/* <LiquidGlassTint /> */}
             <LiquidGlassShine />
             {children}
         </div>

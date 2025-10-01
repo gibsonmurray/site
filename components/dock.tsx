@@ -2,7 +2,7 @@ import { LiquidGlass, LiquidGlassContent } from "@/components/liquid-glass"
 
 const Dock = () => {
     return (
-        <LiquidGlass className="absolute bottom-0 mx-auto p-3">
+        <LiquidGlass className="absolute bottom-0 left-1/2 -translate-x-1/2 p-3">
             <LiquidGlassContent>
                 <img
                     src="https://raw.githubusercontent.com/lucasromerodb/liquid-glass-effect-macos/refs/heads/main/assets/finder.png"

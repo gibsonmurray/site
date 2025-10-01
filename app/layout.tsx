@@ -35,7 +35,7 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
     return (
         <html lang="en" suppressHydrationWarning>
             <head />
-            <body>
+            <body className={figtree.className}>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="light"

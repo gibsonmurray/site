@@ -11,8 +11,8 @@ const apps = [
         icon: "/icons/bible.png",
     },
     {
-        name: "Terminal",
-        icon: "/icons/terminal.png",
+        name: "Warp",
+        icon: "/icons/warp.png",
     },
     {
         name: "Word",
@@ -54,7 +54,7 @@ const Dock = () => {
                             alt={app.name}
                             fill
                             priority
-                            className="object-contain"
+                            className="object-contain pointer-events-none select-none"
                         />
                     </button>
                 ))}

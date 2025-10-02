@@ -3,6 +3,7 @@ import { Figtree } from "next/font/google"
 import "./globals.css"
 import { FC } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
+import { cn } from "@/lib/utils"
 
 const figtree = Figtree({ subsets: ["latin"] })
 
@@ -35,7 +36,7 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
     return (
         <html lang="en" suppressHydrationWarning>
             <head />
-            <body className={figtree.className}>
+            <body className={cn(figtree.className, "bg-[#62AAD9] antialiased")}>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="light"

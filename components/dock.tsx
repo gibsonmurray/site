@@ -1,62 +1,34 @@
 import { LiquidGlass, LiquidGlassContent } from "@/components/liquid-glass"
-import Image from "next/image"
+import { APPS } from "@/lib/constants"
+import DockIcon from "./dock-icon"
+import { FC } from "react"
 
-const apps = [
-    {
-        name: "Apps",
-        icon: "/icons/launchpad.png",
-    },
-    {
-        name: "Bible",
-        icon: "/icons/bible.png",
-    },
-    {
-        name: "Warp",
-        icon: "/icons/warp.png",
-    },
-    {
-        name: "Word",
-        icon: "/icons/word.png",
-    },
-    {
-        name: "VS Code",
-        icon: "/icons/vscode.png",
-    },
-    {
-        name: "Books",
-        icon: "/icons/books.png",
-    },
-    {
-        name: "Photos",
-        icon: "/icons/photos.png",
-    },
-    {
-        name: "Spotify",
-        icon: "/icons/spotify.png",
-    },
-    {
-        name: "Settings",
-        icon: "/icons/settings.png",
-    }
-]
+type DockProps = {
+    openApps: string[]
+    setOpenApps: (apps: string[]) => void
+    bringToFront: (app: string) => void
+    closeApp: (app: string) => void
+}
 
-const Dock = () => {
+const Dock: FC<DockProps> = ({
+    openApps,
+    setOpenApps,
+    bringToFront,
+    closeApp,
+}) => {
     return (
-        <LiquidGlass className="absolute bottom-1 left-1/2 -translate-x-1/2 px-3 py-2">
-            <LiquidGlassContent className="flex items-center gap-2">
-                {apps.map((app) => (
-                    <button
+        <LiquidGlass className="absolute bottom-1 left-1/2 z-100 -translate-x-1/2 px-3 py-2">
+            <LiquidGlassContent className="flex items-center">
+                {APPS.map((app) => (
+                    <DockIcon
                         key={app.name}
-                        className="relative grid size-16 place-items-center"
-                    >
-                        <Image
-                            src={app.icon}
-                            alt={app.name}
-                            fill
-                            priority
-                            className="object-contain pointer-events-none select-none"
-                        />
-                    </button>
+                        name={app.name}
+                        icon={app.icon}
+                        isOpen={openApps.includes(app.name)}
+                        openApp={() => setOpenApps([...openApps, app.name])}
+                        bringToFront={() => bringToFront(app.name)}
+                        closeApp={() => closeApp(app.name)}
+                    />
                 ))}
             </LiquidGlassContent>
         </LiquidGlass>

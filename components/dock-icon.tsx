@@ -7,12 +7,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
-import {
-    Popover,
-    PopoverAnchor,
-    PopoverContent,
-    PopoverTrigger,
-} from "./ui/popover"
+import { Popover, PopoverAnchor, PopoverContent } from "./ui/popover"
 
 type DockIconProps = {
     name: string
@@ -41,6 +36,21 @@ const DockIcon: FC<DockIconProps> = ({
     const handleContextMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         setIsMenuOpen(true)
+    }
+
+    const handleOpen = () => {
+        openApp()
+        setIsMenuOpen(false)
+    }
+
+    const handleQuit = () => {
+        closeApp()
+        setIsMenuOpen(false)
+    }
+
+    const handleShow = () => {
+        bringToFront()
+        setIsMenuOpen(false)
     }
 
     return (
@@ -86,9 +96,17 @@ const DockIcon: FC<DockIconProps> = ({
                 <PopoverContent
                     sideOffset={16}
                     align="start"
-                    className="bg-foreground/50 border-border/20 flex flex-col gap-2 rounded-xl p-2 backdrop-blur"
+                    className="bg-foreground/50 border-border/20 flex w-40 flex-col rounded-xl p-2 backdrop-blur"
                 >
-                    <Button variant="menu">Open</Button>
+                    <Button variant="menu" onClick={handleOpen}>
+                        Open
+                    </Button>
+                    <Button variant="menu" onClick={handleQuit}>
+                        Quit
+                    </Button>
+                    <Button variant="menu" onClick={handleShow}>
+                        Show
+                    </Button>
                 </PopoverContent>
             </Popover>
         </Tooltip>

@@ -6,39 +6,19 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { cn, sleep } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { Popover, PopoverAnchor, PopoverContent } from "./ui/popover"
 import { motion } from "motion/react"
+import { App } from "@/types"
 
 type DockIconProps = {
-    name: string
-    icon: string
-    isOpen: boolean
-    openApp: () => void
-    bringToFront: () => void
-    closeApp: () => void
+    app: App
+    open: () => void
+    close: () => void
 }
 
-const DockIcon: FC<DockIconProps> = ({
-    name,
-    icon,
-    isOpen,
-    openApp,
-    bringToFront,
-    closeApp,
-}) => {
-    const [isOpenning, setIsOpenning] = useState(false)
+const DockIcon: FC<DockIconProps> = ({ app, open, close }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-    const handleClick = async () => {
-        if (!isOpen && !isOpenning) {
-            setIsOpenning(true)
-            await sleep(2000) // play loading animation
-            openApp()
-            setIsOpenning(false)
-        }
-        bringToFront()
-    }
 
     const handleContextMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
@@ -46,17 +26,12 @@ const DockIcon: FC<DockIconProps> = ({
     }
 
     const handleOpen = () => {
-        openApp()
+        open()
         setIsMenuOpen(false)
     }
 
     const handleQuit = () => {
-        closeApp()
-        setIsMenuOpen(false)
-    }
-
-    const handleShow = () => {
-        bringToFront()
+        close()
         setIsMenuOpen(false)
     }
 
@@ -70,17 +45,19 @@ const DockIcon: FC<DockIconProps> = ({
                             variant="simple"
                             size="icon"
                             className="relative grid size-16 place-items-center p-9 px-10"
-                            onClick={handleClick}
+                            onClick={open}
                             onContextMenu={handleContextMenu}
                         >
                             <motion.div
                                 style={{ transformOrigin: "bottom center" }}
                                 className="absolute inset-0"
                                 animate={
-                                    isOpenning ? { y: [0, -20, 0] } : { y: 0 }
+                                    app.state === "launching"
+                                        ? { y: [0, -20, 0] }
+                                        : { y: 0 }
                                 }
                                 transition={
-                                    isOpenning
+                                    app.state === "launching"
                                         ? {
                                               duration: 0.8,
                                               times: [0, 0.5, 1],
@@ -95,8 +72,8 @@ const DockIcon: FC<DockIconProps> = ({
                                 }
                             >
                                 <Image
-                                    src={icon}
-                                    alt={name}
+                                    src={app.icon}
+                                    alt={app.name}
                                     fill
                                     priority
                                     className="pointer-events-none object-contain select-none"
@@ -106,7 +83,9 @@ const DockIcon: FC<DockIconProps> = ({
                             <div
                                 className={cn(
                                     "absolute -bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-white/50 transition-opacity duration-300",
-                                    isOpen ? "opacity-100" : "opacity-0",
+                                    app.state === "open"
+                                        ? "opacity-100"
+                                        : "opacity-0",
                                 )}
                             />
                         </Button>
@@ -118,7 +97,7 @@ const DockIcon: FC<DockIconProps> = ({
                     sideOffset={5}
                     className="rounded-full font-medium opacity-75"
                 >
-                    {name}
+                    {app.name}
                 </TooltipContent>
 
                 {/* Menu */}
@@ -127,13 +106,13 @@ const DockIcon: FC<DockIconProps> = ({
                     align="start"
                     className="bg-background/50 border-border/20 flex w-40 flex-col rounded-xl p-2 backdrop-blur"
                 >
-                    {!isOpen ? (
+                    {app.state === "closed" ? (
                         <Button variant="menu" onClick={handleOpen}>
                             Open
                         </Button>
                     ) : (
                         <>
-                            <Button variant="menu" onClick={handleShow}>
+                            <Button variant="menu" onClick={open}>
                                 Show
                             </Button>
                             <Button variant="menu" onClick={handleQuit}>

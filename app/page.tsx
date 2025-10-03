@@ -2,18 +2,39 @@
 
 import Dock from "@/components/dock"
 import Logo from "@/components/logo"
+import { APPS } from "@/lib/constants"
+import { App } from "@/types"
+import { sleep } from "@/lib/utils"
 import Image from "next/image"
 import { useState } from "react"
 
 const Home = () => {
-    const [openApps, setOpenApps] = useState<string[]>([])
+    const [apps, setApps] = useState<Record<string, App>>(
+        Object.fromEntries(APPS.map((app) => [app.id, app])),
+    )
 
-    const bringToFront = (app: string) => {
-        setOpenApps([...openApps.filter((a) => a !== app), app])
+    console.log(apps)
+
+    const open = async (app: string) => {
+        setApps((prev) => ({
+            ...prev,
+            [app]: { ...prev[app], state: "launching" },
+        }))
+
+        // somewhere between 1.5 and 3 seconds
+        await sleep(Math.random() * 1500 + 1500)
+
+        setApps((prev) => ({
+            ...prev,
+            [app]: { ...prev[app], state: "open" },
+        }))
     }
 
-    const closeApp = (app: string) => {
-        setOpenApps(openApps.filter((a) => a !== app))
+    const close = (app: string) => {
+        setApps((prev) => ({
+            ...prev,
+            [app]: { ...prev[app], state: "closed" },
+        }))
     }
 
     return (
@@ -27,12 +48,7 @@ const Home = () => {
             />
             <Logo className="size-20 stroke-white opacity-60" />
             {/* open apps here */}
-            <Dock
-                openApps={openApps}
-                setOpenApps={setOpenApps}
-                bringToFront={bringToFront}
-                closeApp={closeApp}
-            />
+            <Dock apps={apps} open={open} close={close} />
         </div>
     )
 }

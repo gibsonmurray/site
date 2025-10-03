@@ -1,31 +1,22 @@
-import { APPS } from "@/lib/constants"
 import DockIcon from "./dock-icon"
 import { FC } from "react"
+import { App } from "@/types"
 
 type DockProps = {
-    openApps: string[]
-    setOpenApps: (apps: string[]) => void
-    bringToFront: (app: string) => void
-    closeApp: (app: string) => void
+    apps: Record<string, App>
+    open: (app: string) => void
+    close: (app: string) => void
 }
 
-const Dock: FC<DockProps> = ({
-    openApps,
-    setOpenApps,
-    bringToFront,
-    closeApp,
-}) => {
+const Dock: FC<DockProps> = ({ apps, open, close }) => {
     return (
         <div className="bg-background/40 border-border/50 absolute bottom-1 left-1/2 z-100 flex -translate-x-1/2 rounded-3xl border px-3 py-2 backdrop-blur-xl">
-            {APPS.map((app) => (
+            {Object.values(apps).map((app) => (
                 <DockIcon
-                    key={app.name}
-                    name={app.name}
-                    icon={app.icon}
-                    isOpen={openApps.includes(app.name)}
-                    openApp={() => setOpenApps([...openApps, app.name])}
-                    bringToFront={() => bringToFront(app.name)}
-                    closeApp={() => closeApp(app.name)}
+                    key={app.id}
+                    app={app}
+                    open={() => open(app.id)}
+                    close={() => close(app.id)}
                 />
             ))}
         </div>

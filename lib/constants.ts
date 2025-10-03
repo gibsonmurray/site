@@ -1,4 +1,5 @@
-import { App } from "@/types";
+import { App } from "@/types"
+import { v4 as uuidv4 } from "uuid"
 
 export const APPS: App[] = [
     {
@@ -37,4 +38,4 @@ export const APPS: App[] = [
         name: "Settings",
         icon: "/icons/settings.png",
     },
-]
+].map((app) => ({ ...app, id: uuidv4(), state: "closed" }))

@@ -2,6 +2,7 @@
 
 import Dock from "@/components/dock"
 import Logo from "@/components/logo"
+import Window from "@/components/window"
 import { APPS } from "@/lib/constants"
 import { App } from "@/types"
 import { sleep } from "@/lib/utils"
@@ -13,16 +14,14 @@ const Home = () => {
         Object.fromEntries(APPS.map((app) => [app.id, app])),
     )
 
-    console.log(apps)
-
     const open = async (app: string) => {
         setApps((prev) => ({
             ...prev,
             [app]: { ...prev[app], state: "launching" },
         }))
 
-        // somewhere between 1.5 and 3 seconds
-        await sleep(Math.random() * 1500 + 1500)
+        // somewhere between 1 and 3 seconds
+        await sleep(Math.random() * 2000 + 1000)
 
         setApps((prev) => ({
             ...prev,
@@ -49,6 +48,11 @@ const Home = () => {
             <Logo className="size-20 stroke-white opacity-60" />
             {/* open apps here */}
             <Dock apps={apps} open={open} close={close} />
+            <Window>
+                <div>
+                    <h1>Hello</h1>
+                </div>
+            </Window>
         </div>
     )
 }

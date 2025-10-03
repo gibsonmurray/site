@@ -6,8 +6,9 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
+import { cn, sleep } from "@/lib/utils"
 import { Popover, PopoverAnchor, PopoverContent } from "./ui/popover"
+import { motion } from "motion/react"
 
 type DockIconProps = {
     name: string
@@ -26,10 +27,16 @@ const DockIcon: FC<DockIconProps> = ({
     bringToFront,
     closeApp,
 }) => {
+    const [isOpenning, setIsOpenning] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-    const handleClick = () => {
-        openApp()
+    const handleClick = async () => {
+        if (!isOpen && !isOpenning) {
+            setIsOpenning(true)
+            await sleep(2000) // play loading animation
+            openApp()
+            setIsOpenning(false)
+        }
         bringToFront()
     }
 
@@ -66,13 +73,35 @@ const DockIcon: FC<DockIconProps> = ({
                             onClick={handleClick}
                             onContextMenu={handleContextMenu}
                         >
-                            <Image
-                                src={icon}
-                                alt={name}
-                                fill
-                                priority
-                                className="pointer-events-none object-contain select-none"
-                            />
+                            <motion.div
+                                style={{ transformOrigin: "bottom center" }}
+                                className="absolute inset-0"
+                                animate={
+                                    isOpenning ? { y: [0, -20, 0] } : { y: 0 }
+                                }
+                                transition={
+                                    isOpenning
+                                        ? {
+                                              duration: 0.8,
+                                              times: [0, 0.5, 1],
+                                              ease: [
+                                                  [0, 0, 0.2, 1],
+                                                  [0.8, 0, 1, 1],
+                                              ],
+                                              repeat: Infinity,
+                                              repeatType: "loop",
+                                          }
+                                        : { duration: 0.2, ease: "circIn" }
+                                }
+                            >
+                                <Image
+                                    src={icon}
+                                    alt={name}
+                                    fill
+                                    priority
+                                    className="pointer-events-none object-contain select-none"
+                                />
+                            </motion.div>
 
                             <div
                                 className={cn(
@@ -96,17 +125,22 @@ const DockIcon: FC<DockIconProps> = ({
                 <PopoverContent
                     sideOffset={16}
                     align="start"
-                    className="bg-foreground/50 border-border/20 flex w-40 flex-col rounded-xl p-2 backdrop-blur"
+                    className="bg-background/50 border-border/20 flex w-40 flex-col rounded-xl p-2 backdrop-blur"
                 >
-                    <Button variant="menu" onClick={handleOpen}>
-                        Open
-                    </Button>
-                    <Button variant="menu" onClick={handleQuit}>
-                        Quit
-                    </Button>
-                    <Button variant="menu" onClick={handleShow}>
-                        Show
-                    </Button>
+                    {!isOpen ? (
+                        <Button variant="menu" onClick={handleOpen}>
+                            Open
+                        </Button>
+                    ) : (
+                        <>
+                            <Button variant="menu" onClick={handleShow}>
+                                Show
+                            </Button>
+                            <Button variant="menu" onClick={handleQuit}>
+                                Quit
+                            </Button>
+                        </>
+                    )}
                 </PopoverContent>
             </Popover>
         </Tooltip>

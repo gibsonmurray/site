@@ -1,4 +1,3 @@
-import { LiquidGlass, LiquidGlassContent } from "@/components/liquid-glass"
 import { APPS } from "@/lib/constants"
 import DockIcon from "./dock-icon"
 import { FC } from "react"
@@ -17,21 +16,19 @@ const Dock: FC<DockProps> = ({
     closeApp,
 }) => {
     return (
-        <LiquidGlass className="absolute bottom-1 left-1/2 z-100 -translate-x-1/2 px-3 py-2">
-            <LiquidGlassContent className="flex items-center">
-                {APPS.map((app) => (
-                    <DockIcon
-                        key={app.name}
-                        name={app.name}
-                        icon={app.icon}
-                        isOpen={openApps.includes(app.name)}
-                        openApp={() => setOpenApps([...openApps, app.name])}
-                        bringToFront={() => bringToFront(app.name)}
-                        closeApp={() => closeApp(app.name)}
-                    />
-                ))}
-            </LiquidGlassContent>
-        </LiquidGlass>
+        <div className="bg-background/40 border-border/50 absolute bottom-1 left-1/2 z-100 flex -translate-x-1/2 rounded-3xl border px-3 py-2 backdrop-blur-xl">
+            {APPS.map((app) => (
+                <DockIcon
+                    key={app.name}
+                    name={app.name}
+                    icon={app.icon}
+                    isOpen={openApps.includes(app.name)}
+                    openApp={() => setOpenApps([...openApps, app.name])}
+                    bringToFront={() => bringToFront(app.name)}
+                    closeApp={() => closeApp(app.name)}
+                />
+            ))}
+        </div>
     )
 }
 

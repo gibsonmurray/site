@@ -1,15 +1,41 @@
-import { FC, RefObject, useEffect } from "react"
+import { FC, useEffect, SetStateAction, Dispatch, RefObject } from "react"
 
 type ResizableProps = {
     containerRef: RefObject<HTMLDivElement | null>
+    setPrevSize: Dispatch<
+        SetStateAction<{
+            height: string
+            width: string
+            left: string
+            top: string
+        }>
+    >
 }
 
-const Resizable: FC<ResizableProps> = ({ containerRef }) => {
+const Resizable: FC<ResizableProps> = ({ containerRef, setPrevSize }) => {
+    const addTransition = () => {
+        containerRef.current!.classList.add(
+            "transition-[height,width,left,top]",
+            "duration-300",
+            "ease-in-out",
+        )
+    }
+
+    const removeTransition = () => {
+        containerRef.current!.classList.remove(
+            "transition-[height,width,left,top]",
+            "duration-300",
+            "ease-in-out",
+        )
+    }
+
     useEffect(() => {
         if (!containerRef.current) return
 
         const handleMouseDown = (e: MouseEvent) => {
             e.preventDefault()
+            removeTransition()
+
             const currentResizer = e.target as HTMLElement
             let prevX = (e as MouseEvent).clientX
             let prevY = (e as MouseEvent).clientY
@@ -65,9 +91,16 @@ const Resizable: FC<ResizableProps> = ({ containerRef }) => {
                 }
                 prevX = e.clientX
                 prevY = e.clientY
+                setPrevSize({
+                    height: containerRef.current!.style.height,
+                    width: containerRef.current!.style.width,
+                    left: containerRef.current!.style.left,
+                    top: containerRef.current!.style.top,
+                })
             }
 
             const handleMouseUp = () => {
+                addTransition()
                 window.removeEventListener(
                     "mousemove",
                     handleMouseMove as EventListener,

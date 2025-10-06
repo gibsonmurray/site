@@ -92,10 +92,10 @@ const Resizable: FC<ResizableProps> = ({ containerRef, setPrevSize }) => {
                 prevX = e.clientX
                 prevY = e.clientY
                 setPrevSize({
+                    top: containerRef.current!.style.top,
+                    left: containerRef.current!.style.left,
                     height: containerRef.current!.style.height,
                     width: containerRef.current!.style.width,
-                    left: containerRef.current!.style.left,
-                    top: containerRef.current!.style.top,
                 })
             }
 

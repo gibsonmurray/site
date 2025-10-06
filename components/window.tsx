@@ -22,8 +22,6 @@ const Window: FC<WindowProps> = ({ children, className }) => {
         top: "100px",
     })
 
-    console.log(prevSize)
-
     const addTransition = () => {
         containerRef.current!.classList.add(
             "transition-[height,width,left,top]",
@@ -73,16 +71,18 @@ const Window: FC<WindowProps> = ({ children, className }) => {
 
         const handleMouseMove = (e: MouseEvent) => {
             e.preventDefault()
+
             containerRef.current!.style.left = `${e.clientX - offsetX}px`
             containerRef.current!.style.top = `${e.clientY - offsetY}px`
-        }
-        const handleMouseUp = () => {
-            setPrevSize({
-                height: containerRef.current!.style.height,
-                width: containerRef.current!.style.width,
+
+            setPrevSize((prev) => ({
+                ...prev,
                 left: containerRef.current!.style.left,
                 top: containerRef.current!.style.top,
-            })
+            }))
+        }
+
+        const handleMouseUp = () => {
             addTransition()
             window.removeEventListener("mousemove", handleMouseMove)
         }

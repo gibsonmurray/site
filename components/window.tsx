@@ -15,32 +15,37 @@ type WindowProps = {
 const Window: FC<WindowProps> = ({ children, className, close }) => {
     const handleRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
+    const moveableRef = useRef<any>(null)
     const [prevSize, setPrevSize] = useState<{
         height: string
         width: string
         left: string
         top: string
+        transform: string
     }>({
         height: "500px",
         width: "800px",
         left: "100px",
         top: "100px",
+        transform: "none",
     })
     const [isMaximized, setIsMaximized] = useState(false)
 
-    // useEffect(() => {
-    //     setIsMaximized(
-    //         containerRef.current?.style.height === "calc(-94px + 100vh)" &&
-    //             containerRef.current?.style.width === "100%" &&
-    //             containerRef.current?.style.left === "0px" &&
-    //             containerRef.current?.style.top === "0px",
-    //     )
-    // }, [
-    //     containerRef.current?.style.height,
-    //     containerRef.current?.style.width,
-    //     containerRef.current?.style.left,
-    //     containerRef.current?.style.top,
-    // ])
+    useEffect(() => {
+        setIsMaximized(
+            containerRef.current?.style.height === "calc(-94px + 100vh)" &&
+                containerRef.current?.style.width === "100%" &&
+                containerRef.current?.style.left === "0px" &&
+                containerRef.current?.style.top === "0px" &&
+                containerRef.current?.style.transform === "none",
+        )
+    }, [
+        containerRef.current?.style.height,
+        containerRef.current?.style.width,
+        containerRef.current?.style.left,
+        containerRef.current?.style.top,
+        containerRef.current?.style.transform,
+    ])
 
     // const addTransition = () => {
     //     containerRef.current!.classList.add(
@@ -63,6 +68,8 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
         containerRef.current!.style.width = "100%"
         containerRef.current!.style.left = "0px"
         containerRef.current!.style.top = "0px"
+        containerRef.current!.style.transform = "none"
+        moveableRef.current?.updateRect()
         setIsMaximized(true)
     }
 
@@ -71,6 +78,8 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
         containerRef.current!.style.width = prevSize.width
         containerRef.current!.style.left = prevSize.left
         containerRef.current!.style.top = prevSize.top
+        containerRef.current!.style.transform = prevSize.transform
+        moveableRef.current?.updateRect()
         setIsMaximized(false)
     }
 
@@ -92,6 +101,7 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
                     height: prevSize.height,
                     left: prevSize.left,
                     top: prevSize.top,
+                    transform: prevSize.transform,
                 }}
             >
                 <div
@@ -125,6 +135,8 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
                 {/* <Resizable containerRef={containerRef} setPrevSize={setPrevSize} /> */}
             </div>
             <Movable
+                ref={moveableRef}
+                linePadding={6}
                 target={containerRef}
                 dragTarget={handleRef}
                 resizable={{
@@ -133,10 +145,17 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
                 renderDirections
                 triggerAblesSimultaneously
                 hideDefaultLines
+                useResizeObserver
                 onResize={(e) => {
                     e.target.style.width = e.width + "px"
                     e.target.style.height = e.height + "px"
                     e.target.style.transform = e.drag.transform
+                    setPrevSize({
+                        ...prevSize,
+                        width: e.target.style.width,
+                        height: e.target.style.height,
+                        transform: e.target.style.transform,
+                    })
                 }}
                 draggable
                 onDrag={(e) => {
@@ -146,6 +165,7 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
                         ...prevSize,
                         left: e.target.style.left,
                         top: e.target.style.top,
+                        transform: e.target.style.transform,
                     })
                 }}
             />

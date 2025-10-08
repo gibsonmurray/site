@@ -12,17 +12,19 @@ type WindowProps = {
     close?: () => void
 }
 
+type Size = {
+    height: string
+    width: string
+    left: string
+    top: string
+    transform: string
+}
+
 const Window: FC<WindowProps> = ({ children, className, close }) => {
     const handleRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const moveableRef = useRef<any>(null)
-    const [prevSize, setPrevSize] = useState<{
-        height: string
-        width: string
-        left: string
-        top: string
-        transform: string
-    }>({
+    const [prevSize, setPrevSize] = useState<Size>({
         height: "500px",
         width: "800px",
         left: "100px",
@@ -47,21 +49,21 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
         containerRef.current?.style.transform,
     ])
 
-    // const addTransition = () => {
-    //     containerRef.current!.classList.add(
-    //         "transition-[height,width,left,top]",
-    //         "duration-300",
-    //         "ease-in-out",
-    //     )
-    // }
+    const addTransition = () => {
+        containerRef.current!.classList.add(
+            "transition-[height,width,left,top]",
+            "duration-300",
+            "ease-in-out",
+        )
+    }
 
-    // const removeTransition = () => {
-    //     containerRef.current!.classList.remove(
-    //         "transition-[height,width,left,top]",
-    //         "duration-300",
-    //         "ease-in-out",
-    //     )
-    // }
+    const removeTransition = () => {
+        containerRef.current!.classList.remove(
+            "transition-[height,width,left,top]",
+            "duration-300",
+            "ease-in-out",
+        )
+    }
 
     const maximize = () => {
         containerRef.current!.style.height = "calc(-94px + 100vh)"
@@ -94,6 +96,7 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
                 ref={containerRef}
                 className={cn(
                     "bg-background/40 border-border/50 absolute flex flex-col overflow-hidden rounded-2xl border backdrop-blur-xl",
+                    "animate-in fade-in-0 zoom-in-75 transition-[height,width,left,top] duration-300 ease-in-out",
                     className,
                 )}
                 style={{
@@ -157,6 +160,12 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
                         transform: e.target.style.transform,
                     })
                 }}
+                onResizeStart={() => {
+                    removeTransition()
+                }}
+                onResizeEnd={() => {
+                    addTransition()
+                }}
                 draggable
                 onDrag={(e) => {
                     e.target.style.left = e.left + "px"
@@ -167,6 +176,12 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
                         top: e.target.style.top,
                         transform: e.target.style.transform,
                     })
+                }}
+                onDragStart={() => {
+                    removeTransition()
+                }}
+                onDragEnd={() => {
+                    addTransition()
                 }}
             />
         </>

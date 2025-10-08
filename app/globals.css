@@ -130,3 +130,7 @@
         @apply cursor-pointer;
     }
 }
+
+.moveable-control {
+    opacity: 0 !important;
+}

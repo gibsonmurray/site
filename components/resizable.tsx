@@ -124,7 +124,7 @@ const Resizable: FC<ResizableProps> = ({ containerRef, setPrevSize }) => {
                 handleMouseDown as EventListener,
             )
         })
-    }, [containerRef])
+    }, [containerRef, setPrevSize, addTransition, removeTransition])
 
     return (
         <>

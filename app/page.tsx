@@ -46,13 +46,23 @@ const Home = () => {
                 className="pointer-events-none object-cover select-none"
             />
             <Logo className="size-20 stroke-white opacity-60" />
-            {/* open apps here */}
+            {Object.values(apps).map(
+                (app) =>
+                    app.state === "open" && (
+                        <Window key={app.id} close={() => close(app.id)}>
+                            {/* <div className="flex items-center justify-center"> */}
+                                <h1>{app.name}</h1>
+                                {/* <Image
+                                    src={app.icon}
+                                    alt={app.name}
+                                    width={20}
+                                    height={20}
+                                /> */}
+                            {/* </div> */}
+                        </Window>
+                    ),
+            )}
             <Dock apps={apps} open={open} close={close} />
-            <Window>
-                <div>
-                    <h1>Hello</h1>
-                </div>
-            </Window>
         </div>
     )
 }

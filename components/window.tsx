@@ -1,13 +1,18 @@
-import { FC, useRef, ReactNode, useState } from "react"
+import { FC, useRef, ReactNode, useState, useEffect } from "react"
 import Resizable from "./resizable"
 import { cn } from "@/lib/utils"
+import {
+    ChevronsLeftRightIcon as MaximizeIcon,
+    ChevronsRightLeftIcon as UnmaximizeIcon,
+} from "lucide-react"
 
 type WindowProps = {
     children?: ReactNode
     className?: string
+    close?: () => void
 }
 
-const Window: FC<WindowProps> = ({ children, className }) => {
+const Window: FC<WindowProps> = ({ children, className, close }) => {
     const handleRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const [prevSize, setPrevSize] = useState<{
@@ -21,6 +26,21 @@ const Window: FC<WindowProps> = ({ children, className }) => {
         left: "100px",
         top: "100px",
     })
+    const [isMaximized, setIsMaximized] = useState(false)
+
+    useEffect(() => {
+        setIsMaximized(
+            containerRef.current?.style.height === "calc(-94px + 100vh)" &&
+                containerRef.current?.style.width === "100%" &&
+                containerRef.current?.style.left === "0px" &&
+                containerRef.current?.style.top === "0px",
+        )
+    }, [
+        containerRef.current?.style.height,
+        containerRef.current?.style.width,
+        containerRef.current?.style.left,
+        containerRef.current?.style.top,
+    ])
 
     const addTransition = () => {
         containerRef.current!.classList.add(
@@ -38,24 +58,25 @@ const Window: FC<WindowProps> = ({ children, className }) => {
         )
     }
 
-    const handleDoubleClick = () => {
-        const isMaximized =
-            containerRef.current?.style.height === "calc(-94px + 100vh)" &&
-            containerRef.current?.style.width === "100%" &&
-            containerRef.current?.style.left === "0px" &&
-            containerRef.current?.style.top === "0px"
+    const maximize = () => {
+        containerRef.current!.style.height = "calc(-94px + 100vh)"
+        containerRef.current!.style.width = "100%"
+        containerRef.current!.style.left = "0px"
+        containerRef.current!.style.top = "0px"
+        setIsMaximized(true)
+    }
 
-        if (isMaximized) {
-            containerRef.current!.style.height = prevSize.height
-            containerRef.current!.style.width = prevSize.width
-            containerRef.current!.style.left = prevSize.left
-            containerRef.current!.style.top = prevSize.top
-        } else {
-            containerRef.current!.style.height = "calc(-94px + 100vh)"
-            containerRef.current!.style.width = "100%"
-            containerRef.current!.style.left = "0px"
-            containerRef.current!.style.top = "0px"
-        }
+    const unmaximize = () => {
+        containerRef.current!.style.height = prevSize.height
+        containerRef.current!.style.width = prevSize.width
+        containerRef.current!.style.left = prevSize.left
+        containerRef.current!.style.top = prevSize.top
+        setIsMaximized(false)
+    }
+
+    const handleMaximize = () => {
+        if (isMaximized) unmaximize()
+        else maximize()
     }
 
     const handleDrag = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -100,13 +121,25 @@ const Window: FC<WindowProps> = ({ children, className }) => {
             )}
         >
             <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 px-3 py-4">
-                    <button className="size-3 rounded-full bg-red-400"></button>
-                    <button className="size-3 rounded-full bg-yellow-400"></button>
-                    <button className="size-3 rounded-full bg-green-400"></button>
+                <div className="flex items-center gap-2 px-3 py-4 text-black/50">
+                    <button
+                        className="grid size-3 place-items-center rounded-full bg-red-400"
+                        onClick={close}
+                    ></button>
+                    <button className="grid size-3 place-items-center rounded-full bg-yellow-400"></button>
+                    <button
+                        className="group grid size-3 place-items-center rounded-full bg-green-400 p-0.25"
+                        onClick={handleMaximize}
+                    >
+                        {isMaximized ? (
+                            <UnmaximizeIcon className="size-full rotate-45 stroke-3 opacity-0 group-hover:opacity-100" />
+                        ) : (
+                            <MaximizeIcon className="size-full rotate-45 stroke-3 opacity-0 group-hover:opacity-100" />
+                        )}
+                    </button>
                 </div>
                 <div
-                    onDoubleClick={handleDoubleClick}
+                    onDoubleClick={handleMaximize}
                     onMouseDown={handleDrag}
                     ref={handleRef}
                     className="size-full"

@@ -50,15 +50,7 @@ const Home = () => {
                 (app) =>
                     app.state === "open" && (
                         <Window key={app.id} close={() => close(app.id)}>
-                            {/* <div className="flex items-center justify-center"> */}
-                                <h1>{app.name}</h1>
-                                {/* <Image
-                                    src={app.icon}
-                                    alt={app.name}
-                                    width={20}
-                                    height={20}
-                                /> */}
-                            {/* </div> */}
+                            {app.component && <app.component />}
                         </Window>
                     ),
             )}

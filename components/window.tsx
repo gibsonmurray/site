@@ -144,11 +144,10 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
                     </div>
                 </div>
                 <div className="flex size-full items-center justify-center overflow-hidden rounded-lg px-1 pb-1">
-                    <div className="size-full rounded-lg bg-white/10">
+                    <div className="size-full overflow-auto rounded-lg bg-white">
                         {children}
                     </div>
                 </div>
-                {/* <Resizable containerRef={containerRef} setPrevSize={setPrevSize} /> */}
             </div>
             <Movable
                 ref={moveableRef}

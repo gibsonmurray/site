@@ -1,5 +1,6 @@
 import { App } from "@/types"
 import { v4 as uuidv4 } from "uuid"
+import Resume from "@/components/apps/resume/resume"
 
 export const APPS: App[] = [
     {
@@ -17,6 +18,7 @@ export const APPS: App[] = [
     {
         name: "Resume.docx",
         icon: "/icons/word.png",
+        component: Resume,
     },
     {
         name: "Live Code Editor",

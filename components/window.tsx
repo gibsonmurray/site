@@ -2,7 +2,9 @@ import { FC, useRef, ReactNode, useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import {
     ChevronsLeftRightIcon as MaximizeIcon,
+    MinusIcon,
     ChevronsRightLeftIcon as UnmaximizeIcon,
+    XIcon,
 } from "lucide-react"
 import Movable from "react-moveable"
 
@@ -90,6 +92,10 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
         else maximize()
     }
 
+    const handleMinimize = () => {
+        console.log("minimize")
+    }
+
     return (
         <>
             <div
@@ -112,14 +118,21 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
                     ref={handleRef}
                     onDoubleClick={handleMaximize}
                 >
-                    <div className="flex items-center gap-2 px-3 py-4 text-black/50">
+                    <div className="group flex items-center gap-2 px-3 py-4 text-black/50">
                         <button
-                            className="grid size-3 place-items-center rounded-full bg-red-400"
+                            className="grid size-3 place-items-center rounded-full bg-red-400 p-0.25"
                             onClick={close}
-                        ></button>
-                        <button className="grid size-3 place-items-center rounded-full bg-yellow-400"></button>
+                        >
+                            <XIcon className="size-full stroke-3 opacity-0 group-hover:opacity-100" />
+                        </button>
                         <button
-                            className="group grid size-3 place-items-center rounded-full bg-green-400 p-0.25"
+                            className="grid size-3 place-items-center rounded-full bg-yellow-400 p-0.25"
+                            onClick={handleMinimize}
+                        >
+                            <MinusIcon className="size-full stroke-3 opacity-0 group-hover:opacity-100" />
+                        </button>
+                        <button
+                            className="grid size-3 place-items-center rounded-full bg-green-400 p-0.25"
                             onClick={handleMaximize}
                         >
                             {isMaximized ? (

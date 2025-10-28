@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import capitalize from "lodash/capitalize"
+import { Suspense } from "react"
 import App from "./app"
 
 const description =
@@ -54,4 +55,12 @@ export const generateMetadata = async ({ searchParams }: Args) => {
     } satisfies Metadata
 }
 
-export default App
+const Page = () => {
+    return (
+        <Suspense fallback={<div />}>
+            <App />
+        </Suspense>
+    )
+}
+
+export default Page

@@ -61,7 +61,7 @@ const Resume = () => {
                         <LinkedinIcon className="size-4" />
                         linkedin.com/in/gibsonmurray
                     </a>
-                    <HoverCard openDelay={200} closeDelay={200}>
+                    <HoverCard>
                         <HoverCardTrigger asChild>
                             <span className="flex cursor-pointer items-center gap-2 hover:underline">
                                 <MapPinIcon className="size-4" />

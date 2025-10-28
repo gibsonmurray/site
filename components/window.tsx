@@ -12,6 +12,7 @@ type WindowProps = {
     children?: ReactNode
     className?: string
     close?: () => void
+    isClosing?: boolean
 }
 
 type Size = {
@@ -22,7 +23,7 @@ type Size = {
     transform: string
 }
 
-const Window: FC<WindowProps> = ({ children, className, close }) => {
+const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
     const handleRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const moveableRef = useRef<any>(null)
@@ -102,7 +103,11 @@ const Window: FC<WindowProps> = ({ children, className, close }) => {
                 ref={containerRef}
                 className={cn(
                     "bg-background/40 border-border/50 absolute flex flex-col overflow-hidden rounded-2xl border backdrop-blur-xl",
-                    "animate-in fade-in-0 zoom-in-75 transition-[height,width,left,top] duration-300 ease-in-out",
+                    isClosing
+                        ? "animate-out fade-out-0 zoom-out-75"
+                        : "animate-in fade-in-0 zoom-in-75",
+                    "transition-[height,width,left,top] duration-300 ease-in-out",
+                    isClosing && "pointer-events-none",
                     className,
                 )}
                 style={{

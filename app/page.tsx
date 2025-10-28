@@ -4,37 +4,11 @@ import Dock from "@/components/dock"
 import Logo from "@/components/logo"
 import Window from "@/components/window"
 import { APPS } from "@/lib/constants"
-import { App } from "@/types"
-import { sleep } from "@/lib/utils"
 import Image from "next/image"
-import { useState } from "react"
+import { useApps } from "@/hooks/use-apps"
 
 const Home = () => {
-    const [apps, setApps] = useState<Record<string, App>>(
-        Object.fromEntries(APPS.map((app) => [app.id, app])),
-    )
-
-    const open = async (app: string) => {
-        setApps((prev) => ({
-            ...prev,
-            [app]: { ...prev[app], state: "launching" },
-        }))
-
-        // somewhere between 1 and 3 seconds
-        await sleep(Math.random() * 2000 + 1000)
-
-        setApps((prev) => ({
-            ...prev,
-            [app]: { ...prev[app], state: "open" },
-        }))
-    }
-
-    const close = (app: string) => {
-        setApps((prev) => ({
-            ...prev,
-            [app]: { ...prev[app], state: "closed" },
-        }))
-    }
+    const { apps, open, close } = useApps(APPS)
 
     return (
         <div className="relative flex min-h-svh w-screen items-center justify-center overflow-hidden">
@@ -48,8 +22,12 @@ const Home = () => {
             <Logo className="size-20 stroke-white opacity-60" />
             {Object.values(apps).map(
                 (app) =>
-                    app.state === "open" && (
-                        <Window key={app.id} close={() => close(app.id)}>
+                    (app.state === "open" || app.state === "closing") && (
+                        <Window
+                            key={app.id}
+                            close={() => close(app.id)}
+                            isClosing={app.state === "closing"}
+                        >
                             {app.component && <app.component />}
                         </Window>
                     ),

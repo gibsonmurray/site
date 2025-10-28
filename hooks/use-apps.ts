@@ -43,7 +43,12 @@ export function useApps(initialApps: App[]) {
     }
 
     const close = (appId: string) => {
-        if (!apps[appId] || apps[appId].state === "closed" || apps[appId].state === "closing") return
+        if (
+            !apps[appId] ||
+            apps[appId].state === "closed" ||
+            apps[appId].state === "closing"
+        )
+            return
         // mark closing to allow CSS exit animation
         setApps((prev) => ({
             ...prev,
@@ -71,7 +76,6 @@ export function useApps(initialApps: App[]) {
         currentOpenIds
             .filter((id) => !targetOpenIds.includes(id))
             .forEach((id) => close(id))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appsParam])
 
     // state -> URL

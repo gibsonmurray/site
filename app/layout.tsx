@@ -14,8 +14,8 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
             <body className={cn(figtree.className, "bg-[#62AAD9] antialiased")}>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="dark"
-                    forcedTheme="dark"
+                    defaultTheme="light"
+                    forcedTheme="light"
                     disableTransitionOnChange
                 >
                     {children}

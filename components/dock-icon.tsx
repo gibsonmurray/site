@@ -95,7 +95,7 @@ const DockIcon: FC<DockIconProps> = ({ app, open, close }) => {
                 {/* App Name */}
                 <TooltipContent
                     sideOffset={5}
-                    className="rounded-full font-medium opacity-75"
+                    className="rounded-full font-medium opacity-75 shadow-xl border border-border/50"
                 >
                     {app.name}
                 </TooltipContent>

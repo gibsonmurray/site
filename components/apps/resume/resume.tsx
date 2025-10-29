@@ -14,11 +14,55 @@ import {
     PhoneIcon,
 } from "lucide-react"
 import { motion } from "motion/react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+    TypescriptOriginal,
+    JavascriptOriginal,
+    ReactOriginal,
+    NextjsOriginal,
+    TailwindcssOriginal,
+    NodejsOriginal,
+    NpmOriginal,
+    GithubOriginal,
+    BunOriginal,
+    CodepenOriginal,
+    Html5Original,
+    Css3Original,
+    JqueryOriginal,
+    LodashOriginal,
+    ReactrouterOriginal,
+    SupabaseOriginal,
+    TauriOriginal,
+    VscodeOriginal,
+    ZustandOriginal,
+} from "devicons-react"
+
+const icons = [
+    TypescriptOriginal,
+    JavascriptOriginal,
+    ReactOriginal,
+    NextjsOriginal,
+    TailwindcssOriginal,
+    NodejsOriginal,
+    NpmOriginal,
+    GithubOriginal,
+    BunOriginal,
+    CodepenOriginal,
+    Html5Original,
+    Css3Original,
+    JqueryOriginal,
+    LodashOriginal,
+    ReactrouterOriginal,
+    SupabaseOriginal,
+    TauriOriginal,
+    VscodeOriginal,
+    ZustandOriginal,
+]
 
 const Resume = () => {
     return (
-        <div className="text-background flex size-full max-w-none flex-col gap-2 p-10">
-            <div className="flex flex-col items-center justify-center gap-4">
+        <div className="flex size-full max-w-none flex-col items-center justify-start gap-2 p-10">
+            <div className="flex flex-col items-center justify-center gap-4 lg:max-w-3xl">
                 <motion.div
                     whileHover={{
                         rotate: 360,
@@ -36,7 +80,7 @@ const Resume = () => {
                     />
                 </motion.div>
                 <h1 className="text-3xl font-bold">GIBSON MURRAY</h1>
-                <div className="flex flex-wrap items-center justify-center gap-4 lg:max-w-3xl">
+                <div className="flex flex-wrap items-center justify-center gap-4">
                     <a
                         href="mailto:gibmurrays@gmail.com"
                         target="_blank"
@@ -80,6 +124,20 @@ const Resume = () => {
                         <PhoneIcon className="size-4" />
                         (443) 303-9045
                     </a>
+                </div>
+                <div className="flex w-full flex-col items-center justify-center gap-2">
+                    <Card className="h-min-fit relative w-full">
+                        <CardHeader>
+                            <CardTitle className="text-xl font-bold">
+                                My Expertise
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-wrap items-center justify-center gap-2">
+                            {icons.map((Icon, index) => (
+                                <Icon key={index} size={64} />
+                            ))}
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </div>

@@ -38,7 +38,7 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
 
     useEffect(() => {
         setIsMaximized(
-            containerRef.current?.style.height === "calc(-94px + 100vh)" &&
+            containerRef.current?.style.height === "calc(-95px + 100vh)" &&
                 containerRef.current?.style.width === "100%" &&
                 containerRef.current?.style.left === "0px" &&
                 containerRef.current?.style.top === "0px" &&
@@ -69,7 +69,7 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
     }
 
     const maximize = () => {
-        containerRef.current!.style.height = "calc(-94px + 100vh)"
+        containerRef.current!.style.height = "calc(-95px + 100vh)"
         containerRef.current!.style.width = "100%"
         containerRef.current!.style.left = "0px"
         containerRef.current!.style.top = "0px"

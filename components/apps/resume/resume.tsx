@@ -8,6 +8,7 @@ import {
 import GoogleMap from "@/components/google-map"
 import {
     Globe2Icon,
+    InfoIcon,
     LinkedinIcon,
     MailIcon,
     MapPinIcon,
@@ -15,51 +16,20 @@ import {
 } from "lucide-react"
 import { motion } from "motion/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Ticker } from "motion-plus/react"
+import { SKILLS } from "@/lib/constants"
 import {
-    TypescriptOriginal,
-    JavascriptOriginal,
-    ReactOriginal,
-    NextjsOriginal,
-    TailwindcssOriginal,
-    NodejsOriginal,
-    NpmOriginal,
-    GithubOriginal,
-    BunOriginal,
-    CodepenOriginal,
-    Html5Original,
-    Css3Original,
-    JqueryOriginal,
-    LodashOriginal,
-    ReactrouterOriginal,
-    SupabaseOriginal,
-    TauriOriginal,
-    VscodeOriginal,
-    ZustandOriginal,
-} from "devicons-react"
-
-const icons = [
-    TypescriptOriginal,
-    JavascriptOriginal,
-    ReactOriginal,
-    NextjsOriginal,
-    TailwindcssOriginal,
-    NodejsOriginal,
-    NpmOriginal,
-    GithubOriginal,
-    BunOriginal,
-    CodepenOriginal,
-    Html5Original,
-    Css3Original,
-    JqueryOriginal,
-    LodashOriginal,
-    ReactrouterOriginal,
-    SupabaseOriginal,
-    TauriOriginal,
-    VscodeOriginal,
-    ZustandOriginal,
-]
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { useState } from "react"
+import { cn } from "@/lib/utils"
+import ResumeCard from "@/components/resume-card"
 
 const Resume = () => {
+    const [hoveredSkill, setHoveredSkill] = useState<string | null>(null)
+
     return (
         <div className="flex size-full max-w-none flex-col items-center justify-start gap-2 p-10">
             <div className="flex flex-col items-center justify-center gap-4 lg:max-w-3xl">
@@ -125,19 +95,79 @@ const Resume = () => {
                         (443) 303-9045
                     </a>
                 </div>
-                <div className="flex w-full flex-col items-center justify-center gap-2">
-                    <Card className="h-min-fit relative w-full">
-                        <CardHeader>
-                            <CardTitle className="text-xl font-bold">
-                                My Expertise
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex flex-wrap items-center justify-center gap-2">
-                            {icons.map((Icon, index) => (
-                                <Icon key={index} size={64} />
+                <div className="mt-5 flex w-full flex-col items-center justify-center gap-2">
+                    <div className="relative w-full overflow-hidden">
+                        <Ticker
+                            items={SKILLS.map((item) => (
+                                <Tooltip delayDuration={300}>
+                                    <TooltipTrigger asChild>
+                                        <item.Icon
+                                            size={40}
+                                            className={cn(
+                                                "grayscale transition-all duration-300",
+                                                hoveredSkill === item.name
+                                                    ? "grayscale-0"
+                                                    : "grayscale-100",
+                                            )}
+                                            onMouseEnter={() =>
+                                                setHoveredSkill(item.name)
+                                            }
+                                            onMouseLeave={() =>
+                                                setHoveredSkill(null)
+                                            }
+                                        />
+                                    </TooltipTrigger>
+                                    <TooltipContent
+                                        side="bottom"
+                                        sideOffset={4}
+                                        arrow={false}
+                                        className="bg-transparent font-bold"
+                                        onMouseEnter={() =>
+                                            setHoveredSkill(item.name)
+                                        }
+                                        onMouseLeave={() =>
+                                            setHoveredSkill(null)
+                                        }
+                                    >
+                                        <a
+                                            href={item.link}
+                                            target="_blank"
+                                            className="hover:underline"
+                                        >
+                                            {item.name}
+                                        </a>
+                                    </TooltipContent>
+                                </Tooltip>
                             ))}
-                        </CardContent>
-                    </Card>
+                            hoverFactor={0}
+                        />
+                        <div className="from-background absolute top-0 left-0 h-full w-10 bg-linear-to-r to-transparent" />
+                        <div className="from-background absolute top-0 right-0 h-full w-10 bg-linear-to-l to-transparent" />
+                    </div>
+
+                    <div className="mt-10 grid w-full grid-cols-2 grid-rows-2 gap-4">
+                        <ResumeCard
+                            imageUrl="https://images.unsplash.com/photo-1681938759305-7abe66927aa5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987"
+                            company="Republican National Committee"
+                            position="Software Engineer"
+                            date={{ start: "2024", end: "Present" }}
+                            iconUrl="/icons/rnc.svg?url"
+                        />
+                        <ResumeCard
+                            imageUrl="https://images.unsplash.com/photo-1603274737277-f43f54446c7b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987"
+                            company="Cosmera"
+                            position="Design Engineer"
+                            date={{ start: "2024", end: "2025" }}
+                            iconUrl="/icons/cosmera.svg?url"
+                        />
+                        <ResumeCard
+                            imageUrl="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2340"
+                            company="Pivotal"
+                            position="Front End Engineering Intern"
+                            date={{ start: "2023", end: "2024" }}
+                            iconUrl="/icons/pivotal.svg?url"
+                        />
+                    </div>
                 </div>
             </div>
         </div>

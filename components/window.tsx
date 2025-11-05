@@ -20,7 +20,6 @@ type Size = {
     width: string
     left: string
     top: string
-    transform: string
 }
 
 const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
@@ -32,7 +31,6 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
         width: "800px",
         left: "100px",
         top: "100px",
-        transform: "none",
     })
     const [isMaximized, setIsMaximized] = useState(false)
 
@@ -41,15 +39,13 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
             containerRef.current?.style.height === "calc(-95px + 100vh)" &&
                 containerRef.current?.style.width === "100%" &&
                 containerRef.current?.style.left === "0px" &&
-                containerRef.current?.style.top === "0px" &&
-                containerRef.current?.style.transform === "none",
+                containerRef.current?.style.top === "0px",
         )
     }, [
         containerRef.current?.style.height,
         containerRef.current?.style.width,
         containerRef.current?.style.left,
         containerRef.current?.style.top,
-        containerRef.current?.style.transform,
     ])
 
     const addTransition = () => {
@@ -73,7 +69,6 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
         containerRef.current!.style.width = "100%"
         containerRef.current!.style.left = "0px"
         containerRef.current!.style.top = "0px"
-        containerRef.current!.style.transform = "none"
         moveableRef.current?.updateRect()
         setIsMaximized(true)
     }
@@ -83,7 +78,6 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
         containerRef.current!.style.width = prevSize.width
         containerRef.current!.style.left = prevSize.left
         containerRef.current!.style.top = prevSize.top
-        containerRef.current!.style.transform = prevSize.transform
         moveableRef.current?.updateRect()
         setIsMaximized(false)
     }
@@ -115,7 +109,6 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
                     height: prevSize.height,
                     left: prevSize.left,
                     top: prevSize.top,
-                    transform: prevSize.transform,
                 }}
             >
                 <div
@@ -169,12 +162,13 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
                 onResize={(e) => {
                     e.target.style.width = e.width + "px"
                     e.target.style.height = e.height + "px"
-                    e.target.style.transform = e.drag.transform
+                    e.target.style.left = e.drag.left + "px"
+                    e.target.style.top = e.drag.top + "px"
                     setPrevSize({
-                        ...prevSize,
                         width: e.target.style.width,
                         height: e.target.style.height,
-                        transform: e.target.style.transform,
+                        left: e.target.style.left,
+                        top: e.target.style.top,
                     })
                 }}
                 onResizeStart={() => {
@@ -191,7 +185,6 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
                         ...prevSize,
                         left: e.target.style.left,
                         top: e.target.style.top,
-                        transform: e.target.style.transform,
                     })
                 }}
                 onDragStart={() => {

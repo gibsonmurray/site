@@ -119,3 +119,31 @@ export const SKILLS = [
     },
     { name: "Zustand", Icon: ZustandOriginal, link: "https://zustand.dev/" },
 ]
+
+export const JOBS = [
+    {
+        name: "Republican National Committee",
+        position: "Software Engineer",
+        imgUrl: "https://images.unsplash.com/photo-1681938759305-7abe66927aa5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1000",
+        date: { start: "2024", end: "Present" },
+        iconUrl: "/icons/rnc.svg?url",
+        link: "https://www.gop.com/",
+        className: "row-span-2",
+    },
+    {
+        name: "Pivotal",
+        position: "Front End Engineering Intern",
+        imgUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1000",
+        date: { start: "2023", end: "2024" },
+        iconUrl: "/icons/pivotal.svg?url",
+        link: "https://www.pivotal-consulting-group.com/",
+    },
+    {
+        name: "Cosmera",
+        position: "Design Engineer",
+        imgUrl: "https://images.unsplash.com/photo-1603274737277-f43f54446c7b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1000",
+        date: { start: "2024", end: "2025" },
+        iconUrl: "/icons/cosmera.svg?url",
+        link: "https://www.linkedin.com/company/cosmerastudio/",
+    },
+]

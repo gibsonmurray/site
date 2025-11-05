@@ -1,8 +1,9 @@
 import { FC, useState } from "react"
 import { Card } from "@/components/ui/card"
 import Image from "next/image"
-import { InfoIcon } from "lucide-react"
+import { CalendarFoldIcon } from "lucide-react"
 import { motion, AnimatePresence } from "motion/react"
+import { cn } from "@/lib/utils"
 
 type ResumeCardProps = {
     imageUrl: string
@@ -14,6 +15,8 @@ type ResumeCardProps = {
         end: string
     }
     iconUrl: string
+    link?: string
+    className?: string
 }
 
 const ResumeCard: FC<ResumeCardProps> = ({
@@ -22,11 +25,18 @@ const ResumeCard: FC<ResumeCardProps> = ({
     position,
     date,
     iconUrl,
+    link,
+    className,
 }) => {
     const [infoHovered, setInfoHovered] = useState(false)
 
     return (
-        <Card className="relative h-100 overflow-hidden rounded-3xl border-none pb-0 shadow-none">
+        <Card
+            className={cn(
+                "relative size-full overflow-hidden rounded-3xl border-none pb-0 shadow-none",
+                className,
+            )}
+        >
             <Image
                 src={imageUrl}
                 alt={company}
@@ -43,7 +53,7 @@ const ResumeCard: FC<ResumeCardProps> = ({
             >
                 <AnimatePresence mode="popLayout">
                     <motion.div layout="position">
-                        <InfoIcon className="text-muted-foreground size-4 shrink-0" />
+                        <CalendarFoldIcon className="text-muted-foreground size-4 shrink-0" />
                     </motion.div>
                     {infoHovered && (
                         <motion.p
@@ -70,7 +80,13 @@ const ResumeCard: FC<ResumeCardProps> = ({
                         height={100}
                     />
                     <div className="my-auto flex grow flex-col">
-                        <h3 className="text-lg font-bold">{company}</h3>
+                        <a
+                            href={link ?? "#"}
+                            target="_blank"
+                            className="hover:underline"
+                        >
+                            <h3 className="text-lg font-bold">{company}</h3>
+                        </a>
                         <p className="text-accent-foreground text-sm">
                             {position}
                         </p>

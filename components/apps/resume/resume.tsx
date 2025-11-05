@@ -17,7 +17,7 @@ import {
 import { motion } from "motion/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Ticker } from "motion-plus/react"
-import { SKILLS } from "@/lib/constants"
+import { JOBS, SKILLS } from "@/lib/constants"
 import {
     Tooltip,
     TooltipContent,
@@ -145,28 +145,19 @@ const Resume = () => {
                         <div className="from-background absolute top-0 right-0 h-full w-10 bg-linear-to-l to-transparent" />
                     </div>
 
-                    <div className="mt-10 grid w-full grid-cols-2 grid-rows-2 gap-4">
-                        <ResumeCard
-                            imageUrl="https://images.unsplash.com/photo-1681938759305-7abe66927aa5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987"
-                            company="Republican National Committee"
-                            position="Software Engineer"
-                            date={{ start: "2024", end: "Present" }}
-                            iconUrl="/icons/rnc.svg?url"
-                        />
-                        <ResumeCard
-                            imageUrl="https://images.unsplash.com/photo-1603274737277-f43f54446c7b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987"
-                            company="Cosmera"
-                            position="Design Engineer"
-                            date={{ start: "2024", end: "2025" }}
-                            iconUrl="/icons/cosmera.svg?url"
-                        />
-                        <ResumeCard
-                            imageUrl="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2340"
-                            company="Pivotal"
-                            position="Front End Engineering Intern"
-                            date={{ start: "2023", end: "2024" }}
-                            iconUrl="/icons/pivotal.svg?url"
-                        />
+                    <div className="mt-10 grid h-150 w-full grid-cols-2 grid-rows-2 gap-4">
+                        {JOBS.map((job, idx) => (
+                            <ResumeCard
+                                key={job.name + job.position + idx}
+                                imageUrl={job.imgUrl}
+                                company={job.name}
+                                position={job.position}
+                                date={job.date}
+                                iconUrl={job.iconUrl}
+                                link={job.link}
+                                className={job.className}
+                            />
+                        ))}
                     </div>
                 </div>
             </div>

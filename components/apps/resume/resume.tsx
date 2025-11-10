@@ -159,6 +159,28 @@ const Resume = () => {
                             />
                         ))}
                     </div>
+
+                    <div className="relative mt-10 flex aspect-video h-130 w-full items-center justify-center">
+                        <Image
+                            src="/tv.jpg"
+                            alt="TV Background"
+                            fill
+                            className="w-full translate-x-0.5 object-contain lg:object-cover"
+                        />
+                        <iframe
+                            src="https://www.youtube.com/embed/Ho5ueQcoQ-c?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=Ho5ueQcoQ-c"
+                            className="pointer-events-none absolute top-12.5 aspect-video w-114 lg:top-11 lg:w-117"
+                            title="UMD Football Highlights"
+                        />
+                        <div className="absolute bottom-0 flex w-full flex-col items-center justify-center gap-2 px-4 py-10">
+                            <span className="text-2xl font-bold">
+                                University of Maryland, College Park
+                            </span>
+                            <span className="text-muted-foreground text-lg">
+                                Bachelor's of Science in Computer Science
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -7,15 +7,13 @@ import {
 } from "@/components/ui/hover-card"
 import GoogleMap from "@/components/google-map"
 import {
-    Globe2Icon,
-    InfoIcon,
+    DownloadIcon,
+    FileDownIcon,
     LinkedinIcon,
     MailIcon,
     MapPinIcon,
-    PhoneIcon,
 } from "lucide-react"
 import { motion } from "motion/react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Ticker } from "motion-plus/react"
 import { JOBS, SKILLS } from "@/lib/constants"
 import {
@@ -26,6 +24,10 @@ import {
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import ResumeCard from "@/components/resume-card"
+import PassionLogo from "@/public/passion-logo-big.svg"
+import GibsonMurrayLogo from "@/public/gm-logo.svg"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const Resume = () => {
     const [hoveredSkill, setHoveredSkill] = useState<string | null>(null)
@@ -33,23 +35,25 @@ const Resume = () => {
     return (
         <div className="flex size-full max-w-none flex-col items-center justify-start gap-2 p-10">
             <div className="flex flex-col items-center justify-center gap-4 lg:max-w-3xl">
-                <motion.div
-                    whileHover={{
-                        rotate: 360,
-                        transition: {
-                            type: "spring",
-                            stiffness: 100,
-                            damping: 20,
-                        },
-                    }}
-                >
-                    <Image
-                        src={logo}
-                        alt="Gibson Murray Logo"
-                        className="size-10"
-                    />
-                </motion.div>
-                <h1 className="text-3xl font-bold">GIBSON MURRAY</h1>
+                <div className="flex items-center justify-center">
+                    <motion.div
+                        whileHover={{
+                            rotate: 360,
+                            transition: {
+                                type: "spring",
+                                stiffness: 100,
+                                damping: 20,
+                            },
+                        }}
+                    >
+                        <Image
+                            src={logo}
+                            alt="Gibson Murray Logo"
+                            className="size-10"
+                        />
+                    </motion.div>
+                    <h1 className="font-bumbbled text-4xl">IBSON</h1>
+                </div>
                 <div className="flex flex-wrap items-center justify-center gap-4">
                     <a
                         href="mailto:gibmurrays@gmail.com"
@@ -58,14 +62,6 @@ const Resume = () => {
                     >
                         <MailIcon className="size-4" />
                         gibmurrays@gmail.com
-                    </a>
-                    <a
-                        href="https://gibsonmurray.com"
-                        target="_blank"
-                        className="flex items-center gap-2 hover:underline"
-                    >
-                        <Globe2Icon className="size-4" />
-                        gibsonmurray.com
                     </a>
                     <a
                         href="https://linkedin.com/in/gibsonmurray"
@@ -86,16 +82,9 @@ const Resume = () => {
                             <GoogleMap className="size-full overflow-hidden rounded-md border" />
                         </HoverCardContent>
                     </HoverCard>
-                    <a
-                        href="tel:4433039045"
-                        target="_blank"
-                        className="flex items-center gap-2 hover:underline"
-                    >
-                        <PhoneIcon className="size-4" />
-                        (443) 303-9045
-                    </a>
                 </div>
-                <div className="mt-5 flex w-full flex-col items-center justify-center gap-2">
+
+                <div className="mt-5 flex w-full flex-col items-center justify-center gap-10">
                     <div className="relative w-full overflow-hidden">
                         <Ticker
                             items={SKILLS.map((item) => (
@@ -145,7 +134,7 @@ const Resume = () => {
                         <div className="from-background absolute top-0 right-0 h-full w-10 bg-linear-to-l to-transparent" />
                     </div>
 
-                    <div className="mt-10 grid h-150 w-full grid-cols-2 grid-rows-2 gap-4">
+                    <div className="grid h-150 w-full grid-cols-2 grid-rows-2 gap-4">
                         {JOBS.map((job, idx) => (
                             <ResumeCard
                                 key={job.name + job.position + idx}
@@ -160,7 +149,7 @@ const Resume = () => {
                         ))}
                     </div>
 
-                    <div className="relative mt-10 flex aspect-video h-130 w-full items-center justify-center">
+                    <div className="relative flex aspect-video h-130 w-full items-center justify-center">
                         <Image
                             src="/tv.jpg"
                             alt="TV Background"
@@ -179,6 +168,47 @@ const Resume = () => {
                             <span className="text-muted-foreground text-lg">
                                 Bachelor's of Science in Computer Science
                             </span>
+                        </div>
+                    </div>
+
+                    <div className="relative h-110 w-full overflow-hidden rounded-3xl">
+                        <Image
+                            src="https://images.unsplash.com/photo-1515162305285-0293e4767cc2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2342"
+                            alt="Church"
+                            className="absolute inset-0 size-full object-cover"
+                            fill
+                        />
+                        <div className="absolute top-1/5 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center justify-center">
+                            <span className="text-xl font-bold">
+                                Volunteer on Sundays at
+                            </span>
+                            <PassionLogo className="h-20" />
+                        </div>
+                    </div>
+                    <div className="text-muted-foreground relative flex h-30 w-full items-center justify-between gap-2 text-sm font-medium">
+                        <span>
+                            Copyright © 2025 Gibson Murray{" "}
+                            <GibsonMurrayLogo className="stroke-muted-foreground mx-1 inline-block size-4" />
+                            All rights reserved.
+                        </span>
+
+                        <Button
+                            variant="link"
+                            size="sm"
+                            asChild
+                            className="text-muted-foreground"
+                        >
+                            <Link
+                                href="https://xs83fzgbku8yujf0.public.blob.vercel-storage.com/Resume%20-%20Gibson%20Murray.pdf"
+                                target="_blank"
+                            >
+                                Download as PDF
+                                <DownloadIcon className="size-4" />
+                            </Link>
+                        </Button>
+
+                        <div className="flex items-center gap-1">
+                            Made in the USA 🇺🇸
                         </div>
                     </div>
                 </div>

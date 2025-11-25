@@ -1,0 +1,18 @@
+@reference "../../../app/globals.css";
+
+.woc:not(.verse-num) {
+    @apply text-red-600;
+}
+
+.chapter-num {
+    @apply text-bible-red align-top text-xs;
+}
+
+.verse-num {
+    @apply text-bible-red align-top text-xs;
+}
+
+.audio,
+h2.extra_text {
+    @apply hidden;
+}

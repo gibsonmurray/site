@@ -46,6 +46,7 @@
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --spotify-green: oklch(0.7699 0.212 148.6);
+    --bible-red: oklch(0.6233 0.2338 29.92);
 }
 
 .dark {
@@ -81,6 +82,7 @@
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
     --spotify-green: oklch(0.7699 0.212 148.6);
+    --bible-red: oklch(0.6233 0.2338 29.92);
 }
 
 @theme inline {
@@ -121,6 +123,7 @@
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-spotify-green: var(--spotify-green);
+    --color-bible-red: var(--bible-red);
 }
 
 @layer base {
@@ -132,6 +135,9 @@
     }
     button {
         @apply cursor-pointer;
+    }
+    .font-newsreader {
+        font-family: var(--font-newsreader), "Newsreader", serif;
     }
 }
 

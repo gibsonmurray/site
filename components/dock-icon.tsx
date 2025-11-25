@@ -15,9 +15,10 @@ type DockIconProps = {
     app: App
     open: () => void
     close: () => void
+    bringToFront: () => void
 }
 
-const DockIcon: FC<DockIconProps> = ({ app, open, close }) => {
+const DockIcon: FC<DockIconProps> = ({ app, open, close, bringToFront }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     const handleContextMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -35,6 +36,14 @@ const DockIcon: FC<DockIconProps> = ({ app, open, close }) => {
         setIsMenuOpen(false)
     }
 
+    const handleClick = () => {
+        if (app.state === "open") {
+            bringToFront()
+        } else {
+            open()
+        }
+    }
+
     return (
         <Tooltip>
             <Popover open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -45,7 +54,7 @@ const DockIcon: FC<DockIconProps> = ({ app, open, close }) => {
                             variant="simple"
                             size="icon"
                             className="relative grid size-16 place-items-center p-9 px-10"
-                            onClick={open}
+                            onClick={handleClick}
                             onContextMenu={handleContextMenu}
                         >
                             <motion.div
@@ -112,7 +121,7 @@ const DockIcon: FC<DockIconProps> = ({ app, open, close }) => {
                         </Button>
                     ) : (
                         <>
-                            <Button variant="menu" onClick={open}>
+                            <Button variant="menu" onClick={() => { open(); bringToFront(); }}>
                                 Show
                             </Button>
                             <Button variant="menu" onClick={handleQuit}>

@@ -13,6 +13,8 @@ type WindowProps = {
     className?: string
     close?: () => void
     isClosing?: boolean
+    zIndex?: number
+    onFocus?: () => void
 }
 
 type Size = {
@@ -22,7 +24,14 @@ type Size = {
     top: string
 }
 
-const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
+const Window: FC<WindowProps> = ({
+    children,
+    className,
+    close,
+    isClosing,
+    zIndex = 1,
+    onFocus,
+}) => {
     const handleRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const moveableRef = useRef<any>(null)
@@ -109,7 +118,10 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
                     height: prevSize.height,
                     left: prevSize.left,
                     top: prevSize.top,
+                    zIndex,
                 }}
+                onClick={() => onFocus?.()}
+                onMouseDown={() => onFocus?.()}
             >
                 <div
                     className="flex items-center justify-between"
@@ -173,6 +185,7 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
                 }}
                 onResizeStart={() => {
                     removeTransition()
+                    onFocus?.()
                 }}
                 onResizeEnd={() => {
                     addTransition()
@@ -189,6 +202,7 @@ const Window: FC<WindowProps> = ({ children, className, close, isClosing }) => {
                 }}
                 onDragStart={() => {
                     removeTransition()
+                    onFocus?.()
                 }}
                 onDragEnd={() => {
                     addTransition()

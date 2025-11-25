@@ -1,17 +1,45 @@
 import "./bible.css"
 import "react-h5-audio-player/lib/styles.css"
 import { useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { getBiblePassage } from "@/app/actions/bible"
 import { BIBLE_BOOKS } from "@/lib/constants"
 import AudioPlayer from "react-h5-audio-player"
-import { BookOpenIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+import {
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    PauseIcon,
+    PlayIcon,
+    RepeatIcon,
+    VolumeOffIcon,
+    Volume2Icon,
+    FastForwardIcon,
+    RewindIcon,
+    Repeat1Icon,
+    BookMarkedIcon,
+    SearchIcon,
+    Settings2Icon,
+    HeadphonesIcon,
+    HeadphoneOffIcon,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { AnimatePresence, motion } from "motion/react"
+import {
+    Command,
+    CommandInput,
+    CommandList,
+    CommandItem,
+    CommandEmpty,
+    CommandGroup,
+    CommandSeparator,
+    CommandShortcut,
+    CommandDialog,
+} from "@/components/ui/command"
 
 const ParagraphSkeleton = () => (
     <div className="space-y-2">
@@ -41,6 +69,7 @@ const Bible = () => {
     const [chapter, setChapter] = useState<number>(1)
     const [verse, setVerse] = useState<number | null>(null)
     const [audio, setAudio] = useState<string | undefined>(undefined)
+    const containerRef = useRef<HTMLDivElement>(null)
 
     const normalizeBookValue = (value: string) =>
         value.replace(/[^a-z0-9]/gi, "").toLowerCase()
@@ -93,6 +122,14 @@ const Bible = () => {
 
     const handleNavigate = (direction: "previous" | "next") => {
         if (!currentBook) return
+        // Find the scrollable parent (the div with overflow-auto in Window component)
+        const scrollableParent = containerRef.current?.closest(
+            ".overflow-auto",
+        ) as HTMLElement
+        scrollableParent?.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        })
         setVerse(null)
 
         if (direction === "next") {
@@ -126,13 +163,52 @@ const Bible = () => {
         setChapter((prev) => prev - 1)
     }
 
+    const [showAudioPlayer, setShowAudioPlayer] = useState(false)
+    const [showSearch, setShowSearch] = useState(false)
+
     return (
-        <div className="relative mx-auto flex max-w-2xl flex-col items-center justify-center gap-6 px-8 pb-24">
-            <nav className="bg-background/50 sticky top-0 z-10 flex w-full items-center justify-between px-4 py-2 backdrop-blur-xs">
-                <Button variant="ghost" size="icon">
-                    <BookOpenIcon className="size-4" />
+        <div
+            ref={containerRef}
+            className="relative mx-auto flex max-w-2xl flex-col items-center justify-center gap-6 px-8 pb-24"
+        >
+            {/* Navigation Bar */}
+            <nav className="bg-background/50 sticky top-0 z-10 flex w-full items-center justify-between gap-4 px-4 py-2 backdrop-blur-xs">
+                {/* <ButtonGroup> */}
+                <Button variant="ghost" size="icon" className="rounded-full">
+                    <BookMarkedIcon className="size-4" />
                 </Button>
+
+                <div className="grow" />
+
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full"
+                    onClick={() => setShowSearch(!showSearch)}
+                >
+                    <SearchIcon className="size-4" />
+                </Button>
+
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full"
+                    onClick={() => setShowAudioPlayer(!showAudioPlayer)}
+                >
+                    {showAudioPlayer ? (
+                        <HeadphonesIcon className="size-4" />
+                    ) : (
+                        <HeadphoneOffIcon className="size-4" />
+                    )}
+                </Button>
+
+                <Button variant="ghost" size="icon" className="rounded-full">
+                    <Settings2Icon className="size-4" />
+                </Button>
+                {/* </ButtonGroup> */}
             </nav>
+
+            {/* Navigation Buttons */}
             <nav className="fixed top-1/2 left-1/2 flex w-2xl -translate-x-1/2 -translate-y-1/2 items-center justify-between">
                 <Tooltip delayDuration={200}>
                     <TooltipTrigger asChild>
@@ -168,20 +244,22 @@ const Bible = () => {
                     </TooltipContent>
                 </Tooltip>
             </nav>
+
+            {/* Passage */}
             {isLoadingPassage && <BibleSkeleton />}
             {!isLoadingPassage && passage && (
                 <>
                     <div className="relative flex w-full max-w-xl items-center gap-2">
-                        <div className="bg-bible-red h-8 w-3"></div>
-                        <h2 className="text-foreground text-start font-newsreader text-4xl">
+                        <div className="bg-bible-red h-10 w-3"></div>
+                        <h2 className="text-foreground font-newsreader text-start text-4xl">
                             {currentBook?.name}
                         </h2>
                     </div>
-                    <h3 className="text-bible-red w-full max-w-xl text-start font-newsreader text-4xl">
+                    <h3 className="text-bible-red font-newsreader w-full max-w-xl text-start text-4xl">
                         {chapter}
                     </h3>
                     <div
-                        className="prose max-w-xl font-newsreader"
+                        className="prose font-newsreader max-w-xl"
                         dangerouslySetInnerHTML={{
                             __html: passage.passages?.[0] ?? "",
                         }}
@@ -193,10 +271,36 @@ const Bible = () => {
                     Unable to load passage. Please try again.
                 </p>
             )}
-            <AudioPlayer
-                src={audio}
-                className="bg-background/50! fixed right-0 bottom-0 left-0 mx-auto mb-1 max-w-2xl shadow-none! backdrop-blur-xs!"
-            />
+
+            <AnimatePresence>
+                {/* Audio Player */}
+                {showAudioPlayer && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.3 }}
+                        className="fixed right-0 bottom-0 left-0 mx-auto mb-1 max-w-2xl backdrop-blur-xs!"
+                    >
+                        <AudioPlayer
+                            src={audio}
+                            customIcons={{
+                                play: <PlayIcon />,
+                                pause: <PauseIcon />,
+                                forward: <FastForwardIcon />,
+                                rewind: <RewindIcon />,
+                                volume: <Volume2Icon />,
+                                volumeMute: <VolumeOffIcon />,
+                                loop: <Repeat1Icon />,
+                                loopOff: <RepeatIcon />,
+                            }}
+                            className="bg-background/50! shadow-none!"
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            
         </div>
     )
 }

@@ -1,5 +1,4 @@
 import { App } from "@/types"
-import Resume from "@/components/apps/resume/resume"
 import {
     TypescriptOriginal,
     JavascriptOriginal,
@@ -21,6 +20,8 @@ import {
     VscodeOriginal,
     ZustandOriginal,
 } from "devicons-react"
+import Resume from "@/components/apps/resume/resume"
+import Spotify from "@/components/apps/spotify/spotify"
 
 export const APPS: App[] = [
     {
@@ -62,6 +63,7 @@ export const APPS: App[] = [
         id: "spotify",
         name: "Spotify",
         icon: "/icons/spotify.png",
+        component: Spotify,
     },
     {
         id: "settings",

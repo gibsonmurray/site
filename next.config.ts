@@ -1,5 +1,5 @@
 import type { NextConfig } from "next"
-import createMDX from '@next/mdx'
+import createMDX from "@next/mdx"
 
 const nextConfig: NextConfig = {
     turbopack: {
@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
     poweredByHeader: false,
     reactStrictMode: true,
     devIndicators: false,
-    pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+    pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
 }
 
 const withMDX = createMDX({

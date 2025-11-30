@@ -1,10 +1,16 @@
-interface BiblePassageProps {
+import { FC } from "react"
+
+type BiblePassageProps = {
     bookName: string
     chapter: number
     passageHtml: string
 }
 
-export const BiblePassage = ({ bookName, chapter, passageHtml }: BiblePassageProps) => {
+export const BiblePassage: FC<BiblePassageProps> = ({
+    bookName,
+    chapter,
+    passageHtml,
+}) => {
     return (
         <>
             <div className="relative flex w-full max-w-xl items-center gap-2">
@@ -25,4 +31,3 @@ export const BiblePassage = ({ bookName, chapter, passageHtml }: BiblePassagePro
         </>
     )
 }
-

@@ -1,4 +1,4 @@
-import { FC, useRef, ReactNode, useState, useEffect } from "react"
+import { FC, useRef, ReactNode, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import {
     ChevronsLeftRightIcon as MaximizeIcon,
@@ -7,6 +7,7 @@ import {
     XIcon,
 } from "lucide-react"
 import Movable from "react-moveable"
+import { WindowProvider, useWindowContext, type Size } from "./window-context"
 
 type WindowProps = {
     children?: ReactNode
@@ -15,16 +16,10 @@ type WindowProps = {
     isClosing?: boolean
     zIndex?: number
     onFocus?: () => void
+    initialSize?: Size
 }
 
-type Size = {
-    height: string
-    width: string
-    left: string
-    top: string
-}
-
-const Window: FC<WindowProps> = ({
+const WindowContent: FC<Omit<WindowProps, "initialSize">> = ({
     children,
     className,
     close,
@@ -34,28 +29,60 @@ const Window: FC<WindowProps> = ({
 }) => {
     const handleRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
+    const contentRef = useRef<HTMLDivElement>(null)
     const moveableRef = useRef<any>(null)
-    const [prevSize, setPrevSize] = useState<Size>({
-        height: "500px",
-        width: "800px",
-        left: "100px",
-        top: "100px",
-    })
-    const [isMaximized, setIsMaximized] = useState(false)
+    const {
+        size,
+        setSize,
+        innerSize,
+        setInnerSize,
+        isMaximized,
+        setIsMaximized,
+        maximize: contextMaximize,
+        unmaximize: contextUnmaximize,
+        handleMaximize: contextHandleMaximize,
+    } = useWindowContext()
 
+    // Update isMaximized state based on context size
     useEffect(() => {
         setIsMaximized(
-            containerRef.current?.style.height === "calc(-95px + 100vh)" &&
-                containerRef.current?.style.width === "100%" &&
-                containerRef.current?.style.left === "0px" &&
-                containerRef.current?.style.top === "0px",
+            size.height === "calc(-95px + 100vh)" &&
+                size.width === "100%" &&
+                size.left === "0px" &&
+                size.top === "0px",
         )
-    }, [
-        containerRef.current?.style.height,
-        containerRef.current?.style.width,
-        containerRef.current?.style.left,
-        containerRef.current?.style.top,
-    ])
+    }, [size, setIsMaximized])
+
+    // Update Movable when context size changes (e.g., from maximize/unmaximize)
+    useEffect(() => {
+        moveableRef.current?.updateRect()
+    }, [size])
+
+    // Track inner content size (excluding chrome)
+    useEffect(() => {
+        if (!contentRef.current) return
+
+        const updateInnerSize = () => {
+            if (contentRef.current) {
+                const rect = contentRef.current.getBoundingClientRect()
+                setInnerSize({
+                    width: rect.width,
+                    height: rect.height,
+                })
+            }
+        }
+
+        // Initial measurement
+        updateInnerSize()
+
+        // Use ResizeObserver to track size changes
+        const resizeObserver = new ResizeObserver(updateInnerSize)
+        resizeObserver.observe(contentRef.current)
+
+        return () => {
+            resizeObserver.disconnect()
+        }
+    }, [setInnerSize, size])
 
     const addTransition = () => {
         containerRef.current!.classList.add(
@@ -74,26 +101,18 @@ const Window: FC<WindowProps> = ({
     }
 
     const maximize = () => {
-        containerRef.current!.style.height = "calc(-95px + 100vh)"
-        containerRef.current!.style.width = "100%"
-        containerRef.current!.style.left = "0px"
-        containerRef.current!.style.top = "0px"
+        contextMaximize()
         moveableRef.current?.updateRect()
-        setIsMaximized(true)
     }
 
     const unmaximize = () => {
-        containerRef.current!.style.height = prevSize.height
-        containerRef.current!.style.width = prevSize.width
-        containerRef.current!.style.left = prevSize.left
-        containerRef.current!.style.top = prevSize.top
+        contextUnmaximize()
         moveableRef.current?.updateRect()
-        setIsMaximized(false)
     }
 
     const handleMaximize = () => {
-        if (isMaximized) unmaximize()
-        else maximize()
+        contextHandleMaximize()
+        moveableRef.current?.updateRect()
     }
 
     const handleMinimize = () => {
@@ -114,10 +133,10 @@ const Window: FC<WindowProps> = ({
                     className,
                 )}
                 style={{
-                    width: prevSize.width,
-                    height: prevSize.height,
-                    left: prevSize.left,
-                    top: prevSize.top,
+                    width: size.width,
+                    height: size.height,
+                    left: size.left,
+                    top: size.top,
                     zIndex,
                 }}
                 onClick={() => onFocus?.()}
@@ -154,7 +173,10 @@ const Window: FC<WindowProps> = ({
                     </div>
                 </div>
                 <div className="flex size-full items-center justify-center overflow-hidden rounded-lg px-1 pb-1">
-                    <div className="size-full overflow-auto rounded-lg bg-white">
+                    <div
+                        ref={contentRef}
+                        className="relative size-full overflow-auto rounded-lg bg-white"
+                    >
                         {children}
                     </div>
                 </div>
@@ -176,7 +198,7 @@ const Window: FC<WindowProps> = ({
                     e.target.style.height = e.height + "px"
                     e.target.style.left = e.drag.left + "px"
                     e.target.style.top = e.drag.top + "px"
-                    setPrevSize({
+                    setSize({
                         width: e.target.style.width,
                         height: e.target.style.height,
                         left: e.target.style.left,
@@ -194,8 +216,8 @@ const Window: FC<WindowProps> = ({
                 onDrag={(e) => {
                     e.target.style.left = e.left + "px"
                     e.target.style.top = e.top + "px"
-                    setPrevSize({
-                        ...prevSize,
+                    setSize({
+                        ...size,
                         left: e.target.style.left,
                         top: e.target.style.top,
                     })
@@ -209,6 +231,14 @@ const Window: FC<WindowProps> = ({
                 }}
             />
         </>
+    )
+}
+
+const Window: FC<WindowProps> = ({ children, initialSize, ...props }) => {
+    return (
+        <WindowProvider initialSize={initialSize}>
+            <WindowContent {...props}>{children}</WindowContent>
+        </WindowProvider>
     )
 }
 

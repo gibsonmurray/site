@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react"
 import type { RefObject } from "react"
 import { BIBLE_BOOKS } from "@/lib/constants"
-import { findBookByInput, normalizeBookValue } from "./bible-utils"
+import { findBookByInput } from "./bible-utils"
 
-export const useBibleNavigation = (initialBook: string = "gen", initialChapter: number = 1) => {
+export const useBibleNavigation = (
+    initialBook: string = "gen",
+    initialChapter: number = 1,
+) => {
     const [book, setBook] = useState<string>(initialBook)
     const [chapter, setChapter] = useState<number>(initialChapter)
     const [verse, setVerse] = useState<number | null>(null)
@@ -28,7 +31,10 @@ export const useBibleNavigation = (initialBook: string = "gen", initialChapter: 
         }
     }, [book, currentBook])
 
-    const navigate = (direction: "previous" | "next", containerRef: RefObject<HTMLDivElement | null>) => {
+    const navigate = (
+        direction: "previous" | "next",
+        containerRef: RefObject<HTMLDivElement | null>,
+    ) => {
         if (!currentBook) return
 
         // Find the scrollable parent (the div with overflow-auto in Window component)
@@ -87,4 +93,3 @@ export const useBibleNavigation = (initialBook: string = "gen", initialChapter: 
         navigate,
     }
 }
-

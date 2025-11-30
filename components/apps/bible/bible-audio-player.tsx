@@ -10,13 +10,17 @@ import {
     Repeat1Icon,
     RepeatIcon,
 } from "lucide-react"
+import { FC } from "react"
 
-interface BibleAudioPlayerProps {
+type BibleAudioPlayerProps = {
     show: boolean
     audioSrc: string | undefined
 }
 
-export const BibleAudioPlayer = ({ show, audioSrc }: BibleAudioPlayerProps) => {
+export const BibleAudioPlayer: FC<BibleAudioPlayerProps> = ({
+    show,
+    audioSrc,
+}) => {
     return (
         <AnimatePresence>
             {show && (
@@ -46,4 +50,3 @@ export const BibleAudioPlayer = ({ show, audioSrc }: BibleAudioPlayerProps) => {
         </AnimatePresence>
     )
 }
-

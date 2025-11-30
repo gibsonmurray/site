@@ -5,20 +5,21 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { FC } from "react"
 
-interface BibleNavigationButtonsProps {
+type BibleNavigationButtonsProps = {
     canGoPrevious: boolean
     canGoNext: boolean
     onPrevious: () => void
     onNext: () => void
 }
 
-export const BibleNavigationButtons = ({
+export const BibleNavigationButtons: FC<BibleNavigationButtonsProps> = ({
     canGoPrevious,
     canGoNext,
     onPrevious,
     onNext,
-}: BibleNavigationButtonsProps) => {
+}) => {
     return (
         <nav className="fixed top-1/2 left-1/2 flex w-2xl -translate-x-1/2 -translate-y-1/2 items-center justify-between">
             <Tooltip delayDuration={200}>
@@ -57,4 +58,3 @@ export const BibleNavigationButtons = ({
         </nav>
     )
 }
-

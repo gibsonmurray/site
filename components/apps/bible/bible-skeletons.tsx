@@ -10,7 +10,7 @@ const ParagraphSkeleton = () => (
 )
 
 export const BibleSkeleton = () => (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
         <div className="space-y-2">
             <div className="bg-muted h-8 w-40 animate-pulse rounded" />
             <div className="bg-muted/80 h-5 w-64 animate-pulse rounded" />
@@ -20,4 +20,3 @@ export const BibleSkeleton = () => (
         <ParagraphSkeleton />
     </div>
 )
-

@@ -20,8 +20,8 @@ export const getBiblePassage = async (
     return data
 }
 
-export const getBibleSearch = async (query: string) => {
-    const response = await fetch(`${ESV_API_URL}/search?q=${query}`, {
+export const getBibleSearch = async (query: string, page: number = 1) => {
+    const response = await fetch(`${ESV_API_URL}/search?q=${query}&page=${page}`, {
         headers: {
             Authorization: `Token ${process.env.ESV_API_KEY}`,
         },

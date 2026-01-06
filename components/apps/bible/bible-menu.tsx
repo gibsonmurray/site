@@ -11,11 +11,20 @@ import {
 } from "react"
 import { BIBLE_BOOKS } from "@/lib/constants"
 import { useWindowContext } from "@/components/window-context"
-import { BookMarkedIcon, HeadphonesIcon, HeadphoneOffIcon } from "lucide-react"
+import {
+    BookMarkedIcon,
+    HeadphonesIcon,
+    HeadphoneOffIcon,
+    XIcon,
+    ChevronLeftIcon,
+    SearchIcon,
+} from "lucide-react"
+import { Input } from "@/components/ui/input"
 
 type BibleMenuProps = {
     search: string
     onSearchChange: (value: string) => void
+    onSearchSubmit: () => void
     showAudioPlayer: boolean
     onToggleAudioPlayer: () => void
     setBook: (book: string) => void
@@ -28,6 +37,7 @@ type BibleMenuProps = {
 const BibleMenu: FC<BibleMenuProps> = ({
     search,
     onSearchChange,
+    onSearchSubmit,
     showAudioPlayer,
     onToggleAudioPlayer,
     setBook,
@@ -37,19 +47,51 @@ const BibleMenu: FC<BibleMenuProps> = ({
     setMenuOpen,
 }) => {
     const { innerSize } = useWindowContext()
+    const [selectedBook, setSelectedBook] = useState<string | null>(null)
 
     const navRef = useRef<HTMLDivElement>(null)
     const navHeight = navRef.current?.clientHeight || 0
 
-    // useEffect(() => {
-    //     if (containerRef.current && menuOpen) {
-    //         containerRef.current.style.overflow = "hidden"
-    //         containerRef.current.style.height = innerSize.height + "px"
-    //     } else if (containerRef.current && !menuOpen) {
-    //         containerRef.current.style.overflow = "auto"
-    //         containerRef.current.style.height = "auto"
-    //     }
-    // }, [containerRef, menuOpen])
+    const currentBookData = selectedBook
+        ? BIBLE_BOOKS.find((book) => book.id === selectedBook)
+        : null
+
+    const handleBookSelect = (bookId: string) => {
+        setSelectedBook(bookId)
+    }
+
+    const handleChapterSelect = (chapter: number) => {
+        if (selectedBook) {
+            setBook(selectedBook)
+            setChapter(chapter)
+            setMenuOpen(false)
+            setSelectedBook(null)
+        }
+    }
+
+    const handleBackToBooks = () => {
+        setSelectedBook(null)
+    }
+
+    // Reset selected book when menu closes
+    useEffect(() => {
+        if (!menuOpen) {
+            setSelectedBook(null)
+        }
+    }, [menuOpen])
+
+    const handleSearchSubmit = () => {
+        if (search.trim().length > 0) {
+            onSearchSubmit()
+            setMenuOpen(false)
+        }
+    }
+
+    const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleSearchSubmit()
+        }
+    }
 
     return (
         <AnimatePresence>
@@ -63,25 +105,12 @@ const BibleMenu: FC<BibleMenuProps> = ({
                     className="rounded-full"
                     onClick={() => setMenuOpen(!menuOpen)}
                 >
-                    <BookMarkedIcon className="size-4" />
+                    {menuOpen ? (
+                        <XIcon className="animate-in spin-in size-4" />
+                    ) : (
+                        <BookMarkedIcon className="animate-in -spin-in size-4" />
+                    )}
                 </Button>
-
-                <div className="relative flex w-full items-center">
-                    {/* <Input
-                    type="search"
-                    placeholder="Search for a passage..."
-                    className="w-full rounded-full ps-9"
-                    value={search}
-                    onChange={(e) => onSearchChange(e.target.value)}
-                />
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute left-0 rounded-full"
-                >
-                    <SearchIcon className="size-4" />
-                </Button> */}
-                </div>
 
                 <Button
                     variant="ghost"
@@ -109,19 +138,93 @@ const BibleMenu: FC<BibleMenuProps> = ({
                     style={{ marginTop: navHeight }}
                     exit={{ height: 0 }}
                     transition={{ ease: "easeInOut" }}
-                    className="bg-background/50 absolute top-0 left-0 z-10 w-full overflow-y-auto backdrop-blur-sm"
+                    className="bg-background/50 absolute top-0 left-0 z-10 flex w-full flex-col px-12 backdrop-blur-sm"
                 >
-                    <div className="flex flex-col gap-4">
-                        {BIBLE_BOOKS.map((book) => (
+                    <div className="py-3">
+                        <div className="relative flex w-full items-center justify-center">
+                            <Input
+                                type="search"
+                                placeholder="Search for a passage..."
+                                className="w-full border-none ps-9 shadow-none"
+                                value={search}
+                                onChange={(e) => onSearchChange(e.target.value)}
+                                onKeyDown={handleSearchKeyDown}
+                            />
                             <Button
-                                key={book.id}
                                 variant="simple"
-                                size="lg"
-                                className="rounded-full"
+                                size="icon"
+                                className="absolute left-0 rounded-full"
+                                onClick={handleSearchSubmit}
                             >
-                                {book.name}
+                                <SearchIcon className="size-4" />
                             </Button>
-                        ))}
+                        </div>
+                    </div>
+                    <div className="flex-1 overflow-y-auto">
+                        <AnimatePresence mode="wait">
+                            {!selectedBook ? (
+                                <motion.div
+                                    key="books-list"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="flex flex-col gap-4 pb-10"
+                                >
+                                    {BIBLE_BOOKS.map((book) => (
+                                        <Button
+                                            key={book.id}
+                                            variant="simple"
+                                            size="lg"
+                                            className="rounded-none"
+                                            onClick={() =>
+                                                handleBookSelect(book.id)
+                                            }
+                                        >
+                                            {book.name}
+                                        </Button>
+                                    ))}
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="chapters-grid"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="flex flex-col gap-4 pb-10"
+                                >
+                                    <Button
+                                        variant="simple"
+                                        size="lg"
+                                        className="flex items-center gap-4 rounded-none"
+                                        onClick={handleBackToBooks}
+                                    >
+                                        <ChevronLeftIcon className="size-4" />
+                                        {currentBookData?.name}
+                                    </Button>
+                                    <div className="grid grid-cols-6 gap-2">
+                                        {currentBookData?.chapter_lengths.map(
+                                            (_, index) => (
+                                                <Button
+                                                    key={index + 1}
+                                                    variant="simple"
+                                                    size="lg"
+                                                    className="h-14 rounded-none"
+                                                    onClick={() =>
+                                                        handleChapterSelect(
+                                                            index + 1,
+                                                        )
+                                                    }
+                                                >
+                                                    {index + 1}
+                                                </Button>
+                                            ),
+                                        )}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </motion.div>
             )}

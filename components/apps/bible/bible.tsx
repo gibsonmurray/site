@@ -1,14 +1,23 @@
 import "./bible.css"
 import "react-h5-audio-player/lib/styles.css"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+    useQuery,
+    useQueryClient,
+    useInfiniteQuery,
+} from "@tanstack/react-query"
 import { RefObject, useEffect, useRef, useState } from "react"
-import { getBiblePassage } from "@/app/actions/bible"
+import { getBiblePassage, getBibleSearch } from "@/app/actions/bible"
 import { useBibleNavigation } from "./use-bible-navigation"
 import { BibleSkeleton } from "./bible-skeletons"
 import { BibleNavigationButtons } from "./bible-navigation-buttons"
 import { BibleAudioPlayer } from "./bible-audio-player"
 import { BiblePassage } from "./bible-passage"
-import { cleanChapterNumbers, extractAudioFromPassage } from "./bible-utils"
+import { BibleSearchResults } from "./bible-search-results"
+import {
+    cleanChapterNumbers,
+    extractAudioFromPassage,
+    scrollToVerse,
+} from "./bible-utils"
 import { BIBLE_BOOKS } from "@/lib/constants"
 import BibleMenu from "./bible-menu"
 import { cn } from "@/lib/utils"
@@ -19,6 +28,7 @@ const Bible = () => {
     const [audio, setAudio] = useState<string | undefined>(undefined)
     const [showAudioPlayer, setShowAudioPlayer] = useState(false)
     const [search, setSearch] = useState("")
+    const [submittedSearch, setSubmittedSearch] = useState("")
 
     const {
         book,
@@ -32,11 +42,33 @@ const Bible = () => {
         navigate,
         setBook,
         setChapter,
+        setVerse,
     } = useBibleNavigation("gen", 1)
 
     const { data: passage, isLoading: isLoadingPassage } = useQuery({
         queryKey: ["bible", book, chapter, verse],
         queryFn: () => getBiblePassage(passageKey),
+        enabled: !submittedSearch.trim(),
+    })
+
+    const {
+        data: searchResults,
+        isLoading: isLoadingSearch,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useInfiniteQuery({
+        queryKey: ["bible-search", submittedSearch],
+        queryFn: ({ pageParam = 1 }) =>
+            getBibleSearch(submittedSearch, pageParam),
+        enabled: submittedSearch.trim().length > 0,
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.page || !lastPage.total_pages) return undefined
+            return lastPage.page < lastPage.total_pages
+                ? lastPage.page + 1
+                : undefined
+        },
     })
 
     // Prefetch previous and next chapters
@@ -95,13 +127,36 @@ const Bible = () => {
             setAudio(audioSrc)
             // Clean chapter numbers after DOM is updated
             setTimeout(() => cleanChapterNumbers(), 0)
+            // Scroll to verse if one is set
+            if (verse) {
+                scrollToVerse(verse, containerRef)
+            }
         }
-    }, [passage])
+    }, [passage, verse])
 
     const [menuOpen, setMenuOpen] = useState(false)
 
     const handleNavigate = (direction: "previous" | "next") => {
         navigate(direction, containerRef)
+    }
+
+    const handleNavigateToReference = (
+        bookId: string,
+        chapterNum: number,
+        verseNum: number | null,
+    ) => {
+        setBook(bookId)
+        setChapter(chapterNum)
+        // setVerse(verseNum)
+        if (verseNum) {
+            scrollToVerse(verseNum, containerRef)
+        }
+        setSearch("")
+        setSubmittedSearch("")
+    }
+
+    const handleSearchSubmit = () => {
+        setSubmittedSearch(search.trim())
     }
 
     return (
@@ -115,6 +170,7 @@ const Bible = () => {
             <BibleMenu
                 search={search}
                 onSearchChange={setSearch}
+                onSearchSubmit={handleSearchSubmit}
                 showAudioPlayer={showAudioPlayer}
                 onToggleAudioPlayer={() => setShowAudioPlayer(!showAudioPlayer)}
                 setBook={setBook}
@@ -124,25 +180,46 @@ const Bible = () => {
                 setMenuOpen={setMenuOpen}
             />
 
-            <BibleNavigationButtons
-                canGoPrevious={canGoPrevious}
-                canGoNext={canGoNext}
-                onPrevious={() => handleNavigate("previous")}
-                onNext={() => handleNavigate("next")}
-            />
-
-            {isLoadingPassage && <BibleSkeleton />}
-            {!isLoadingPassage && passage?.passages?.[0] && currentBook && (
-                <BiblePassage
-                    bookName={currentBook.name}
-                    chapter={chapter}
-                    passageHtml={passage.passages[0]}
+            {!submittedSearch.trim() && (
+                <BibleNavigationButtons
+                    canGoPrevious={canGoPrevious}
+                    canGoNext={canGoNext}
+                    onPrevious={() => handleNavigate("previous")}
+                    onNext={() => handleNavigate("next")}
                 />
             )}
-            {!isLoadingPassage && !passage && (
-                <p className="text-muted-foreground text-sm">
-                    Unable to load passage. Please try again.
-                </p>
+
+            {submittedSearch.trim() ? (
+                <>
+                    {isLoadingSearch && <BibleSkeleton />}
+                    {!isLoadingSearch && searchResults && (
+                        <BibleSearchResults
+                            searchResults={searchResults}
+                            onNavigateToReference={handleNavigateToReference}
+                            onLoadMore={fetchNextPage}
+                            hasMore={hasNextPage ?? false}
+                            isLoadingMore={isFetchingNextPage}
+                        />
+                    )}
+                </>
+            ) : (
+                <>
+                    {isLoadingPassage && <BibleSkeleton />}
+                    {!isLoadingPassage &&
+                        passage?.passages?.[0] &&
+                        currentBook && (
+                            <BiblePassage
+                                bookName={currentBook.name}
+                                chapter={chapter}
+                                passageHtml={passage.passages[0]}
+                            />
+                        )}
+                    {!isLoadingPassage && !passage && (
+                        <p className="text-muted-foreground text-sm">
+                            Unable to load passage. Please try again.
+                        </p>
+                    )}
+                </>
             )}
 
             <BibleAudioPlayer show={showAudioPlayer} audioSrc={audio} />

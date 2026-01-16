@@ -26,6 +26,7 @@ import Resume from "@/components/apps/resume/resume"
 import Spotify from "@/components/apps/spotify/spotify"
 import Bible from "@/components/apps/bible/bible"
 import Photos from "@/components/apps/photos/photos"
+import Blog from "@/components/apps/blog/blog"
 
 export const APPS: App[] = [
     // {
@@ -55,9 +56,10 @@ export const APPS: App[] = [
         icon: "/icons/vscode.png",
     },
     {
-        id: "books",
-        name: "Books",
+        id: "blog",
+        name: "Blog",
         icon: "/icons/books.png",
+        component: Blog,
     },
     {
         id: "photos",

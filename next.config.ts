@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
     poweredByHeader: false,
     reactStrictMode: true,
     devIndicators: false,
-    pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+    pageExtensions: ["js", "jsx", "mdx", "md", "ts", "tsx"],
 }
 
 const withMDX = createMDX({

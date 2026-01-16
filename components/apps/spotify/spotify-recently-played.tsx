@@ -30,8 +30,10 @@ export const SpotifyRecentlyPlayed = ({
                         </>
                     ) : (
                         items?.map((item) => {
-                            const track = item.track
+                            const track =
+                                item.track as SpotifyApi.TrackObjectFull
                             if (!track) return null
+
                             return (
                                 <div
                                     key={`${track.id}-${item.played_at}`}

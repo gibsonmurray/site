@@ -25,6 +25,7 @@ type BibleMenuProps = {
     search: string
     onSearchChange: (value: string) => void
     onSearchSubmit: () => void
+    onClearSearch: () => void
     showAudioPlayer: boolean
     onToggleAudioPlayer: () => void
     setBook: (book: string) => void
@@ -38,6 +39,7 @@ const BibleMenu: FC<BibleMenuProps> = ({
     search,
     onSearchChange,
     onSearchSubmit,
+    onClearSearch,
     showAudioPlayer,
     onToggleAudioPlayer,
     setBook,
@@ -64,6 +66,7 @@ const BibleMenu: FC<BibleMenuProps> = ({
         if (selectedBook) {
             setBook(selectedBook)
             setChapter(chapter)
+            onClearSearch()
             setMenuOpen(false)
             setSelectedBook(null)
         }

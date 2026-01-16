@@ -25,11 +25,11 @@ import Spotify from "@/components/apps/spotify/spotify"
 import Bible from "@/components/apps/bible/bible"
 
 export const APPS: App[] = [
-    {
-        id: "apps",
-        name: "Apps",
-        icon: "/icons/launchpad.png",
-    },
+    // {
+    //     id: "apps",
+    //     name: "Apps",
+    //     icon: "/icons/launchpad.png",
+    // },
     {
         id: "bible",
         name: "Bible",
@@ -67,11 +67,11 @@ export const APPS: App[] = [
         icon: "/icons/spotify.png",
         component: Spotify,
     },
-    {
-        id: "settings",
-        name: "Settings",
-        icon: "/icons/settings.png",
-    },
+    // {
+    //     id: "settings",
+    //     name: "Settings",
+    //     icon: "/icons/settings.png",
+    // },
 ].map((app) => ({ ...app, state: "closed" }))
 
 export const SKILLS = [

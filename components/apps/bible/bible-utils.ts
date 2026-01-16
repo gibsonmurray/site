@@ -50,6 +50,45 @@ export const parseReference = (
     return { book: bookName, chapter, verse }
 }
 
+/**
+ * Attempts to parse a user search query as a Bible reference.
+ * Handles partial book names like "josh 3", "gen 1:5", "1 cor 13", "rom 8:28"
+ * Returns the book ID, chapter, and optional verse if valid, otherwise null.
+ */
+export const parseSearchAsReference = (
+    query: string,
+): { bookId: string; chapter: number; verse: number | null } | null => {
+    const trimmed = query.trim()
+    if (!trimmed) return null
+
+    // Match patterns like "josh 3", "gen 1:5", "1 cor 13", "song of solomon 2"
+    // The book part can include numbers at the start (1 cor, 2 sam) and multiple words (song of solomon)
+    // The chapter/verse part is at the end: chapter or chapter:verse
+    const match = trimmed.match(/^(.+?)\s+(\d+)(?::(\d+))?$/i)
+    if (!match) return null
+
+    const bookInput = match[1].trim()
+    const chapter = parseInt(match[2], 10)
+    const verse = match[3] ? parseInt(match[3], 10) : null
+
+    // Try to find the book using the existing findBookByInput function
+    const bookResult = findBookByInput(bookInput)
+    if (!bookResult) return null
+
+    const { book } = bookResult
+
+    // Validate chapter exists for this book
+    if (chapter < 1 || chapter > book.chapter_lengths.length) return null
+
+    // Validate verse if provided
+    if (verse !== null) {
+        const maxVerses = book.chapter_lengths[chapter - 1]
+        if (verse < 1 || verse > maxVerses) return null
+    }
+
+    return { bookId: book.id, chapter, verse }
+}
+
 export const scrollToVerse = (
     verse: number,
     containerRef: RefObject<HTMLDivElement | null>,

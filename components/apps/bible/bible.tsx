@@ -16,6 +16,7 @@ import { BibleSearchResults } from "./bible-search-results"
 import {
     cleanChapterNumbers,
     extractAudioFromPassage,
+    parseSearchAsReference,
     scrollToVerse,
 } from "./bible-utils"
 import { BIBLE_BOOKS } from "@/lib/constants"
@@ -156,7 +157,18 @@ const Bible = () => {
     }
 
     const handleSearchSubmit = () => {
-        setSubmittedSearch(search.trim())
+        const trimmedSearch = search.trim()
+        
+        // Check if the search looks like a Bible reference (e.g., "josh 3", "gen 1:5")
+        const reference = parseSearchAsReference(trimmedSearch)
+        if (reference) {
+            // Navigate directly to the reference instead of searching
+            handleNavigateToReference(reference.bookId, reference.chapter, reference.verse)
+            return
+        }
+        
+        // Otherwise, perform a text search
+        setSubmittedSearch(trimmedSearch)
     }
 
     return (
@@ -171,6 +183,10 @@ const Bible = () => {
                 search={search}
                 onSearchChange={setSearch}
                 onSearchSubmit={handleSearchSubmit}
+                onClearSearch={() => {
+                    setSearch("")
+                    setSubmittedSearch("")
+                }}
                 showAudioPlayer={showAudioPlayer}
                 onToggleAudioPlayer={() => setShowAudioPlayer(!showAudioPlayer)}
                 setBook={setBook}

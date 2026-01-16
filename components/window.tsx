@@ -139,8 +139,8 @@ const WindowContent: FC<Omit<WindowProps, "initialSize">> = ({
                     top: size.top,
                     zIndex,
                 }}
-                onClick={() => onFocus?.()}
-                onMouseDown={() => onFocus?.()}
+                onClickCapture={() => onFocus?.()}
+                onMouseDownCapture={() => onFocus?.()}
             >
                 <div
                     className="flex items-center justify-between"

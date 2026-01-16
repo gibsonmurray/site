@@ -1,3 +1,5 @@
+"use client"
+
 import "./bible.css"
 import "react-h5-audio-player/lib/styles.css"
 import {
@@ -5,7 +7,7 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from "@tanstack/react-query"
-import { RefObject, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { getBiblePassage, getBibleSearch } from "@/app/actions/bible"
 import { useBibleNavigation } from "./use-bible-navigation"
 import { BibleSkeleton } from "./bible-skeletons"
@@ -158,7 +160,7 @@ const Bible = () => {
 
     const handleSearchSubmit = () => {
         const trimmedSearch = search.trim()
-        
+
         // Check if the search looks like a Bible reference (e.g., "josh 3", "gen 1:5")
         const reference = parseSearchAsReference(trimmedSearch)
         if (reference) {
@@ -166,7 +168,7 @@ const Bible = () => {
             handleNavigateToReference(reference.bookId, reference.chapter, reference.verse)
             return
         }
-        
+
         // Otherwise, perform a text search
         setSubmittedSearch(trimmedSearch)
     }

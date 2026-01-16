@@ -1,4 +1,6 @@
 import { App } from "@/types"
+
+export const ICLOUD_ALBUM_URL = "https://www.icloud.com/sharedalbum/#B26532ODW2g6S5M"
 import {
     TypescriptOriginal,
     JavascriptOriginal,
@@ -23,6 +25,7 @@ import {
 import Resume from "@/components/apps/resume/resume"
 import Spotify from "@/components/apps/spotify/spotify"
 import Bible from "@/components/apps/bible/bible"
+import Photos from "@/components/apps/photos/photos"
 
 export const APPS: App[] = [
     // {
@@ -60,6 +63,7 @@ export const APPS: App[] = [
         id: "photos",
         name: "Photos",
         icon: "/icons/photos.png",
+        component: Photos,
     },
     {
         id: "spotify",

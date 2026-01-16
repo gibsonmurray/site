@@ -1,3 +1,5 @@
+"use client"
+
 import { FC, useEffect, useRef } from "react"
 import { InfiniteData } from "@tanstack/react-query"
 import { ESVSearch } from "@/types/bible"

@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import logo from "@/public/gm-logo.png"
 import {
@@ -8,7 +10,6 @@ import {
 import GoogleMap from "@/components/google-map"
 import {
     DownloadIcon,
-    FileDownIcon,
     LinkedinIcon,
     MailIcon,
     MapPinIcon,

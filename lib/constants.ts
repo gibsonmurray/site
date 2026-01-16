@@ -27,6 +27,7 @@ import Spotify from "@/components/apps/spotify/spotify"
 import Bible from "@/components/apps/bible/bible"
 import Photos from "@/components/apps/photos/photos"
 import Blog from "@/components/apps/blog/blog"
+import Code from "@/components/apps/code/code"
 
 export const APPS: App[] = [
     // {
@@ -52,8 +53,9 @@ export const APPS: App[] = [
     },
     {
         id: "code",
-        name: "Live Code Editor",
+        name: "Code",
         icon: "/icons/vscode.png",
+        component: Code,
     },
     {
         id: "blog",

@@ -1,18 +1,20 @@
 import type { NextConfig } from "next"
+import createMDX from "@next/mdx"
 
 const nextConfig: NextConfig = {
-    experimental: {
-        turbo: {
-            rules: { "*.svg": { loaders: ["@svgr/webpack"], as: "*.js" } },
-        },
-        reactCompiler: true,
+    turbopack: {
+        rules: { "*.svg": { loaders: ["@svgr/webpack"], as: "*.js" } },
     },
-
+    reactCompiler: true,
     images: { remotePatterns: [{ protocol: "https", hostname: "**" }] },
-
     poweredByHeader: false,
     reactStrictMode: true,
     devIndicators: false,
+    pageExtensions: ["js", "jsx", "mdx", "md", "ts", "tsx"],
 }
 
-export default nextConfig
+const withMDX = createMDX({
+    // Add markdown plugins here, as desired
+})
+
+export default withMDX(nextConfig)

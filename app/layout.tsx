@@ -1,42 +1,72 @@
+import "./global.css"
 import type { Metadata } from "next"
-import { Figtree } from "next/font/google"
-import "./globals.css"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
+import { Navbar } from "./components/nav"
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import Footer from "./components/footer"
+import { baseUrl } from "./sitemap"
 import { cn } from "@/lib/utils"
 import { FC } from "react"
-
-const figtree = Figtree({ subsets: ["latin"] })
-
-const description =
-    "hey everyone, welcome to my website! i'm gibson, a design engineer."
+import { ThemeProvider } from "next-themes"
 
 export const metadata: Metadata = {
-    metadataBase: new URL("https://gibsonmurray.com"),
-    title: { template: "%s | gibson murray", default: "gibson murray" },
-    description,
-    openGraph: {
-        type: "website",
-        title: "gibson murray",
-        siteName: "gibson murray",
-        url: "https://gibsonmurray.com",
-        description,
-        images: [{ url: "/og.jpg" }],
+    metadataBase: new URL(baseUrl),
+    title: {
+        default: "Gibson Murray",
+        template: "%s | Gibson Murray",
     },
-    twitter: {
-        card: "summary_large_image",
-        title: "gibson murray",
-        description,
-        images: [{ url: "/og.jpg" }],
+    description: "Gibson Murray's portfolio.",
+    openGraph: {
+        title: "Gibson Murray",
+        description: "Gibson Murray's portfolio.",
+        url: baseUrl,
+        siteName: "Gibson Murray",
+        locale: "en_US",
+        type: "website",
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
     },
 }
 
-type RootLayoutProps = { children: React.ReactNode }
-
-const RootLayout: FC<RootLayoutProps> = ({ children }) => {
+const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
-        <html lang="en">
-            <body className={cn("bg-zinc-50 antialiased", figtree.className)}>
-                {children}
+        <html
+            lang="en"
+            suppressHydrationWarning
+            className={cn(
+                "bg-white text-black dark:bg-black dark:text-white",
+                GeistSans.variable,
+                GeistMono.variable,
+            )}
+        >
+            <body className="mx-4 mt-8 max-w-xl antialiased lg:mx-auto">
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <main className="mt-6 flex min-w-0 flex-auto flex-col px-2 md:px-0">
+                        <Navbar />
+                        {children}
+                        <Footer />
+                        <Analytics />
+                        <SpeedInsights />
+                    </main>
+                </ThemeProvider>
             </body>
+
         </html>
     )
 }

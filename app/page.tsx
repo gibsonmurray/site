@@ -1,26 +1,32 @@
-"use client"
-
-import Header from "@/components/Header"
-import Content from "@/components/Content"
-import Footer from "@/components/Footer"
-import { AnimatePresence } from "motion/react"
-import useNavigate from "@/hooks/useNavigate"
+import { BlogPosts } from "@/app/components/posts"
+import Link from "next/link"
+import LogoIcon from "@/app/components/logo"
 
 const Home = () => {
-    const { isNavigating, navigateTo } = useNavigate()
-
     return (
-        <main className="container mx-auto flex min-h-svh max-w-md flex-col items-center justify-between gap-10 py-10">
-            <AnimatePresence>
-                {!isNavigating && (
-                    <>
-                        <Header key="header" />
-                        <Content key="content" navigateTo={navigateTo} />
-                        <Footer key="footer" />
-                    </>
-                )}
-            </AnimatePresence>
-        </main>
+        <section>
+            <div className="flex items-center gap-2 mb-8">
+                <LogoIcon className="size-6" />
+                <h1 className="text-2xl font-semibold tracking-tighter">
+                    Gibson Murray
+                </h1>
+            </div>
+
+            <p className="prose mb-4">
+                {`Hi, I'm Gibson. I'm a front end software engineer. I'm currently working at the `}
+                <Link href="https://www.gop.com" target="_blank">
+                    Republican National Committee
+                </Link>
+                {`. On Sundays, I volunteer at `}
+                <Link href="https://passioncitychurch.com/dc" target="_blank">
+                    Passion City Church DC
+                </Link>
+                {`. I enjoy reading, writing, movies, tv, gaming, and music! You can see some of my work here.`}
+            </p>
+            <div className="my-8">
+                <BlogPosts />
+            </div>
+        </section>
     )
 }
 

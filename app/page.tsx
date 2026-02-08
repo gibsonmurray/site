@@ -1,66 +1,33 @@
-import { Metadata } from "next"
-import capitalize from "lodash/capitalize"
-import { Suspense } from "react"
-import App from "./app"
+import { BlogPosts } from "@/app/components/posts"
+import Link from "next/link"
+import Image from "next/image"
 
-const description =
-    "Hey everyone, welcome to my website! I'm Gibson, a design engineer."
-
-const metadata: Metadata = {
-    metadataBase: new URL("https://gibsonmurray.com"),
-    title: { template: "%s | Gibson Murray", default: "Gibson Murray" },
-    description,
-    openGraph: {
-        type: "website",
-        title: "Gibson Murray",
-        siteName: "Gibson Murray",
-        url: "https://gibsonmurray.com",
-        description,
-        images: [{ url: "/og.jpg" }],
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Gibson Murray",
-        description,
-        images: [{ url: "/og.jpg" }],
-    },
-    robots: {
-        index: true,
-        follow: true,
-    },
-}
-
-type Args = {
-    searchParams: Promise<{ apps?: string }>
-}
-
-export const generateMetadata = async ({ searchParams }: Args) => {
-    const params = await searchParams
-    const apps = params?.apps || ""
-
-    // Optional: if q is required, you can set a default or use notFound
-    if (!apps) {
-        return metadata
-    }
-
-    const appsList = apps
-        .split(",")
-        .map((app) => capitalize(app.trim()))
-        .join(", ")
-
-    return {
-        ...metadata,
-        title: `Gibson Murray - ${appsList}`,
-        description: `Gibson Murray - ${appsList}`,
-    } satisfies Metadata
-}
-
-const Page = () => {
+const Home = () => {
     return (
-        <Suspense fallback={<div />}>
-            <App />
-        </Suspense>
+        <section>
+            <div className="flex items-center gap-2 mb-8">
+                <Image src="/gm-logo.png" alt="Gibson Murray Logo" width={24} height={24} />
+                <h1 className="text-2xl font-semibold tracking-tighter">
+                    Gibson Murray
+                </h1>
+            </div>
+
+            <p className="prose mb-4">
+                {`Hi, I'm Gibson. I'm a front end software engineer. I'm currently working at the `}
+                <Link href="https://www.gop.com" target="_blank">
+                    Republican National Committee
+                </Link>
+                {`. On Sundays, I volunteer at `}
+                <Link href="https://passioncitychurch.com/dc" target="_blank">
+                    Passion City Church DC
+                </Link>
+                {`. I enjoy reading, writing, movies, tv, gaming, and music! You can see some of my work here.`}
+            </p>
+            <div className="my-8">
+                <BlogPosts />
+            </div>
+        </section>
     )
 }
 
-export default Page
+export default Home

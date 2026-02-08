@@ -1,27 +1,72 @@
-import "./globals.css"
-import { Figtree, Newsreader } from "next/font/google"
-import { FC } from "react"
-import { ThemeProvider } from "@/components/theme-provider"
+import "./global.css"
+import type { Metadata } from "next"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
+import { Navbar } from "./components/nav"
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import Footer from "./components/footer"
+import { baseUrl } from "./sitemap"
 import { cn } from "@/lib/utils"
-const figtree = Figtree({ subsets: ["latin"] })
-const newsreader = Newsreader({ subsets: ["latin"], variable: "--font-newsreader" })
+import { FC } from "react"
+import { ThemeProvider } from "next-themes"
 
-type RootLayoutProps = { children: React.ReactNode }
+export const metadata: Metadata = {
+    metadataBase: new URL(baseUrl),
+    title: {
+        default: "Gibson Murray",
+        template: "%s | Gibson Murray",
+    },
+    description: "Gibson Murray's portfolio.",
+    openGraph: {
+        title: "Gibson Murray",
+        description: "Gibson Murray's portfolio.",
+        url: baseUrl,
+        siteName: "Gibson Murray",
+        locale: "en_US",
+        type: "website",
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
+    },
+}
 
-const RootLayout: FC<RootLayoutProps> = ({ children }) => {
+const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
-        <html lang="en" suppressHydrationWarning>
-            <head />
-            <body className={cn(figtree.className, newsreader.variable, "bg-[#62AAD9] antialiased")}>
+        <html
+            lang="en"
+            suppressHydrationWarning
+            className={cn(
+                "bg-white text-black dark:bg-black dark:text-white",
+                GeistSans.variable,
+                GeistMono.variable,
+            )}
+        >
+            <body className="mx-4 mt-8 max-w-xl antialiased lg:mx-auto">
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="light"
-                    forcedTheme="light"
+                    defaultTheme="system"
+                    enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <main className="mt-6 flex min-w-0 flex-auto flex-col px-2 md:px-0">
+                        <Navbar />
+                        {children}
+                        <Footer />
+                        <Analytics />
+                        <SpeedInsights />
+                    </main>
                 </ThemeProvider>
             </body>
+
         </html>
     )
 }

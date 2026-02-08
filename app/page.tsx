@@ -1,12 +1,12 @@
 import { BlogPosts } from "@/app/components/posts"
 import Link from "next/link"
-import Image from "next/image"
+import LogoIcon from "@/app/components/logo"
 
 const Home = () => {
     return (
         <section>
             <div className="flex items-center gap-2 mb-8">
-                <Image src="/gm-logo.png" alt="Gibson Murray Logo" width={24} height={24} />
+                <LogoIcon className="size-6" />
                 <h1 className="text-2xl font-semibold tracking-tighter">
                     Gibson Murray
                 </h1>

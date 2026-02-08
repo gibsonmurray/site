@@ -2,7 +2,6 @@ import { notFound } from "next/navigation"
 import { CustomMDX } from "@/app/components/mdx"
 import { formatDate, getBlogPosts } from "@/app/blog/utils"
 import { baseUrl } from "@/app/sitemap"
-import { FC } from "react"
 
 export const generateStaticParams = async () => {
     let posts = getBlogPosts()
@@ -15,9 +14,10 @@ export const generateStaticParams = async () => {
 export const generateMetadata = async ({
     params,
 }: {
-    params: { slug: string }
+    params: Promise<{ slug: string }>
 }) => {
-    let post = getBlogPosts().find((post) => post.slug === params.slug)
+    let { slug } = await params
+    let post = getBlogPosts().find((post) => post.slug === slug)
     if (!post) {
         return
     }
@@ -56,8 +56,13 @@ export const generateMetadata = async ({
     }
 }
 
-const BlogPage: FC<{ params: { slug: string } }> = ({ params }) => {
-    let post = getBlogPosts().find((post) => post.slug === params.slug)
+export default async function BlogPage({
+    params,
+}: {
+    params: Promise<{ slug: string }>
+}) {
+    let { slug } = await params
+    let post = getBlogPosts().find((post) => post.slug === slug)
 
     if (!post) {
         notFound()
@@ -101,5 +106,3 @@ const BlogPage: FC<{ params: { slug: string } }> = ({ params }) => {
         </section>
     )
 }
-
-export default BlogPage

@@ -1,6 +1,6 @@
-import { BlogPosts } from "@/app/components/posts"
+import { BlogPosts } from "@/components/posts"
 import Link from "next/link"
-import LogoIcon from "@/app/components/logo"
+import LogoIcon from "@/components/logo"
 
 const Home = () => {
     return (
@@ -24,7 +24,7 @@ const Home = () => {
                 {`. I enjoy reading, writing, movies, tv, gaming, and music! You can see some of my work here.`}
             </p>
             <div className="my-8">
-                <BlogPosts />
+                <BlogPosts recentOnly recentCount={3} />
             </div>
         </section>
     )

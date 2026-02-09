@@ -1,4 +1,4 @@
-import { BlogPosts } from "@/app/components/posts"
+import { BlogPosts } from "@/components/posts"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {

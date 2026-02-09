@@ -49,8 +49,14 @@ const getMDXData = (dir: string) => {
     })
 }
 
-export const getBlogPosts = () => {
-    return getMDXData(path.join(process.cwd(), "app", "blog", "posts"))
+export const getBlogPosts = (recentOnly = false, recentCount = 3) => {
+    let posts = getMDXData(path.join(process.cwd(), "app", "blog", "posts"))
+    if (recentOnly) {
+        return posts.sort((a, b) => {
+            return new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime()
+        }).slice(0, recentCount)
+    }
+    return posts
 }
 
 export const formatDate = (date: string, includeRelative = false) => {

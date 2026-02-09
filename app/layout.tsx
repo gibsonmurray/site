@@ -44,11 +44,7 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
         <html
             lang="en"
             suppressHydrationWarning
-            className={cn(
-                "bg-white text-black dark:bg-black dark:text-white",
-                GeistSans.variable,
-                GeistMono.variable,
-            )}
+            className={cn(GeistSans.variable, GeistMono.variable)}
         >
             <body className="mx-4 mt-8 max-w-xl antialiased lg:mx-auto">
                 <ThemeProvider

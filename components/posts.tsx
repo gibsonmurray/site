@@ -36,6 +36,14 @@ const PostList = ({ posts }: { posts: ReturnType<typeof getBlogPosts> }) => (
 export const BlogPosts: FC<BlogPostsProps> = ({ recentOnly = false, recentCount = 3 }) => {
     const posts = getBlogPosts(recentOnly, recentCount)
 
+    if (posts.length === 0) {
+        return (
+            <p className="text-neutral-500 dark:text-neutral-400">
+                No posts yet. Check back soon.
+            </p>
+        )
+    }
+
     if (recentOnly) {
         return (
             <div className="space-y-10">

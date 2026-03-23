@@ -29,15 +29,8 @@ export const generateMetadata = async ({
         return
     }
 
-    let {
-        title,
-        publishedAt: publishedTime,
-        summary: description,
-        image,
-    } = post.metadata
-    let ogImage = image
-        ? image
-        : `${baseUrl}/og?title=${encodeURIComponent(title)}`
+    let { title, publishedAt: publishedTime, summary: description } = post.metadata
+    let ogImage = `${baseUrl}/og?title=${encodeURIComponent(title)}`
 
     return {
         title,
@@ -51,6 +44,10 @@ export const generateMetadata = async ({
             images: [
                 {
                     url: ogImage,
+                    width: 1200,
+                    height: 630,
+                    type: "image/png",
+                    alt: title,
                 },
             ],
         },
@@ -75,6 +72,7 @@ export default async function BlogPage({
         notFound()
     }
 
+    const ogImage = `${baseUrl}/og?title=${encodeURIComponent(post.metadata.title)}`
     const readingTime = getReadingTime(post.content)
     const authorName = post.metadata.author?.trim() || "Gibson Murray"
     const tags = getPostTags(post.metadata.tags)
@@ -93,9 +91,7 @@ export default async function BlogPage({
                         dateModified: post.metadata.publishedAt,
                         description: post.metadata.summary,
                         keywords: tags,
-                        image: post.metadata.image
-                            ? `${baseUrl}${post.metadata.image}`
-                            : `/og?title=${encodeURIComponent(post.metadata.title)}`,
+                        image: ogImage,
                         url: `${baseUrl}/blog/${post.slug}`,
                         author: {
                             "@type": "Person",

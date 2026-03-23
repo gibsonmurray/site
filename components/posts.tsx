@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { formatDate, getBlogPosts } from "@/app/blog/utils"
+import { formatDate, getBlogPosts, getReadingTime } from "@/app/blog/utils"
 import { FC } from "react"
 
 function getYear(dateStr: string): number {
@@ -49,20 +49,23 @@ const PostList = ({
         {posts.map((post) => (
             <Link
                 key={post.slug}
-                className="group flex flex-col space-y-1 px-3 py-2 transition-colors"
+                className="group flex flex-col space-y-1 px-3 py-2 transition-colors hover:bg-muted/30 rounded-lg"
                 href={`/blog/${post.slug}`}
             >
-                <div className="flex w-full flex-col space-x-0 md:flex-row md:space-x-2">
-                    <p
-                        className={`${compactDate ? "w-16" : "w-25"} tabular-nums text-muted-foreground`}
-                    >
+                <div className="flex w-full flex-col space-x-0 md:flex-row md:space-x-2 md:items-start">
+                    <p className="tabular-nums text-muted-foreground transition-colors duration-200 group-hover:text-primary/60">
                         {compactDate
                             ? formatListDay(post.metadata.publishedAt)
                             : formatDate(post.metadata.publishedAt, false)}
                     </p>
-                    <p className="text-foreground group-hover:text-primary tracking-tight transition-colors">
-                        {post.metadata.title}
-                    </p>
+                    <div className="flex-1 flex flex-col space-y-1">
+                        <p className="text-foreground group-hover:text-primary tracking-tight transition-colors">
+                            {post.metadata.title}
+                        </p>
+                        <p className="inline-block text-xs text-muted-foreground font-medium">
+                            {getReadingTime(post.content)}
+                        </p>
+                    </div>
                 </div>
             </Link>
         ))}

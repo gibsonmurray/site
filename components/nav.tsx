@@ -36,9 +36,12 @@ export const Navbar = () => {
                                 <Link
                                     key={path}
                                     href={path}
-                                    className="relative m-1 flex px-2 py-1 align-middle transition-all"
+                                    className="relative m-1 flex px-3 py-1 align-middle transition-all rounded-md hover:bg-muted/40 group"
                                 >
-                                    {name}
+                                    <span className="relative">
+                                        {name}
+                                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary/60 group-hover:w-full transition-all duration-300"></span>
+                                    </span>
                                 </Link>
                             )
                         })}
@@ -50,11 +53,12 @@ export const Navbar = () => {
                             onClick={() =>
                                 setTheme(theme === "dark" ? "light" : "dark")
                             }
+                            className="transition-all duration-200 hover:scale-110 hover:bg-muted/40"
                         >
                             {theme === "dark" ? (
-                                <MoonIcon className="size-4" />
+                                <MoonIcon className="size-4 transition-transform duration-300" />
                             ) : (
-                                <SunIcon className="size-4" />
+                                <SunIcon className="size-4 transition-transform duration-300" />
                             )}
                         </Button>
                     )}

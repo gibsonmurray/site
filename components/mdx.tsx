@@ -4,6 +4,7 @@ import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc"
 import remarkGfm from "remark-gfm"
 import { highlight } from "sugar-high"
 import React, { FC } from "react"
+import { Pre } from "@/components/mdx-pre"
 
 const Table: FC<{ data: { headers: string[]; rows: string[][] } }> = ({
     data,
@@ -149,6 +150,7 @@ let components = {
     img: RoundedImage,
     a: CustomLink,
     code: Code,
+    pre: Pre,
     Table,
 }
 

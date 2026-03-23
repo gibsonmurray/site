@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import { CustomMDX } from "@/components/mdx"
 import { Badge } from "@/components/ui/badge"
+import { ShareButtons } from "@/components/share-buttons"
 import {
     formatDate,
     getBlogPosts,
@@ -119,6 +120,11 @@ export default async function BlogPage({
                         <span aria-hidden>·</span>
                         <p>By {authorName}</p>
                     </div>
+                    <ShareButtons
+                        title={post.metadata.title}
+                        slug={slug}
+                        description={post.metadata.summary}
+                    />
                 </div>
                 {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2">

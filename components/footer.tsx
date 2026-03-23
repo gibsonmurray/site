@@ -17,12 +17,12 @@ const LINKS = [
 
 export const Footer = () => {
     return (
-        <footer className="mb-16">
-            <ul className="font-sm mt-8 flex flex-col space-y-2 space-x-0 text-neutral-600 md:flex-row md:space-y-0 md:space-x-4 dark:text-neutral-300">
+        <footer className="mb-16 mt-auto">
+            <ul className="font-sm mt-8 flex flex-col space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
                 {LINKS.map((link) => (
                     <li key={link.name}>
                         <a
-                            className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
+                            className="flex items-center transition-all"
                             rel="noopener noreferrer"
                             target="_blank"
                             href={link.href}
@@ -33,9 +33,7 @@ export const Footer = () => {
                     </li>
                 ))}
             </ul>
-            <p className="mt-8 text-neutral-600 dark:text-neutral-300">
-                © {new Date().getFullYear()} Gibson Murray
-            </p>
+            <p className="mt-8">© {new Date().getFullYear()} Gibson Murray</p>
         </footer>
     )
 }

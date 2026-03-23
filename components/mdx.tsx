@@ -1,8 +1,10 @@
 import Link from "next/link"
 import Image, { ImageProps } from "next/image"
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc"
+import remarkGfm from "remark-gfm"
 import { highlight } from "sugar-high"
 import React, { FC } from "react"
+import { Pre } from "@/components/mdx-pre"
 
 const Table: FC<{ data: { headers: string[]; rows: string[][] } }> = ({
     data,
@@ -43,14 +45,58 @@ const CustomLink: FC<
     }
 
     if (href.startsWith("#")) {
-        return <a {...props} />
+        return (
+            <a href={href} {...props}>
+                {children}
+            </a>
+        )
     }
 
-    return <a target="_blank" rel="noopener noreferrer" {...props} />
+    return (
+        <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+            {children}
+        </a>
+    )
 }
 
-const RoundedImage: FC<{ alt: string } & ImageProps> = ({ alt, ...props }) => {
-    return <Image alt={alt} className="rounded-lg" {...props} />
+type RoundedImageProps = Omit<ImageProps, "alt"> & {
+    alt?: string
+}
+
+const RoundedImage: FC<RoundedImageProps> = ({
+    alt = "",
+    className,
+    width,
+    height,
+    ...props
+}) => {
+    const mergedClassName = ["rounded-lg", className].filter(Boolean).join(" ")
+
+    if (typeof width === "number" && typeof height === "number") {
+        return (
+            <Image
+                alt={alt}
+                width={width}
+                height={height}
+                className={mergedClassName}
+                {...props}
+            />
+        )
+    }
+
+    return (
+        <span className="relative block aspect-4/3 w-full overflow-hidden rounded-lg">
+            <Image
+                alt={alt}
+                fill
+                sizes="100vw"
+                className={["object-cover", mergedClassName]
+                    .filter(Boolean)
+                    .join(" ")}
+                {...props}
+            />
+        </span>
+    )
 }
 
 const Code: FC<{ children: React.ReactNode | string }> = ({
@@ -101,9 +147,10 @@ let components = {
     h4: createHeading(4),
     h5: createHeading(5),
     h6: createHeading(6),
-    Image: RoundedImage,
+    img: RoundedImage,
     a: CustomLink,
     code: Code,
+    pre: Pre,
     Table,
 }
 
@@ -111,6 +158,11 @@ export const CustomMDX: FC<MDXRemoteProps> = (props) => {
     return (
         <MDXRemote
             {...props}
+            options={{
+                mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                },
+            }}
             components={{ ...components, ...(props.components || {}) }}
         />
     )

@@ -6,6 +6,8 @@ type Metadata = {
     publishedAt: string
     summary: string
     image?: string
+    author?: string
+    tags?: string
 }
 
 const parseFrontmatter = (fileContent: string) => {
@@ -59,7 +61,20 @@ export const getBlogPosts = (recentOnly = false, recentCount = 3) => {
     return posts
 }
 
-export const formatDate = (date: string, includeRelative = false) => {
+export const formatDate = (
+    date: string,
+    includeRelativeOrOptions:
+        | boolean
+        | { includeRelative?: boolean; includeWeekday?: boolean } = false,
+) => {
+    const options =
+        typeof includeRelativeOrOptions === "boolean"
+            ? { includeRelative: includeRelativeOrOptions, includeWeekday: false }
+            : {
+                  includeRelative: includeRelativeOrOptions.includeRelative ?? false,
+                  includeWeekday: includeRelativeOrOptions.includeWeekday ?? false,
+              }
+
     let currentDate = new Date()
     if (!date.includes("T")) {
         date = `${date}T00:00:00`
@@ -83,14 +98,34 @@ export const formatDate = (date: string, includeRelative = false) => {
     }
 
     let fullDate = targetDate.toLocaleString("en-us", {
+        weekday: options.includeWeekday ? "long" : undefined,
         month: "short",
         day: "numeric",
         year: "numeric",
     })
 
-    if (!includeRelative) {
+    if (!options.includeRelative) {
         return fullDate
     }
 
     return `${fullDate} (${formattedDate})`
+}
+
+export const getReadingTime = (content: string, wordsPerMinute = 200) => {
+    const words = content.trim().split(/\s+/).filter(Boolean).length
+    const minutes = Math.max(1, Math.ceil(words / wordsPerMinute))
+    return `${minutes} min read`
+}
+
+export const getPostTags = (tags?: string) => {
+    if (!tags) {
+        return []
+    }
+
+    return tags
+        .replace(/^\[/, "")
+        .replace(/\]$/, "")
+        .split(",")
+        .map((tag) => tag.trim().replace(/^['\"](.*)['\"]$/, "$1"))
+        .filter(Boolean)
 }

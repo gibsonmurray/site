@@ -4,7 +4,6 @@ import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc"
 import remarkGfm from "remark-gfm"
 import { highlight } from "sugar-high"
 import React, { FC } from "react"
-import remarkRehype from "remark-rehype"
 
 const Table: FC<{ data: { headers: string[]; rows: string[][] } }> = ({
     data,

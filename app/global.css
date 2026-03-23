@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 /* 
+
 ---break---
 
 */
@@ -11,6 +12,7 @@ html {
     min-width: 360px;
 }
 /* 
+
 .prose {
     @apply max-w-none text-[1.05rem] leading-8 text-neutral-800 dark:text-neutral-200;
 }
@@ -186,6 +188,7 @@ table {
 
 */
 /* 
+
 ---break---
 
 */
@@ -232,6 +235,7 @@ table {
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 /* 
+
 ---break---
 
 */
@@ -270,6 +274,7 @@ table {
     --sidebar-ring: oklch(0.708 0 0);
 }
 /* 
+
 ---break---
 
 */
@@ -307,6 +312,7 @@ table {
     --sidebar-ring: oklch(0.556 0 0);
 }
 /* 
+
 ---break---
 
 */

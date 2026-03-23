@@ -26,8 +26,23 @@ export const metadata: Metadata = {
         description: "Gibson Murray's portfolio.",
         url: baseUrl,
         siteName: "Gibson Murray",
+        images: [
+            {
+                url: "/headshot.jpeg",
+                alt: "Gibson Murray",
+                width: 1200,
+                height: 630,
+                type: "image/jpeg",
+            },
+        ],
         locale: "en_US",
         type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Gibson Murray",
+        description: "Gibson Murray's portfolio.",
+        images: ["/headshot.jpeg"],
     },
     robots: {
         index: true,

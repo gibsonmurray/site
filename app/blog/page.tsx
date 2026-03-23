@@ -13,7 +13,7 @@ const BlogPage = () => {
                 My Blog
             </h1>
             <p className="mb-8 text-sm text-muted-foreground">
-                Writing on software, work, and what I am learning.
+                My thoughts, ideas, and learnings on faith and life 💭
             </p>
             <BlogPosts />
         </section>

@@ -1,197 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
-/* 
+/* @import "shadcn/tailwind.css"; */
+@plugin "@tailwindcss/typography";
 
----break---
-
-*/
 @custom-variant dark (&:is(.dark *));
 
-html {
-    min-width: 360px;
-}
-/* 
-
-.prose {
-    @apply max-w-none text-[1.05rem] leading-8 text-neutral-800 dark:text-neutral-200;
-}
-
-.prose .anchor {
-    @apply invisible absolute no-underline;
-
-    margin-left: -1em;
-    padding-right: 0.5em;
-    width: 80%;
-    max-width: 700px;
-    cursor: pointer;
-}
-
-.anchor:hover {
-    @apply visible;
-}
-
-.prose a {
-    @apply font-medium text-neutral-900 underline decoration-neutral-400 decoration-[0.1em] underline-offset-2 transition-all hover:decoration-neutral-900 dark:text-neutral-100 dark:decoration-neutral-600 dark:hover:decoration-neutral-100;
-}
-
-.prose .anchor:after {
-    @apply text-neutral-300 dark:text-neutral-700;
-    content: "#";
-}
-
-.prose *:hover > .anchor {
-    @apply visible;
-}
-
-.prose pre {
-    @apply my-6 overflow-x-auto rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm shadow-sm dark:border-neutral-800 dark:bg-neutral-900;
-}
-
-.prose code {
-    @apply rounded-md bg-neutral-100 px-1.5 py-0.5 text-[0.9em] dark:bg-neutral-800;
-}
-
-.prose pre code {
-    @apply p-0;
-    border: initial;
-    line-height: 1.5;
-}
-
-.prose code span {
-    @apply font-medium;
-}
-
-.prose img {
-    @apply my-8 rounded-xl border border-neutral-200 dark:border-neutral-800;
-}
-
-.prose p {
-    @apply my-5 text-neutral-800 dark:text-neutral-200;
-}
-
-.prose h1 {
-    @apply mt-8 mb-3 text-4xl font-semibold tracking-tight;
-}
-
-.prose h2 {
-    @apply mt-10 mb-3 scroll-mt-24 text-2xl font-semibold tracking-tight;
-}
-
-.prose h3 {
-    @apply mt-8 mb-3 scroll-mt-24 text-xl font-semibold tracking-tight;
-}
-
-.prose h4 {
-    @apply mt-6 mb-2 scroll-mt-24 text-lg font-semibold tracking-tight;
-}
-
-.prose strong {
-    @apply font-semibold text-neutral-900 dark:text-neutral-100;
-}
-
-.prose ul {
-    @apply my-5 list-disc space-y-2 pl-6;
-}
-
-.prose ol {
-    @apply my-5 list-decimal space-y-2 pl-6;
-}
-
-.prose li {
-    @apply pl-1;
-}
-
-.prose li::marker {
-    @apply text-neutral-500 dark:text-neutral-400;
-}
-
-.prose blockquote {
-    @apply my-8 border-l-4 border-neutral-300 pl-5 italic text-neutral-700 dark:border-neutral-700 dark:text-neutral-300;
-}
-
-.prose hr {
-    @apply my-10 border-neutral-200 dark:border-neutral-800;
-}
-
-.prose table {
-    @apply my-8 w-full border-collapse text-sm;
-}
-
-.prose thead {
-    @apply border-b border-neutral-300 dark:border-neutral-700;
-}
-
-.prose th {
-    @apply px-3 py-2 text-left font-semibold text-neutral-900 dark:text-neutral-100;
-}
-
-.prose td {
-    @apply border-b border-neutral-200 px-3 py-2 align-top text-neutral-700 dark:border-neutral-800 dark:text-neutral-300;
-}
-
-.prose [data-footnotes] {
-    @apply mt-8 border-t border-neutral-200 pt-6 dark:border-neutral-800;
-}
-
-.prose [data-footnotes] h2 {
-    @apply sr-only;
-}
-
-.prose [data-footnotes] ol {
-    @apply my-0 pl-6 text-xs leading-7 text-neutral-700 dark:text-neutral-300;
-}
-
-.prose [data-footnotes] li {
-    @apply my-2;
-}
-
-.prose [data-footnote-ref] {
-    @apply cursor-pointer align-super text-xs font-semibold no-underline;
-}
-
-.prose [data-footnote-backref] {
-    @apply ml-1 cursor-pointer no-underline;
-}
-
-.prose > :first-child {
-    margin-top: 1.25em !important;
-    margin-bottom: 1.25em !important;
-} 
-
-pre::-webkit-scrollbar {
-    display: none;
-}
-
-pre {
-    -ms-overflow-style: none; 
-    scrollbar-width: none; 
-}
-
-input[type="text"],
-input[type="email"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-}
-
-table {
-    display: block;
-    max-width: fit-content;
-    overflow-x: auto;
-    white-space: nowrap;
-}
-
-.title {
-    text-wrap: balance;
-}
-
-*/
-/* 
-
----break---
-
-*/
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-sans);
@@ -234,11 +47,7 @@ table {
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
 }
-/* 
 
----break---
-
-*/
 :root {
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
@@ -273,11 +82,7 @@ table {
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
 }
-/* 
 
----break---
-
-*/
 .dark {
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
@@ -311,19 +116,38 @@ table {
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
 }
-/* 
 
----break---
-
-*/
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
     }
-  html {
-    @apply font-sans;
+    html {
+        @apply font-sans;
+    }
+    button {
+        @apply cursor-pointer;
+    }
+}
+
+@layer components {
+    .prose blockquote p:first-of-type::before,
+    .prose blockquote p:last-of-type::after {
+        @apply content-none!;
+    }
+
+    .prose .footnotes {
+        @apply mt-16
+    }
+
+    .prose .footnotes > :is(h2, h3) {
+        @apply hidden;
+    }
+
+    .prose .footnotes::before, .prose .footnotes::after {
+        content: "";
+        @apply border-border my-8 block border-t;
     }
 }

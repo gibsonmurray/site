@@ -10,9 +10,9 @@ import { baseUrl } from "./sitemap"
 import { cn } from "@/lib/utils"
 import { FC } from "react"
 import { ThemeProvider } from "next-themes"
-import { Geist } from "next/font/google";
+import { Geist } from "next/font/google"
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
 export const metadata: Metadata = {
     metadataBase: new URL(baseUrl),
@@ -47,16 +47,21 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
         <html
             lang="en"
             suppressHydrationWarning
-            className={cn(GeistSans.variable, GeistMono.variable, "font-sans", geist.variable)}
+            className={cn(
+                GeistSans.variable,
+                GeistMono.variable,
+                "font-sans",
+                geist.variable,
+            )}
         >
-            <body className="mx-4 mt-8 max-w-xl antialiased lg:mx-auto">
+            <body className="px-4 mx-auto flex min-h-screen max-w-xl flex-col pt-8 antialiased">
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <main className="mt-6 flex min-w-0 flex-auto flex-col px-2 md:px-0">
+                    <main className="mt-6 flex min-w-0 flex-1 flex-col px-2 md:px-0">
                         <Navbar />
                         {children}
                         <Footer />
@@ -65,7 +70,6 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
                     </main>
                 </ThemeProvider>
             </body>
-
         </html>
     )
 }

@@ -36,7 +36,7 @@ export const Navbar = () => {
                                 <Link
                                     key={path}
                                     href={path}
-                                    className="relative m-1 flex px-2 py-1 align-middle transition-all hover:text-neutral-800 dark:hover:text-neutral-200"
+                                    className="relative m-1 flex px-2 py-1 align-middle transition-all"
                                 >
                                     {name}
                                 </Link>

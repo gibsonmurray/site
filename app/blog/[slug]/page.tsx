@@ -1,6 +1,12 @@
 import { notFound } from "next/navigation"
 import { CustomMDX } from "@/components/mdx"
-import { formatDate, getBlogPosts } from "@/app/blog/utils"
+import { Badge } from "@/components/ui/badge"
+import {
+    formatDate,
+    getBlogPosts,
+    getPostTags,
+    getReadingTime,
+} from "@/app/blog/utils"
 import { baseUrl } from "@/app/sitemap"
 
 export const generateStaticParams = async () => {
@@ -68,6 +74,10 @@ export default async function BlogPage({
         notFound()
     }
 
+    const readingTime = getReadingTime(post.content)
+    const authorName = post.metadata.author?.trim() || "Gibson Murray"
+    const tags = getPostTags(post.metadata.tags)
+
     return (
         <section>
             <script
@@ -81,13 +91,14 @@ export default async function BlogPage({
                         datePublished: post.metadata.publishedAt,
                         dateModified: post.metadata.publishedAt,
                         description: post.metadata.summary,
+                        keywords: tags,
                         image: post.metadata.image
                             ? `${baseUrl}${post.metadata.image}`
                             : `/og?title=${encodeURIComponent(post.metadata.title)}`,
                         url: `${baseUrl}/blog/${post.slug}`,
                         author: {
                             "@type": "Person",
-                            name: "Gibson Murray",
+                            name: authorName,
                         },
                     }),
                 }}
@@ -95,12 +106,31 @@ export default async function BlogPage({
             <h1 className="title text-2xl font-semibold tracking-tighter">
                 {post.metadata.title}
             </h1>
-            <div className="mt-2 mb-8 flex items-center justify-between text-sm">
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    {formatDate(post.metadata.publishedAt)}
-                </p>
+            <div className="mt-2 mb-8 space-y-3 text-sm">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex flex-wrap items-center gap-2 text-neutral-600 dark:text-neutral-400">
+                        <p>
+                            {formatDate(post.metadata.publishedAt, {
+                                includeWeekday: true,
+                            })}
+                        </p>
+                        <span aria-hidden>·</span>
+                        <p>{readingTime}</p>
+                        <span aria-hidden>·</span>
+                        <p>By {authorName}</p>
+                    </div>
+                </div>
+                {tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                            <Badge key={tag} variant="secondary">
+                                {tag}
+                            </Badge>
+                        ))}
+                    </div>
+                )}
             </div>
-            <article className="prose">
+            <article className="prose dark:prose-invert">
                 <CustomMDX source={post.content} />
             </article>
         </section>

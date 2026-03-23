@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image, { ImageProps } from "next/image"
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc"
+import remarkGfm from "remark-gfm"
 import { highlight } from "sugar-high"
 import React, { FC } from "react"
 
@@ -43,10 +44,18 @@ const CustomLink: FC<
     }
 
     if (href.startsWith("#")) {
-        return <a {...props} />
+        return (
+            <a href={href} {...props}>
+                {children}
+            </a>
+        )
     }
 
-    return <a target="_blank" rel="noopener noreferrer" {...props} />
+    return (
+        <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+            {children}
+        </a>
+    )
 }
 
 const RoundedImage: FC<{ alt: string } & ImageProps> = ({ alt, ...props }) => {
@@ -111,6 +120,11 @@ export const CustomMDX: FC<MDXRemoteProps> = (props) => {
     return (
         <MDXRemote
             {...props}
+            options={{
+                mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                },
+            }}
             components={{ ...components, ...(props.components || {}) }}
         />
     )

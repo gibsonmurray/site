@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { SunIcon, MoonIcon } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 
 const navItems = {
     "/": {
@@ -16,9 +17,14 @@ const navItems = {
 
 export const Navbar = () => {
     const { theme, setTheme } = useTheme()
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     return (
-        <aside className="mb-16 -ml-[8px] tracking-tight">
+        <aside className="mb-16 -ml-2 tracking-tight">
             <div className="lg:sticky lg:top-20">
                 <nav
                     className="fade relative flex scroll-pr-6 flex-row items-start justify-between px-0 pb-0 md:relative md:overflow-auto"
@@ -37,13 +43,21 @@ export const Navbar = () => {
                             )
                         })}
                     </div>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                    >
-                        {theme === "dark" ? <MoonIcon className="size-4" /> : <SunIcon className="size-4" />}
-                    </Button>
+                    {mounted && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() =>
+                                setTheme(theme === "dark" ? "light" : "dark")
+                            }
+                        >
+                            {theme === "dark" ? (
+                                <MoonIcon className="size-4" />
+                            ) : (
+                                <SunIcon className="size-4" />
+                            )}
+                        </Button>
+                    )}
                 </nav>
             </div>
         </aside>

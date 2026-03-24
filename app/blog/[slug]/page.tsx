@@ -71,6 +71,21 @@ export const generateMetadata = async ({
             description,
             images: [ogImage],
         },
+        jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: title,
+            datePublished: publishedTime,
+            dateModified: publishedTime,
+            description,
+            keywords: getPostTags(post.metadata.tags),
+            image: canonicalImage,
+            url: `${baseUrl}/blog/${post.slug}`,
+            author: {
+                "@type": "Person",
+                name: "Gibson Murray",
+            },
+        },
     }
 }
 
@@ -86,42 +101,12 @@ export default async function BlogPage({
         notFound()
     }
 
-    const imageParam = post.metadata.image
-        ? `&image=${encodeURIComponent(post.metadata.image)}`
-        : ""
-    const ogImage = `${baseUrl}/og?title=${encodeURIComponent(post.metadata.title)}${imageParam}`
-    const canonicalImage = post.metadata.image
-        ? /^https?:\/\//i.test(post.metadata.image)
-            ? post.metadata.image
-            : `${baseUrl}${post.metadata.image.startsWith("/") ? "" : "/"}${post.metadata.image}`
-        : ogImage
     const readingTime = getReadingTime(post.content)
     const authorName = post.metadata.author?.trim() || "Gibson Murray"
     const tags = getPostTags(post.metadata.tags)
 
     return (
         <section className="page-shell">
-            <script
-                type="application/ld+json"
-                suppressHydrationWarning
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "BlogPosting",
-                        headline: post.metadata.title,
-                        datePublished: post.metadata.publishedAt,
-                        dateModified: post.metadata.publishedAt,
-                        description: post.metadata.summary,
-                        keywords: tags,
-                        image: canonicalImage,
-                        url: `${baseUrl}/blog/${post.slug}`,
-                        author: {
-                            "@type": "Person",
-                            name: authorName,
-                        },
-                    }),
-                }}
-            />
             <h1 className="title text-2xl font-semibold tracking-tighter">
                 {post.metadata.title}
             </h1>

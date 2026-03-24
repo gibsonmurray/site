@@ -38,35 +38,34 @@ export const Navbar = () => {
                                 { name: string; icon: LucideIcon },
                             ]) => {
                                 return (
-                                    <Tooltip key={path}>
-                                        <TooltipTrigger
-                                            render={
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    render={
-                                                        <Link href={path} />
-                                                    }
-                                                    className="group m-1 transition-all duration-200 hover:scale-110"
-                                                    aria-label={name}
-                                                />
-                                            }
-                                        >
-                                            <span className="relative inline-flex">
-                                                <Icon className="h-4 w-4" />
-                                                <span className="sr-only">
-                                                    {name}
+                                    <Link key={path} href={path}>
+                                        <Tooltip>
+                                            <TooltipTrigger
+                                                render={
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="group m-1 transition-all duration-200 hover:scale-110"
+                                                        aria-label={name}
+                                                    />
+                                                }
+                                            >
+                                                <span className="relative inline-flex">
+                                                    <Icon className="h-4 w-4" />
+                                                    <span className="sr-only">
+                                                        {name}
+                                                    </span>
+                                                    <span className="bg-primary/60 absolute -bottom-1 left-0 h-0.5 w-0 transition-all duration-300 group-hover:w-full"></span>
                                                 </span>
-                                                <span className="bg-primary/60 absolute -bottom-1 left-0 h-0.5 w-0 transition-all duration-300 group-hover:w-full"></span>
-                                            </span>
-                                        </TooltipTrigger>
-                                        <TooltipContent
-                                            className="capitalize"
-                                            side="bottom"
-                                        >
-                                            {name}
-                                        </TooltipContent>
-                                    </Tooltip>
+                                            </TooltipTrigger>
+                                            <TooltipContent
+                                                className="capitalize"
+                                                side="bottom"
+                                            >
+                                                {name}
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </Link>
                                 )
                             },
                         )}

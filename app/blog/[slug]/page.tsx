@@ -100,7 +100,7 @@ export default async function BlogPage({
     const tags = getPostTags(post.metadata.tags)
 
     return (
-        <section>
+        <section className="page-shell">
             <script
                 type="application/ld+json"
                 suppressHydrationWarning

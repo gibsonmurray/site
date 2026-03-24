@@ -49,23 +49,21 @@ const PostList = ({
         {posts.map((post) => (
             <Link
                 key={post.slug}
-                className="group flex flex-col space-y-1 px-3 py-2 transition-colors hover:bg-muted/30 rounded-lg"
+                className="group hover:bg-muted/30 flex flex-col space-y-1 rounded-lg px-3 py-2 transition-colors"
                 href={`/blog/${post.slug}`}
             >
-                <div className="flex w-full flex-col space-x-0 md:flex-row md:space-x-2 md:items-start">
-                    <p className="tabular-nums text-muted-foreground transition-colors duration-200 group-hover:text-primary/60">
+                <div className="flex flex-1 flex-col space-y-1">
+                    <p className="text-muted-foreground group-hover:text-primary/60 text-xs tabular-nums transition-colors duration-200">
                         {compactDate
                             ? formatListDay(post.metadata.publishedAt)
                             : formatDate(post.metadata.publishedAt, false)}
                     </p>
-                    <div className="flex-1 flex flex-col space-y-1">
-                        <p className="text-foreground group-hover:text-primary tracking-tight transition-colors">
-                            {post.metadata.title}
-                        </p>
-                        <p className="inline-block text-xs text-muted-foreground font-medium">
-                            {getReadingTime(post.content)}
-                        </p>
-                    </div>
+                    <p className="text-foreground group-hover:text-primary tracking-tight transition-colors">
+                        {post.metadata.title}
+                    </p>
+                    <p className="text-muted-foreground inline-block text-xs font-medium">
+                        {getReadingTime(post.content)}
+                    </p>
                 </div>
             </Link>
         ))}

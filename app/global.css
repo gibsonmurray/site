@@ -133,20 +133,24 @@
 }
 
 @layer components {
+    .page-shell {
+        @apply relative overflow-hidden px-5 py-5 sm:px-7 sm:py-7;
+    }
+
     .prose blockquote p:first-of-type::before,
     .prose blockquote p:last-of-type::after {
         @apply content-none!;
     }
 
     .prose .footnotes {
-        @apply mt-16
+        @apply mt-16 text-sm;
     }
 
     .prose .footnotes > :is(h2, h3) {
         @apply hidden;
     }
 
-    .prose .footnotes::before, .prose .footnotes::after {
+    .prose .footnotes::before {
         content: "";
         @apply border-border my-8 block border-t;
     }

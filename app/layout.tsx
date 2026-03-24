@@ -70,7 +70,7 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
                 geist.variable,
             )}
         >
-            <body className="mx-auto flex min-h-screen max-w-xl flex-col px-4 pt-8 antialiased">
+            <body className="mx-auto flex min-h-screen w-full max-w-xl flex-col pt-6 antialiased sm:pt-8">
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
@@ -78,7 +78,7 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
                     disableTransitionOnChange
                 >
                     <TooltipProvider delay={500}>
-                        <main className="mt-6 flex min-w-0 flex-1 flex-col px-2 md:px-0">
+                        <main className="mt-5 flex min-w-0 flex-1 flex-col sm:mt-6">
                             <Navbar />
                             {children}
                             <Footer />

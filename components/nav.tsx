@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/tooltip"
 import { BookText, House, SunMoon, type LucideIcon } from "lucide-react"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
 
 const navItems = {
     "/": {
@@ -26,13 +25,13 @@ export const Navbar = () => {
     const { resolvedTheme, setTheme } = useTheme()
 
     return (
-        <aside className="mb-16 -ml-2 tracking-tight">
+        <aside className="mb-10 px-5 tracking-tight sm:mb-12 sm:px-7">
             <div className="lg:sticky lg:top-20">
                 <nav
                     className="fade relative flex scroll-pr-6 flex-row items-start justify-between px-0 pb-0 md:relative md:overflow-auto"
                     id="nav"
                 >
-                    <div className="flex flex-row space-x-0 pr-10">
+                    <div className="flex flex-row items-center gap-1">
                         {Object.entries(navItems).map(
                             ([path, { name, icon: Icon }]: [
                                 string,

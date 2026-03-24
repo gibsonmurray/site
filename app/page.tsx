@@ -5,7 +5,7 @@ import Image from "next/image"
 
 const Home = () => {
     return (
-        <section className="relative overflow-hidden p-5 sm:p-7">
+        <section className="page-shell">
             <div className="mb-8 flex items-center gap-2">
                 <LogoIcon className="text-primary size-6" />
                 <h1 className="text-foreground text-2xl font-semibold tracking-tighter">

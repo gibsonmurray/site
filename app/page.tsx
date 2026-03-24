@@ -15,7 +15,7 @@ const Home = () => {
 
             <div className="mb-4 flex flex-col-reverse items-start gap-6 sm:flex-row">
                 <p className="prose text-foreground/90 prose-a:decoration-primary/40 prose-a:underline-offset-4 dark:prose-invert leading-7">
-                    {`Hi, I'm Gibson, a front-end software engineer. I'm currently working at the `}
+                    {`Hi, I'm Gibson, a front-end software engineer and aspiring author. I'm currently working at the `}
                     <Link
                         href="https://www.gop.com"
                         target="_blank"
@@ -31,7 +31,7 @@ const Home = () => {
                     >
                         Passion City Church DC
                     </Link>
-                    {` ✝️. I enjoy reading, writing, movies, TV, gaming, and music. Check out some of my work here.`}
+                    {` ✝️. I enjoy reading, writing, movies, TV, gaming, and music. Thanks for stopping by!`}
                 </p>
                 <Image
                     src="/headshot.jpeg"

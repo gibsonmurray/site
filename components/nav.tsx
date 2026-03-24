@@ -2,26 +2,28 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { SunIcon, MoonIcon } from "lucide-react"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { BookText, House, SunMoon, type LucideIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
 const navItems = {
     "/": {
         name: "home",
+        icon: House,
     },
     "/blog": {
         name: "blog",
+        icon: BookText,
     },
 }
 
 export const Navbar = () => {
-    const { theme, setTheme } = useTheme()
-    const [mounted, setMounted] = useState(false)
-
-    useEffect(() => {
-        setMounted(true)
-    }, [])
+    const { resolvedTheme, setTheme } = useTheme()
 
     return (
         <aside className="mb-16 -ml-2 tracking-tight">
@@ -31,37 +33,69 @@ export const Navbar = () => {
                     id="nav"
                 >
                     <div className="flex flex-row space-x-0 pr-10">
-                        {Object.entries(navItems).map(([path, { name }]) => {
-                            return (
-                                <Link
-                                    key={path}
-                                    href={path}
-                                    className="relative m-1 flex px-3 py-1 align-middle transition-all rounded-md hover:bg-muted/40 group"
-                                >
-                                    <span className="relative">
-                                        {name}
-                                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary/60 group-hover:w-full transition-all duration-300"></span>
-                                    </span>
-                                </Link>
-                            )
-                        })}
+                        {Object.entries(navItems).map(
+                            ([path, { name, icon: Icon }]: [
+                                string,
+                                { name: string; icon: LucideIcon },
+                            ]) => {
+                                return (
+                                    <Tooltip key={path}>
+                                        <TooltipTrigger
+                                            render={
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    render={
+                                                        <Link href={path} />
+                                                    }
+                                                    className="group m-1 transition-all duration-200 hover:scale-110"
+                                                    aria-label={name}
+                                                />
+                                            }
+                                        >
+                                            <span className="relative inline-flex">
+                                                <Icon className="h-4 w-4" />
+                                                <span className="sr-only">
+                                                    {name}
+                                                </span>
+                                                <span className="bg-primary/60 absolute -bottom-1 left-0 h-0.5 w-0 transition-all duration-300 group-hover:w-full"></span>
+                                            </span>
+                                        </TooltipTrigger>
+                                        <TooltipContent
+                                            className="capitalize"
+                                            side="bottom"
+                                        >
+                                            {name}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                )
+                            },
+                        )}
                     </div>
-                    {mounted && (
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() =>
-                                setTheme(theme === "dark" ? "light" : "dark")
+                    <Tooltip>
+                        <TooltipTrigger
+                            render={
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() =>
+                                        setTheme(
+                                            resolvedTheme === "dark"
+                                                ? "light"
+                                                : "dark",
+                                        )
+                                    }
+                                    className="hover:bg-muted/40 transition-all duration-200 hover:scale-110"
+                                    aria-label={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode`}
+                                />
                             }
-                            className="transition-all duration-200 hover:scale-110 hover:bg-muted/40"
                         >
-                            {theme === "dark" ? (
-                                <MoonIcon className="size-4 transition-transform duration-300" />
-                            ) : (
-                                <SunIcon className="size-4 transition-transform duration-300" />
-                            )}
-                        </Button>
-                    )}
+                            <SunMoon />
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">
+                            Switch theme
+                        </TooltipContent>
+                    </Tooltip>
                 </nav>
             </div>
         </aside>

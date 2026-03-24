@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 import { FC } from "react"
 import { ThemeProvider } from "next-themes"
 import { Geist } from "next/font/google"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -69,20 +70,22 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
                 geist.variable,
             )}
         >
-            <body className="px-4 mx-auto flex min-h-screen max-w-xl flex-col pt-8 antialiased">
+            <body className="mx-auto flex min-h-screen max-w-xl flex-col px-4 pt-8 antialiased">
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <main className="mt-6 flex min-w-0 flex-1 flex-col px-2 md:px-0">
-                        <Navbar />
-                        {children}
-                        <Footer />
-                        <Analytics />
-                        <SpeedInsights />
-                    </main>
+                    <TooltipProvider delay={500}>
+                        <main className="mt-6 flex min-w-0 flex-1 flex-col px-2 md:px-0">
+                            <Navbar />
+                            {children}
+                            <Footer />
+                            <Analytics />
+                            <SpeedInsights />
+                        </main>
+                    </TooltipProvider>
                 </ThemeProvider>
             </body>
         </html>

@@ -23,14 +23,29 @@ export const generateMetadata = async ({
 }: {
     params: Promise<{ slug: string }>
 }) => {
+    const toAbsoluteUrl = (value: string) => {
+        if (/^https?:\/\//i.test(value)) {
+            return value
+        }
+
+        return `${baseUrl}${value.startsWith("/") ? "" : "/"}${value}`
+    }
+
     let { slug } = await params
     let post = getBlogPosts().find((post) => post.slug === slug)
     if (!post) {
         return
     }
 
-    let { title, publishedAt: publishedTime, summary: description } = post.metadata
-    let ogImage = `${baseUrl}/og?title=${encodeURIComponent(title)}`
+    let {
+        title,
+        publishedAt: publishedTime,
+        summary: description,
+        image,
+    } = post.metadata
+    let imageParam = image ? `&image=${encodeURIComponent(image)}` : ""
+    let ogImage = `${baseUrl}/og?title=${encodeURIComponent(title)}${imageParam}`
+    let canonicalImage = image ? toAbsoluteUrl(image) : ogImage
 
     return {
         title,
@@ -46,7 +61,6 @@ export const generateMetadata = async ({
                     url: ogImage,
                     width: 1200,
                     height: 630,
-                    type: "image/png",
                     alt: title,
                 },
             ],
@@ -72,7 +86,15 @@ export default async function BlogPage({
         notFound()
     }
 
-    const ogImage = `${baseUrl}/og?title=${encodeURIComponent(post.metadata.title)}`
+    const imageParam = post.metadata.image
+        ? `&image=${encodeURIComponent(post.metadata.image)}`
+        : ""
+    const ogImage = `${baseUrl}/og?title=${encodeURIComponent(post.metadata.title)}${imageParam}`
+    const canonicalImage = post.metadata.image
+        ? /^https?:\/\//i.test(post.metadata.image)
+            ? post.metadata.image
+            : `${baseUrl}${post.metadata.image.startsWith("/") ? "" : "/"}${post.metadata.image}`
+        : ogImage
     const readingTime = getReadingTime(post.content)
     const authorName = post.metadata.author?.trim() || "Gibson Murray"
     const tags = getPostTags(post.metadata.tags)
@@ -91,7 +113,7 @@ export default async function BlogPage({
                         dateModified: post.metadata.publishedAt,
                         description: post.metadata.summary,
                         keywords: tags,
-                        image: ogImage,
+                        image: canonicalImage,
                         url: `${baseUrl}/blog/${post.slug}`,
                         author: {
                             "@type": "Person",

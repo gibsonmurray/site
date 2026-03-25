@@ -13,7 +13,12 @@ export const GET = async (request: Request) => {
 
     return new ImageResponse(
         imageUrl ? (
-            <img src={imageUrl} alt={title} className="size-full" />
+            <img
+                src={imageUrl}
+                alt={title}
+                className="size-full object-cover"
+                style={{ imageOrientation: "from-image" }}
+            />
         ) : (
             <div className="flex size-full items-center justify-center text-6xl font-bold">
                 {title}

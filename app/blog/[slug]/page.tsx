@@ -104,10 +104,11 @@ export default async function BlogPage({
     const readingTime = getReadingTime(post.content)
     const authorName = post.metadata.author?.trim() || "Gibson Murray"
     const tags = getPostTags(post.metadata.tags)
+    const scriptureCopyright = post.metadata.scriptureCopyright?.trim()
 
     return (
-        <section className="page-shell">
-            <h1 className="title text-2xl font-semibold tracking-tighter">
+        <section className="flex flex-col relative overflow-hidden px-5 py-5 sm:px-7 sm:py-7">
+            <h1 className="text-2xl font-semibold tracking-tighter">
                 {post.metadata.title}
             </h1>
             <div className="mt-2 mb-8 space-y-3 text-sm">
@@ -142,6 +143,11 @@ export default async function BlogPage({
             <article className="prose dark:prose-invert">
                 <CustomMDX source={post.content} />
             </article>
+            {scriptureCopyright && (
+                <p className="text-muted-foreground text-xs leading-relaxed mt-5">
+                    {scriptureCopyright}
+                </p>
+            )}
         </section>
     )
 }

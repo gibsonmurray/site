@@ -8,6 +8,7 @@ type Metadata = {
     image?: string
     author?: string
     tags?: string
+    scriptureCopyright?: string
 }
 
 const parseFrontmatter = (fileContent: string) => {

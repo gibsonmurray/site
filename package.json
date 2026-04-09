@@ -19,6 +19,7 @@
         "@vercel/speed-insights": "^2.0.0",
         "babel-plugin-react-compiler": "^1.0.0",
         "class-variance-authority": "^0.7.1",
+        "fast-average-color": "^9.5.2",
         "geist": "^1.7.0",
         "lucide-react": "^1.8.0",
         "next": "^16.2.3",

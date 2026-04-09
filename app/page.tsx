@@ -2,6 +2,7 @@ import { BlogPosts } from "@/components/posts"
 import Link from "next/link"
 import LogoIcon from "@/components/logo"
 import Image from "next/image"
+import LatestBookPopup from "@/components/latest-book-popup"
 
 const Home = () => {
     return (
@@ -46,6 +47,7 @@ const Home = () => {
             <div className="border-border/65 bg-background/80 my-8 rounded-xl border p-4 sm:p-5">
                 <BlogPosts recentOnly recentCount={3} />
             </div>
+            <LatestBookPopup />
         </section>
     )
 }

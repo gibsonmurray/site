@@ -80,7 +80,7 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
                     <TooltipProvider delay={500}>
                         <main className="mt-5 flex min-w-0 flex-1 flex-col sm:mt-6">
                             <Navbar />
-                            {children}
+                            <div className="px-10">{children}</div>
                             <Footer />
                             <Analytics />
                             <SpeedInsights />

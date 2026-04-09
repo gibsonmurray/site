@@ -7,7 +7,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { BookText, House, SunMoon, type LucideIcon } from "lucide-react"
+import { BookOpen, House, Newspaper, SunMoon, type LucideIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 
 const navItems = {
@@ -17,7 +17,11 @@ const navItems = {
     },
     "/blog": {
         name: "blog",
-        icon: BookText,
+        icon: Newspaper,
+    },
+    "/books": {
+        name: "books",
+        icon: BookOpen,
     },
 }
 

@@ -27,7 +27,7 @@ export type Book = {
 
 export const books: Book[] = [
     {
-        id: "prod_UJ1sHqnbYbCuuA",
+        id: "prod_UJ1F7uxQumemsV",
         title: "Walls 🧱",
         genre: "Biblical Fiction",
         coverImageSrc: "/books/walls-cover-ebook.png",

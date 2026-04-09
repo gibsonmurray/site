@@ -4,6 +4,11 @@ export type BookStatus =
           label: string
       }
     | {
+          type: "pre-order"
+          label?: string
+          releaseDate: string
+      }
+    | {
           type: "available"
           label?: string
       }
@@ -22,7 +27,7 @@ export type Book = {
 
 export const books: Book[] = [
     {
-        id: "walls",
+        id: "prod_UJ1sHqnbYbCuuA",
         title: "Walls 🧱",
         genre: "Biblical Fiction",
         coverImageSrc: "/books/walls-cover-ebook.png",
@@ -34,8 +39,9 @@ export const books: Book[] = [
             "Only Rahab, a resourceful prostitute with dangerous secrets, can guide them through the city's peril and challenge everything they believe about loyalty, faith, and courage. As Jericho's walls and the spies' own prejudices begin to crumble, the fate of Israel and the promise of God hang in the balance.",
         ],
         status: {
-            type: "coming-soon",
-            label: "Coming Summer 2026",
+            type: "pre-order",
+            label: "Pre-order",
+            releaseDate: "July 1, 2026",
         },
         sortOrder: 1,
     },

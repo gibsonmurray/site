@@ -21,7 +21,7 @@ const LINKS = [
 
 export const Footer = () => {
     return (
-        <footer className="mt-auto mb-6 border-t border-border/65 px-5 pt-4 text-xs text-muted-foreground sm:mb-8 sm:px-7">
+        <footer className="mb-6 border-t border-border/65 px-5 pt-4 text-xs text-muted-foreground sm:mb-8 sm:px-7">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-foreground/80 font-medium">Gibson Murray</p>
                 <ul className="flex flex-wrap items-center gap-3">

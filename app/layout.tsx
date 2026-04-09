@@ -12,6 +12,7 @@ import { FC } from "react"
 import { ThemeProvider } from "next-themes"
 import { Geist } from "next/font/google"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { Providers } from "@/components/providers"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -71,22 +72,28 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
             )}
         >
             <body className="mx-auto flex min-h-screen w-full max-w-xl flex-col pt-6 antialiased sm:pt-8">
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <TooltipProvider delay={500}>
-                        <main className="mt-5 flex min-w-0 flex-1 flex-col sm:mt-6">
-                            <Navbar />
-                            <div className="px-10">{children}</div>
-                            <Footer />
-                            <Analytics />
-                            <SpeedInsights />
-                        </main>
-                    </TooltipProvider>
-                </ThemeProvider>
+                <Providers>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <TooltipProvider delay={500}>
+                            <main className="mt-5 flex min-w-0 flex-1 flex-col sm:mt-6">
+                                <Navbar />
+                                <div className="px-10">{children}</div>
+                                <div
+                                    className="min-h-10 flex-1"
+                                    aria-hidden="true"
+                                />
+                                <Footer />
+                                <Analytics />
+                                <SpeedInsights />
+                            </main>
+                        </TooltipProvider>
+                    </ThemeProvider>
+                </Providers>
             </body>
         </html>
     )

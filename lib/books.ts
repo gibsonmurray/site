@@ -1,9 +1,8 @@
 export type BookFormat = "paperback" | "ebook" | "audiobook"
 
 export type BookFormatOption = {
-    priceId?: string // Stripe price ID for this format (falls back to product default_price)
+    productId?: string // Stripe product ID for this format
     available: boolean
-    price?: number // Display price in USD (cents), e.g. 1499 = $14.99
 }
 
 export type BookStatus =
@@ -22,7 +21,6 @@ export type BookStatus =
       }
 
 export type Book = {
-    id: string
     slug: string
     title: string
     genre: string
@@ -34,11 +32,12 @@ export type Book = {
     status: BookStatus
     sortOrder: number
     formats: Partial<Record<BookFormat, BookFormatOption>>
+    /** Set to false to hide all add-to-cart / checkout UI sitewide */
+    purchasable?: boolean
 }
 
 export const books: Book[] = [
     {
-        id: "prod_UJ1F7uxQumemsV",
         slug: "walls",
         title: "Walls",
         genre: "Biblical Fiction",
@@ -62,10 +61,11 @@ export const books: Book[] = [
         },
         sortOrder: 1,
         formats: {
-            paperback: { available: true, price: 1499 },
-            ebook: { available: true, price: 999 },
+            paperback: { productId: "prod_UJIRemQJC3RNFj", available: true },
+            ebook: { productId: "prod_UJIwvIDjh1OnQH", available: true },
             audiobook: { available: false },
         },
+        purchasable: false,
     },
 ]
 

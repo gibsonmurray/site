@@ -32,6 +32,7 @@ import {
     type GlowColor,
 } from "@/lib/book-glow"
 import { useCartStore } from "@/lib/cart-store"
+import { usePricesStore } from "@/lib/prices-store"
 import { cn } from "@/lib/utils"
 
 const FORMAT_CONFIG: Record<BookFormat, { label: string; icon: LucideIcon }> = {
@@ -181,13 +182,16 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
     const [quantity, setQuantity] = useState(1)
 
     const { addItem, openCart } = useCartStore()
+    const getPrice = usePricesStore((s) => s.getPrice)
 
     const isPreOrder = book.status.type === "pre-order"
     const isComingSoon = book.status.type === "coming-soon"
+    const isPurchasable = book.purchasable !== false
     const canBuy =
-        !isComingSoon && (book.formats[selectedFormat]?.available ?? false)
-    const selectedFormatOption = book.formats[selectedFormat]
-    const selectedPrice = selectedFormatOption?.price
+        isPurchasable &&
+        !isComingSoon &&
+        (book.formats[selectedFormat]?.available ?? false)
+    const selectedPrice = getPrice(book.slug, selectedFormat)
 
     const buyNowMutation = useMutation({
         mutationFn: async () => {
@@ -196,7 +200,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     items: [
-                        { bookId: book.id, format: selectedFormat, quantity },
+                        { bookId: book.slug, format: selectedFormat, quantity },
                     ],
                 }),
             })
@@ -207,7 +211,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
     })
 
     const handleAddToCart = () => {
-        addItem(book.id, selectedFormat, quantity)
+        addItem(book.slug, selectedFormat, quantity)
         openCart()
         setAdded(true)
         setTimeout(() => setAdded(false), 2000)
@@ -249,11 +253,13 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                 {/* Title block */}
                 <div className="flex flex-col items-center gap-1.5 text-center">
                     <Badge variant="outline" className="text-xs">
-                        {isPreOrder
-                            ? "Pre-order"
-                            : isComingSoon
-                              ? "Coming soon"
-                              : "Available"}
+                        {isPreOrder && !isPurchasable
+                            ? "Pre-order coming soon"
+                            : isPreOrder
+                              ? "Pre-order"
+                              : isComingSoon
+                                ? "Coming soon"
+                                : "Available"}
                     </Badge>
                     <h1 className="text-foreground text-3xl font-bold tracking-tight">
                         {book.title}
@@ -269,7 +275,19 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                 </p>
 
                 {/* Purchase section */}
-                <div className="border-border/60 bg-muted/20 flex flex-col gap-4 rounded-2xl border p-4 sm:p-5">
+                {!isPurchasable && isPreOrder && (
+                    <div className="border-border/60 bg-muted/20 flex flex-col items-center gap-2 rounded-2xl border p-5 text-center">
+                        <p className="text-foreground text-sm font-semibold">
+                            Pre-order opening soon
+                        </p>
+                        {releaseDate && (
+                            <p className="text-muted-foreground text-xs">
+                                Releasing {releaseDate}
+                            </p>
+                        )}
+                    </div>
+                )}
+                {isPurchasable && <div className="border-border/60 bg-muted/20 flex flex-col gap-4 rounded-2xl border p-4 sm:p-5">
                     {/* Format */}
                     <div className="flex flex-col gap-3">
                         <span className="text-foreground text-sm font-semibold">
@@ -312,9 +330,10 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                         />
                                         {FORMAT_CONFIG[format].label}
                                         <span className="text-[11px] font-normal opacity-75">
-                                            {opt.price !== undefined
-                                                ? fmt(opt.price)
-                                                : "Coming soon"}
+                                            {(() => {
+                                                const p = getPrice(book.slug, format)
+                                                return p !== undefined ? fmt(p) : "Coming soon"
+                                            })()}
                                         </span>
                                     </button>
                                 )
@@ -436,7 +455,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                             </p>
                         </div>
                     )}
-                </div>
+                </div>}
             </div>
 
             {/* About */}

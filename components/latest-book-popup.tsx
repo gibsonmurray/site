@@ -74,7 +74,8 @@ export default function LatestBookPopup() {
                         className="w-full gap-2 font-semibold"
                         render={<Link href={bookHref} onClick={dismissPopup} />}
                     >
-                        {latestBook.status.type === "pre-order"
+                        {latestBook.status.type === "pre-order" &&
+                        latestBook.purchasable !== false
                             ? "Pre-order now"
                             : "See book details"}
                         <ArrowRight className="size-4" />

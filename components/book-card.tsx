@@ -35,6 +35,7 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
 
     const isPreOrder = book.status.type === "pre-order"
     const isComingSoon = book.status.type === "coming-soon"
+    const isPurchasable = book.purchasable !== false
 
     const releaseDate = isPreOrder
         ? (book.status as { type: "pre-order"; releaseDate: string }).releaseDate
@@ -48,7 +49,7 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
 
     const handleAddToCart = () => {
         if (!defaultFormat) return
-        addItem(book.id, defaultFormat, 1)
+        addItem(book.slug, defaultFormat, 1)
         openCart()
         setAdded(true)
         setTimeout(() => setAdded(false), 2000)
@@ -122,7 +123,12 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                             </p>
                         </div>
                         <Badge variant="outline" className="shrink-0 text-xs">
-                            {isPreOrder ? (
+                            {isPreOrder && !isPurchasable ? (
+                                <span className="flex items-center gap-1">
+                                    <CalendarClock className="size-3" />
+                                    Pre-order coming soon
+                                </span>
+                            ) : isPreOrder ? (
                                 <span className="flex items-center gap-1">
                                     <CalendarClock className="size-3" />
                                     Pre-order
@@ -140,7 +146,18 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                     </p>
 
                     <div className="mt-auto flex flex-col gap-2">
-                        {isComingSoon ? (
+                        {!isPurchasable ? (
+                            <Link href={`/books/${book.slug}`}>
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    className="w-full gap-2 py-6 font-semibold"
+                                >
+                                    Learn more
+                                    <ArrowRight className="size-4" />
+                                </Button>
+                            </Link>
+                        ) : isComingSoon ? (
                             <div className="border-border/50 bg-background/50 rounded-lg border p-4 text-center">
                                 <p className="text-muted-foreground text-sm font-medium">
                                     {book.status.label}

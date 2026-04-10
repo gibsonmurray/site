@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     const lineItems: { price: string; quantity: number }[] = []
 
     for (const { bookId, format, quantity } of items) {
-        const book = books.find((b) => b.id === bookId)
+        const book = books.find((b) => b.slug === bookId)
         if (!book || book.status.type === "coming-soon") {
             return NextResponse.json(
                 { error: "Book not available for purchase" },
@@ -42,23 +42,25 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        let priceId: string
-
-        if (formatOption.priceId) {
-            priceId = formatOption.priceId
-        } else {
-            const product = await stripe.products.retrieve(book.id, {
-                expand: ["default_price"],
-            })
-            const defaultPrice = product.default_price
-            if (!defaultPrice || typeof defaultPrice === "string") {
-                return NextResponse.json(
-                    { error: "Book price not configured in Stripe" },
-                    { status: 500 },
-                )
-            }
-            priceId = defaultPrice.id
+        if (!formatOption.productId) {
+            return NextResponse.json(
+                { error: "Book price not configured" },
+                { status: 500 },
+            )
         }
+
+        const product = await stripe.products.retrieve(formatOption.productId, {
+            expand: ["default_price"],
+        })
+        const defaultPrice = product.default_price
+        if (!defaultPrice || typeof defaultPrice === "string") {
+            return NextResponse.json(
+                { error: "Book price not configured in Stripe" },
+                { status: 500 },
+            )
+        }
+
+        const priceId = defaultPrice.id
 
         lineItems.push({
             price: priceId,

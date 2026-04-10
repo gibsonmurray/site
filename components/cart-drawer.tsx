@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { books, BookFormat } from "@/lib/books"
 import { useCartStore, type CartItem } from "@/lib/cart-store"
+import { usePricesStore } from "@/lib/prices-store"
 import { cn } from "@/lib/utils"
 
 const FORMAT_LABELS: Record<BookFormat, string> = {
@@ -30,11 +31,11 @@ const CartLineItem = ({
     onRemove: () => void
     onQuantityChange: (qty: number) => void
 }) => {
-    const book = books.find((b) => b.id === item.bookId)
+    const book = books.find((b) => b.slug === item.bookId)
+    const getPrice = usePricesStore((s) => s.getPrice)
     if (!book) return null
 
-    const formatOption = book.formats[item.format]
-    const unitPrice = formatOption?.price
+    const unitPrice = getPrice(book.slug, item.format)
     const lineTotal =
         unitPrice !== undefined ? unitPrice * item.quantity : undefined
 
@@ -110,15 +111,18 @@ export const CartDrawer = () => {
 
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
+    const getPrice = usePricesStore((s) => s.getPrice)
+
     const subtotal = items.reduce((sum, item) => {
-        const book = books.find((b) => b.id === item.bookId)
-        const price = book?.formats[item.format]?.price
+        const book = books.find((b) => b.slug === item.bookId)
+        if (!book) return sum
+        const price = getPrice(book.slug, item.format)
         return price !== undefined ? sum + price * item.quantity : sum
     }, 0)
 
     const allPriced = items.every((item) => {
-        const book = books.find((b) => b.id === item.bookId)
-        return book?.formats[item.format]?.price !== undefined
+        const book = books.find((b) => b.slug === item.bookId)
+        return book !== undefined && getPrice(book.slug, item.format) !== undefined
     })
 
     useEffect(() => {
@@ -231,9 +235,11 @@ export const CartDrawer = () => {
                         <div className="flex flex-col gap-1.5">
                             {items.map((item) => {
                                 const book = books.find(
-                                    (b) => b.id === item.bookId,
+                                    (b) => b.slug === item.bookId,
                                 )
-                                const price = book?.formats[item.format]?.price
+                                const price = book
+                                    ? getPrice(book.slug, item.format)
+                                    : undefined
                                 if (!book || price === undefined) return null
                                 return (
                                     <div

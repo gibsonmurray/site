@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, type SyntheticEvent } from "react"
+import { useState, useRef, type SyntheticEvent } from "react"
 import Image from "next/image"
 import { useMutation } from "@tanstack/react-query"
 import {
+    Bell,
     BookOpen,
     Check,
     ChevronLeft,
@@ -160,6 +161,91 @@ const BookImageCarousel = ({
     )
 }
 
+// ─── Pre-order notify form ────────────────────────────────────────────────────
+
+const PreOrderNotifyForm = ({
+    book,
+    releaseDate,
+}: {
+    book: Book
+    releaseDate: string | null
+}) => {
+    const [submitted, setSubmitted] = useState(false)
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const mutation = useMutation({
+        mutationFn: async (email: string) => {
+            const res = await fetch("/api/notify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, bookSlug: book.slug }),
+            })
+            const data = await res.json()
+            if (!res.ok) throw new Error(data.error ?? "Something went wrong")
+        },
+        onSuccess: () => setSubmitted(true),
+    })
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        const email = inputRef.current?.value.trim() ?? ""
+        if (email) mutation.mutate(email)
+    }
+
+    return (
+        <div className="border-border/60 bg-muted/20 flex flex-col items-center gap-4 rounded-2xl border p-5 text-center">
+            <div className="flex flex-col items-center gap-1">
+                <p className="text-foreground text-sm font-semibold">
+                    Pre-order opening soon
+                </p>
+                {releaseDate && (
+                    <p className="text-muted-foreground text-xs">
+                        Releasing {releaseDate}
+                    </p>
+                )}
+            </div>
+            {submitted ? (
+                <div className="flex items-center gap-2 text-sm">
+                    <Check className="text-primary size-4 shrink-0" />
+                    <span className="text-foreground font-medium">
+                        {"You're on the list! We'll notify you when pre-orders open."}
+                    </span>
+                </div>
+            ) : (
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex w-full max-w-xs flex-col gap-2"
+                >
+                    <p className="text-muted-foreground text-xs">
+                        Get notified when pre-orders open
+                    </p>
+                    <input
+                        ref={inputRef}
+                        type="email"
+                        required
+                        placeholder="your@email.com"
+                        className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary/40 w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2"
+                    />
+                    <Button
+                        type="submit"
+                        size="sm"
+                        disabled={mutation.isPending}
+                        className="w-full gap-1.5"
+                    >
+                        <Bell className="size-3.5" />
+                        {mutation.isPending ? "..." : "Notify me"}
+                    </Button>
+                    {mutation.isError && (
+                        <p className="text-destructive text-xs">
+                            {mutation.error?.message ?? "Something went wrong. Try again."}
+                        </p>
+                    )}
+                </form>
+            )}
+        </div>
+    )
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export const BookDetailClient = ({ book }: { book: Book }) => {
@@ -276,16 +362,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
 
                 {/* Purchase section */}
                 {!isPurchasable && isPreOrder && (
-                    <div className="border-border/60 bg-muted/20 flex flex-col items-center gap-2 rounded-2xl border p-5 text-center">
-                        <p className="text-foreground text-sm font-semibold">
-                            Pre-order opening soon
-                        </p>
-                        {releaseDate && (
-                            <p className="text-muted-foreground text-xs">
-                                Releasing {releaseDate}
-                            </p>
-                        )}
-                    </div>
+                    <PreOrderNotifyForm book={book} releaseDate={releaseDate} />
                 )}
                 {isPurchasable && <div className="border-border/60 bg-muted/20 flex flex-col gap-4 rounded-2xl border p-4 sm:p-5">
                     {/* Format */}

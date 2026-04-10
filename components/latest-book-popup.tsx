@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { X } from "lucide-react"
+import { ArrowRight, X } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -16,9 +16,7 @@ export default function LatestBookPopup() {
 
     useEffect(() => {
         const dismissed = window.localStorage.getItem(DISMISS_KEY)
-        if (!dismissed) {
-            setIsOpen(true)
-        }
+        if (!dismissed) setIsOpen(true)
     }, [])
 
     const dismissPopup = () => {
@@ -26,70 +24,68 @@ export default function LatestBookPopup() {
         setIsOpen(false)
     }
 
-    if (!isOpen) {
-        return null
-    }
+    if (!isOpen || !latestBook) return null
 
-    if (!latestBook) {
-        return null
-    }
+    const bookHref = `/books/${latestBook.slug}`
 
     return (
         <div className="fixed right-4 bottom-4 z-50 w-[calc(100%-2rem)] max-w-sm sm:right-6 sm:bottom-6">
-            <div className="border-border bg-background/95 supports-backdrop-filter:bg-background/90 rounded-xl border p-3 shadow-xl backdrop-blur-sm">
-                <div className="mb-3 flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="text-[10px] uppercase">
-                            Latest Book
-                        </Badge>
-                        <p className="text-foreground text-sm font-semibold">
-                            {latestBook.title}
-                        </p>
-                    </div>
+            <div className="border-border bg-background/95 supports-backdrop-filter:bg-background/90 rounded-2xl border p-4 shadow-2xl backdrop-blur-sm">
+                {/* Header */}
+                <div className="mb-3 flex items-center justify-between gap-2">
+                    <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">
+                        Latest Book
+                    </Badge>
                     <button
                         type="button"
                         onClick={dismissPopup}
-                        className="text-muted-foreground hover:text-foreground rounded-md p-1 transition-colors"
-                        aria-label="Dismiss latest book popup"
+                        className="text-muted-foreground hover:text-foreground -mr-1 rounded-lg p-1.5 transition-colors"
+                        aria-label="Dismiss"
                     >
                         <X className="size-4" />
                     </button>
                 </div>
 
-                <div className="mb-3 flex gap-3">
+                {/* Book info */}
+                <Link href={bookHref} onClick={dismissPopup} className="group mb-4 flex gap-3">
                     <Image
                         src={latestBook.coverImageSrc}
                         alt={latestBook.coverImageAlt}
-                        width={96}
-                        height={144}
-                        className="w-20 shrink-0 rounded-md border object-cover"
+                        width={72}
+                        height={108}
+                        className="w-[72px] shrink-0 rounded-md object-cover shadow-md transition-transform duration-200 group-hover:scale-[1.02]"
                     />
-                    <div className="space-y-1">
-                        {latestBook.status.type === "coming-soon" ? (
-                            <Badge variant="default" className="text-[10px]">
-                                {latestBook.status.label}
-                            </Badge>
-                        ) : null}
-                        <p className="text-muted-foreground text-xs leading-relaxed">
+                    <div className="flex flex-col gap-1 pt-0.5">
+                        <p className="text-foreground font-semibold leading-tight">
+                            {latestBook.title}
+                        </p>
+                        <p className="text-muted-foreground text-xs font-medium">
+                            {latestBook.genre}
+                        </p>
+                        <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed">
                             {latestBook.shortDescription}
                         </p>
                     </div>
-                </div>
+                </Link>
 
-                <div className="flex gap-2">
-                    <Link href="/books" className="flex-1">
-                        <Button size="sm" className="w-full">
-                            See Book Details
-                        </Button>
-                    </Link>
+                {/* Actions */}
+                <div className="flex flex-col gap-2">
                     <Button
-                        variant="outline"
-                        size="sm"
-                        className="px-3"
-                        onClick={dismissPopup}
+                        className="w-full gap-2 font-semibold"
+                        render={<Link href={bookHref} onClick={dismissPopup} />}
                     >
-                        Later
+                        {latestBook.status.type === "pre-order" &&
+                        latestBook.purchasable !== false
+                            ? "Pre-order now"
+                            : "See book details"}
+                        <ArrowRight className="size-4" />
                     </Button>
+                    <button
+                        onClick={dismissPopup}
+                        className="text-muted-foreground hover:text-foreground w-full py-1 text-sm transition-colors"
+                    >
+                        Maybe later
+                    </button>
                 </div>
             </div>
         </div>

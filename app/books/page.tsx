@@ -34,7 +34,7 @@ const BooksPage = () => {
             <div className="space-y-4">
                 {books.map((book, index) => (
                     <BookCard
-                        key={book.id}
+                        key={book.slug}
                         book={book}
                         priority={index === 0}
                     />

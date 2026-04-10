@@ -7,26 +7,36 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { BookOpen, House, Newspaper, SunMoon, type LucideIcon } from "lucide-react"
+import {
+    BookOpen,
+    House,
+    Newspaper,
+    ShoppingCart,
+    SunMoon,
+    type LucideIcon,
+} from "lucide-react"
 import { useTheme } from "next-themes"
+import { useCartStore } from "@/lib/cart-store"
 
 const navItems = {
     "/": {
         name: "home",
         icon: House,
     },
-    "/blog": {
-        name: "blog",
-        icon: Newspaper,
-    },
     "/books": {
         name: "books",
         icon: BookOpen,
+    },
+    "/blog": {
+        name: "blog",
+        icon: Newspaper,
     },
 }
 
 export const Navbar = () => {
     const { resolvedTheme, setTheme } = useTheme()
+    const { items, openCart } = useCartStore()
+    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
     return (
         <aside className="mb-10 px-5 tracking-tight sm:mb-12 sm:px-7">
@@ -74,30 +84,55 @@ export const Navbar = () => {
                             },
                         )}
                     </div>
-                    <Tooltip>
-                        <TooltipTrigger
-                            render={
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() =>
-                                        setTheme(
-                                            resolvedTheme === "dark"
-                                                ? "light"
-                                                : "dark",
-                                        )
-                                    }
-                                    className="hover:bg-muted/40 transition-all duration-200 hover:scale-110"
-                                    aria-label={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode`}
-                                />
-                            }
-                        >
-                            <SunMoon />
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom">
-                            Switch theme
-                        </TooltipContent>
-                    </Tooltip>
+                    <div className="flex items-center gap-1">
+                        <Tooltip>
+                            <TooltipTrigger
+                                render={
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={openCart}
+                                        className="hover:bg-muted/40 relative transition-all duration-200 hover:scale-110"
+                                        aria-label="Open cart"
+                                    />
+                                }
+                            >
+                                <span className="relative inline-flex">
+                                    <ShoppingCart className="h-4 w-4" />
+                                    {totalItems > 0 && (
+                                        <span className="bg-primary text-primary-foreground absolute -top-1.5 -right-1.5 flex size-3.5 items-center justify-center rounded-full text-[9px] font-bold leading-none">
+                                            {totalItems > 9 ? "9+" : totalItems}
+                                        </span>
+                                    )}
+                                </span>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">Cart</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger
+                                render={
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() =>
+                                            setTheme(
+                                                resolvedTheme === "dark"
+                                                    ? "light"
+                                                    : "dark",
+                                            )
+                                        }
+                                        className="hover:bg-muted/40 transition-all duration-200 hover:scale-110"
+                                        aria-label={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode`}
+                                    />
+                                }
+                            >
+                                <SunMoon />
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">
+                                Switch theme
+                            </TooltipContent>
+                        </Tooltip>
+                    </div>
                 </nav>
             </div>
         </aside>

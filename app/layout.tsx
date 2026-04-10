@@ -12,6 +12,10 @@ import { FC } from "react"
 import { ThemeProvider } from "next-themes"
 import { Geist } from "next/font/google"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { Providers } from "@/components/providers"
+import { CartDrawer } from "@/components/cart-drawer"
+import { fetchBookPrices } from "@/lib/stripe-server"
+import { PricesProvider } from "@/components/prices-provider"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -21,10 +25,12 @@ export const metadata: Metadata = {
         default: "Gibson Murray",
         template: "%s | Gibson Murray",
     },
-    description: "Gibson Murray's portfolio.",
+    description:
+        "Gibson Murray — author and software engineer. Biblical fiction, faith, and reflections on life.",
     openGraph: {
         title: "Gibson Murray",
-        description: "Gibson Murray's portfolio.",
+        description:
+            "Gibson Murray — author and software engineer. Biblical fiction, faith, and reflections on life.",
         url: baseUrl,
         siteName: "Gibson Murray",
         images: [
@@ -42,7 +48,8 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Gibson Murray",
-        description: "Gibson Murray's portfolio.",
+        description:
+            "Gibson Murray — author and software engineer. Biblical fiction, faith, and reflections on life.",
         images: ["/headshot.jpeg"],
     },
     robots: {
@@ -58,7 +65,22 @@ export const metadata: Metadata = {
     },
 }
 
-const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
+const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Gibson Murray",
+    url: "https://gibsonmurray.com",
+    sameAs: [
+        "https://github.com/gibsonmurray",
+        "https://x.com/gibsonmurray",
+    ],
+    jobTitle: "Author",
+    description:
+        "Author of Biblical fiction and software engineer.",
+}
+
+const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
+    const prices = await fetchBookPrices()
     return (
         <html
             lang="en"
@@ -71,22 +93,36 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
             )}
         >
             <body className="mx-auto flex min-h-screen w-full max-w-xl flex-col pt-6 antialiased sm:pt-8">
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <TooltipProvider delay={500}>
-                        <main className="mt-5 flex min-w-0 flex-1 flex-col sm:mt-6">
-                            <Navbar />
-                            <div className="px-10">{children}</div>
-                            <Footer />
-                            <Analytics />
-                            <SpeedInsights />
-                        </main>
-                    </TooltipProvider>
-                </ThemeProvider>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify(personJsonLd),
+                    }}
+                />
+                <Providers>
+                    <PricesProvider prices={prices} />
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <TooltipProvider delay={500}>
+                            <main className="mt-5 flex min-w-0 flex-1 flex-col sm:mt-6">
+                                <Navbar />
+                                <div className="px-10">{children}</div>
+                                <div
+                                    className="min-h-10 flex-1"
+                                    aria-hidden="true"
+                                />
+                                <Footer />
+                                <Analytics />
+                                <SpeedInsights />
+                                <CartDrawer />
+                            </main>
+                        </TooltipProvider>
+                    </ThemeProvider>
+                </Providers>
             </body>
         </html>
     )

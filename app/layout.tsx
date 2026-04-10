@@ -13,6 +13,7 @@ import { ThemeProvider } from "next-themes"
 import { Geist } from "next/font/google"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Providers } from "@/components/providers"
+import { CartDrawer } from "@/components/cart-drawer"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -90,6 +91,7 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
                                 <Footer />
                                 <Analytics />
                                 <SpeedInsights />
+                                <CartDrawer />
                             </main>
                         </TooltipProvider>
                     </ThemeProvider>

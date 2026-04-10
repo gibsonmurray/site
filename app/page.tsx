@@ -3,6 +3,8 @@ import Link from "next/link"
 import LogoIcon from "@/components/logo"
 import Image from "next/image"
 import LatestBookPopup from "@/components/latest-book-popup"
+import { books } from "@/lib/books"
+import { ArrowRight, BookOpen, CalendarClock } from "lucide-react"
 
 const Home = () => {
     return (
@@ -45,6 +47,42 @@ const Home = () => {
                 />
             </div>
             <div className="border-border/65 bg-background/80 my-8 rounded-xl border p-4 sm:p-5">
+                <h2 className="border-primary/45 text-muted-foreground mb-4 border-l-2 pl-3 text-xs font-semibold tracking-[0.12em] uppercase">
+                    Books
+                </h2>
+                <div className="space-y-1">
+                    {books.map((book) => (
+                        <Link
+                            key={book.slug}
+                            href={`/books/${book.slug}`}
+                            className="group hover:bg-muted/30 flex items-center gap-3 rounded-lg px-3 py-2 transition-colors"
+                        >
+                            <BookOpen className="text-muted-foreground group-hover:text-primary size-4 shrink-0 transition-colors duration-200" />
+                            <div className="flex min-w-0 flex-1 flex-col space-y-0.5">
+                                <p className="text-foreground group-hover:text-primary tracking-tight transition-colors">
+                                    {book.title}
+                                </p>
+                                <p className="text-muted-foreground text-xs">
+                                    {book.genre}
+                                </p>
+                            </div>
+                            {book.status.type === "pre-order" && (
+                                <span className="text-muted-foreground flex shrink-0 items-center gap-1 text-xs">
+                                    <CalendarClock className="size-3" />
+                                    Pre-order
+                                </span>
+                            )}
+                            {book.status.type === "coming-soon" && (
+                                <span className="text-muted-foreground shrink-0 text-xs">
+                                    {book.status.label}
+                                </span>
+                            )}
+                            <ArrowRight className="text-muted-foreground/40 group-hover:text-primary/60 size-3.5 shrink-0 transition-colors duration-200" />
+                        </Link>
+                    ))}
+                </div>
+            </div>
+            <div className="border-border/65 bg-background/80 mb-8 rounded-xl border p-4 sm:p-5">
                 <BlogPosts recentOnly recentCount={3} />
             </div>
             <LatestBookPopup />

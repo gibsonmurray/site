@@ -1,11 +1,18 @@
 "use client"
 
 import { useState, type SyntheticEvent } from "react"
-import { useMutation } from "@tanstack/react-query"
 import Image from "next/image"
+import Link from "next/link"
+import {
+    ArrowRight,
+    CalendarClock,
+    Check,
+    ShoppingCart,
+    Tag,
+} from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Book } from "@/lib/books"
+import { Book, BookFormat, BookFormatOption } from "@/lib/books"
 import {
     DEFAULT_GLOW,
     mixWithBlack,
@@ -14,6 +21,7 @@ import {
     sampleGlowColor,
     type GlowColor,
 } from "@/lib/book-glow"
+import { useCartStore } from "@/lib/cart-store"
 
 interface BookCardProps {
     book: Book
@@ -23,26 +31,27 @@ interface BookCardProps {
 export const BookCard = ({ book, priority = false }: BookCardProps) => {
     const [glowColor, setGlowColor] = useState<GlowColor>(DEFAULT_GLOW)
     const [hasGlowColor, setHasGlowColor] = useState(false)
-    const [isExpanded, setIsExpanded] = useState(false)
+    const [added, setAdded] = useState(false)
+
     const isPreOrder = book.status.type === "pre-order"
     const isComingSoon = book.status.type === "coming-soon"
-    const isAvailable = book.status.type === "available"
 
-    const checkoutMutation = useMutation({
-        mutationFn: async () => {
-            const res = await fetch("/api/checkout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ bookId: book.id }),
-            })
-            const { url, error } = await res.json()
-            if (!res.ok) throw new Error(error)
-            window.location.href = url
-        },
-    })
+    const releaseDate = isPreOrder
+        ? (book.status as { type: "pre-order"; releaseDate: string }).releaseDate
+        : null
 
-    const handlePreOrder = () => {
-        checkoutMutation.mutate()
+    const { addItem, openCart } = useCartStore()
+
+    const defaultFormat = (
+        Object.entries(book.formats) as [BookFormat, BookFormatOption][]
+    ).find(([, opt]) => opt.available)?.[0]
+
+    const handleAddToCart = () => {
+        if (!defaultFormat) return
+        addItem(book.id, defaultFormat, 1)
+        openCart()
+        setAdded(true)
+        setTimeout(() => setAdded(false), 2000)
     }
 
     const handleCoverLoad = (event: SyntheticEvent<HTMLImageElement>) => {
@@ -68,15 +77,15 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
             }}
         >
             <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-1"
+                className="pointer-events-none absolute inset-x-0 top-0 h-px"
                 style={{
                     background: `linear-gradient(90deg, rgba(${glowRgb(accentColor)}, 0.9) 0%, rgba(${glowRgb(glowColorDeep)}, 0.55) 60%, transparent 100%)`,
                 }}
             />
 
             <div className="grid gap-5 md:grid-cols-[auto,minmax(0,1fr)] md:items-start md:gap-x-7">
-                {/* Cover Image */}
-                <div className="relative mx-auto w-44 shrink-0 overflow-visible md:w-52">
+                {/* Cover */}
+                <div className="relative mx-auto w-40 shrink-0 overflow-visible md:w-48">
                     <div
                         className="pointer-events-none absolute inset-[-8%] rounded-xl blur-xl transition-opacity duration-700"
                         style={{
@@ -85,16 +94,14 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                         }}
                     />
                     <div
-                        className="relative aspect-5/8 w-full overflow-hidden rounded-md shadow-[0_18px_48px_rgba(0,0,0,0.22)]"
-                        style={{
-                            boxShadow: coverShadow,
-                        }}
+                        className="relative aspect-5/8 w-full overflow-hidden rounded-md"
+                        style={{ boxShadow: coverShadow }}
                     >
                         <Image
                             src={book.coverImageSrc}
                             alt={book.coverImageAlt}
                             fill
-                            sizes="(max-width: 768px) 9rem, (max-width: 1200px) 12rem, 15rem"
+                            sizes="(max-width: 768px) 10rem, 12rem"
                             priority={priority}
                             onLoad={handleCoverLoad}
                             className="object-contain"
@@ -109,94 +116,74 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                             <h2 className="text-foreground text-2xl font-semibold tracking-tight">
                                 {book.title}
                             </h2>
-                            <p className="text-muted-foreground mt-1 text-xs">
+                            <p className="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
+                                <Tag className="size-3" />
                                 {book.genre}
                             </p>
                         </div>
                         <Badge variant="outline" className="shrink-0 text-xs">
-                            {isPreOrder
-                                ? "Pre-order"
-                                : isComingSoon
-                                  ? "Coming soon"
-                                  : "Available"}
+                            {isPreOrder ? (
+                                <span className="flex items-center gap-1">
+                                    <CalendarClock className="size-3" />
+                                    Pre-order
+                                </span>
+                            ) : isComingSoon ? (
+                                "Coming soon"
+                            ) : (
+                                "Available"
+                            )}
                         </Badge>
                     </div>
 
-                    {/* Hook - subtle */}
                     <p className="text-muted-foreground text-sm leading-snug">
                         {book.shortDescription}
                     </p>
 
-                    {/* Expandable Details */}
-                    {!isExpanded && (
-                        <button
-                            onClick={() => setIsExpanded(true)}
-                            className="text-primary hover:text-primary/80 w-fit text-xs font-medium transition-colors"
-                        >
-                            Learn more →
-                        </button>
-                    )}
-
-                    {isExpanded && (
-                        <div className="border-border/50 bg-background/50 space-y-2 rounded-lg border p-4">
-                            {book.longDescription.map((paragraph) => (
-                                <p
-                                    key={paragraph}
-                                    className="text-muted-foreground text-sm leading-relaxed"
-                                >
-                                    {paragraph}
-                                </p>
-                            ))}
-                            <button
-                                onClick={() => setIsExpanded(false)}
-                                className="text-primary hover:text-primary/80 mt-3 text-xs font-medium transition-colors"
-                            >
-                                ← Show less
-                            </button>
-                        </div>
-                    )}
-                    <div className="mt-auto flex flex-col gap-3">
-                        {isPreOrder ? (
-                            <>
-                                <Button
-                                    size="lg"
-                                    onClick={handlePreOrder}
-                                    disabled={checkoutMutation.isPending}
-                                    className="w-full py-6 text-base font-semibold"
-                                >
-                                    {checkoutMutation.isPending
-                                        ? "Redirecting..."
-                                        : "Pre-order"}
-                                </Button>
-                                <p className="text-muted-foreground text-center text-xs">
-                                    {`Releases ${
-                                        (
-                                            book.status as {
-                                                type: "pre-order"
-                                                label?: string
-                                                releaseDate: string
-                                            }
-                                        ).releaseDate
-                                    }`}
-                                </p>
-                            </>
-                        ) : isComingSoon ? (
+                    <div className="mt-auto flex flex-col gap-2">
+                        {isComingSoon ? (
                             <div className="border-border/50 bg-background/50 rounded-lg border p-4 text-center">
                                 <p className="text-muted-foreground text-sm font-medium">
                                     {book.status.label}
                                 </p>
                             </div>
                         ) : (
-                            <Button
-                                size="lg"
-                                onClick={handlePreOrder}
-                                disabled={checkoutMutation.isPending}
-                                className="w-full py-6 text-base font-semibold"
-                            >
-                                {checkoutMutation.isPending
-                                    ? "Redirecting..."
-                                    : "Get now"}
-                            </Button>
+                            <>
+                                <Button
+                                    size="lg"
+                                    className="w-full gap-2 py-6 font-semibold"
+                                    onClick={handleAddToCart}
+                                    disabled={!defaultFormat || added}
+                                >
+                                    {added ? (
+                                        <>
+                                            <Check className="size-4" />
+                                            Added to cart
+                                        </>
+                                    ) : isPreOrder ? (
+                                        <>
+                                            <ShoppingCart className="size-4" />
+                                            Pre-order
+                                            {releaseDate && (
+                                                <span className="text-primary-foreground/60 ml-0.5 font-normal">
+                                                    · {releaseDate}
+                                                </span>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <ShoppingCart className="size-4" />
+                                            Add to cart
+                                        </>
+                                    )}
+                                </Button>
+                                <Link
+                                    href={`/books/${book.slug}`}
+                                    className="text-muted-foreground hover:text-foreground flex items-center justify-center gap-1 text-sm transition-colors"
+                                >
+                                    View more info
+                                    <ArrowRight className="size-3" />
+                                </Link>
+                            </>
                         )}
                     </div>
                 </div>

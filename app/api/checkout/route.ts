@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
-import { books } from "@/lib/books"
+import { books, BookFormat } from "@/lib/books"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
@@ -9,32 +9,66 @@ const baseUrl =
         ? "https://gibsonmurray.com"
         : "http://localhost:3000"
 
-export async function POST(req: NextRequest) {
-    const { bookId } = await req.json()
+type CartItem = {
+    bookId: string
+    format: BookFormat
+    quantity: number
+}
 
-    const book = books.find((b) => b.id === bookId)
-    if (!book || book.status.type !== "pre-order") {
-        return NextResponse.json(
-            { error: "Book not available for purchase" },
-            { status: 400 }
-        )
+export async function POST(req: NextRequest) {
+    const body = await req.json()
+    const items: CartItem[] = body.items
+
+    if (!Array.isArray(items) || items.length === 0) {
+        return NextResponse.json({ error: "No items provided" }, { status: 400 })
     }
 
-    const product = await stripe.products.retrieve(book.id, {
-        expand: ["default_price"],
-    })
+    const lineItems: { price: string; quantity: number }[] = []
 
-    const defaultPrice = product.default_price
-    if (!defaultPrice || typeof defaultPrice === "string") {
-        return NextResponse.json(
-            { error: "Book price not configured in Stripe" },
-            { status: 500 }
-        )
+    for (const { bookId, format, quantity } of items) {
+        const book = books.find((b) => b.id === bookId)
+        if (!book || book.status.type === "coming-soon") {
+            return NextResponse.json(
+                { error: "Book not available for purchase" },
+                { status: 400 },
+            )
+        }
+
+        const formatOption = book.formats[format]
+        if (!formatOption?.available) {
+            return NextResponse.json(
+                { error: `Format "${format}" is not available` },
+                { status: 400 },
+            )
+        }
+
+        let priceId: string
+
+        if (formatOption.priceId) {
+            priceId = formatOption.priceId
+        } else {
+            const product = await stripe.products.retrieve(book.id, {
+                expand: ["default_price"],
+            })
+            const defaultPrice = product.default_price
+            if (!defaultPrice || typeof defaultPrice === "string") {
+                return NextResponse.json(
+                    { error: "Book price not configured in Stripe" },
+                    { status: 500 },
+                )
+            }
+            priceId = defaultPrice.id
+        }
+
+        lineItems.push({
+            price: priceId,
+            quantity: Math.max(1, Math.min(99, quantity)),
+        })
     }
 
     const session = await stripe.checkout.sessions.create({
         mode: "payment",
-        line_items: [{ quantity: 1, price: defaultPrice.id }],
+        line_items: lineItems,
         shipping_address_collection: {
             allowed_countries: [
                 "US", "CA", "GB", "AU", "NZ",
@@ -46,13 +80,21 @@ export async function POST(req: NextRequest) {
         phone_number_collection: { enabled: true },
         success_url: `${baseUrl}/books/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${baseUrl}/books`,
-        metadata: { bookId: book.id },
+        metadata: {
+            items: JSON.stringify(
+                items.map(({ bookId, format, quantity }) => ({
+                    bookId,
+                    format,
+                    quantity,
+                })),
+            ),
+        },
     })
 
     if (!session.url) {
         return NextResponse.json(
             { error: "Unable to create checkout session" },
-            { status: 500 }
+            { status: 500 },
         )
     }
 

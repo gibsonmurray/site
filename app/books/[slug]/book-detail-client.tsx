@@ -120,22 +120,24 @@ const BookImageCarousel = ({
                 {/* Prev / Next arrows */}
                 {showControls && (
                     <>
-                        <button
+                        <Button
+                            variant="outline"
                             onClick={() => goTo(current - 1)}
                             disabled={current === 0}
-                            className="bg-background/80 border-border hover:bg-background absolute top-1/2 -left-5 flex size-9 -translate-y-1/2 items-center justify-center rounded-full border shadow-sm backdrop-blur-sm transition-all disabled:opacity-0"
+                            className="bg-background/80 hover:bg-background absolute top-1/2 -left-5 size-9 -translate-y-1/2 rounded-full shadow-sm backdrop-blur-sm disabled:opacity-0"
                             aria-label="Previous image"
                         >
                             <ChevronLeft className="size-5" />
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                            variant="outline"
                             onClick={() => goTo(current + 1)}
                             disabled={current === images.length - 1}
-                            className="bg-background/80 border-border hover:bg-background absolute top-1/2 -right-5 flex size-9 -translate-y-1/2 items-center justify-center rounded-full border shadow-sm backdrop-blur-sm transition-all disabled:opacity-0"
+                            className="bg-background/80 hover:bg-background absolute top-1/2 -right-5 size-9 -translate-y-1/2 rounded-full shadow-sm backdrop-blur-sm disabled:opacity-0"
                             aria-label="Next image"
                         >
                             <ChevronRight className="size-5" />
-                        </button>
+                        </Button>
                     </>
                 )}
             </div>
@@ -144,12 +146,13 @@ const BookImageCarousel = ({
             {showControls && (
                 <div className="flex items-center gap-1.5">
                     {images.map((_, i) => (
-                        <button
+                        <Button
                             key={i}
+                            variant="ghost"
                             onClick={() => goTo(i)}
                             aria-label={`Go to image ${i + 1}`}
                             className={cn(
-                                "bg-foreground rounded-full transition-all duration-300",
+                                "bg-foreground min-w-0 rounded-full p-0 transition-all duration-300 hover:bg-foreground",
                                 i === current
                                     ? "h-1.5 w-4 opacity-70"
                                     : "size-1.5 opacity-20 hover:opacity-40",
@@ -387,17 +390,18 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                         opt.available
                                     const Icon = FORMAT_CONFIG[format].icon
                                     const btn = (
-                                        <button
+                                        <Button
                                             key={format}
+                                            variant="ghost"
                                             disabled={!opt.available}
                                             onClick={() =>
                                                 opt.available &&
                                                 setSelectedFormat(format)
                                             }
                                             className={cn(
-                                                "flex w-full flex-col items-center gap-1.5 rounded-xl border px-2 py-2.5 text-xs font-medium transition-all",
+                                                "flex h-auto w-full flex-col items-center gap-1.5 rounded-xl border px-2 py-2.5 text-xs font-medium transition-all",
                                                 isSelected
-                                                    ? "border-primary/40 bg-primary/5 text-foreground shadow-sm"
+                                                    ? "border-primary/40 bg-primary/5 text-foreground shadow-sm hover:bg-primary/5"
                                                     : opt.available
                                                       ? "border-border text-muted-foreground hover:border-primary/20 hover:text-foreground cursor-pointer"
                                                       : "border-border/40 text-muted-foreground/40 cursor-not-allowed",
@@ -423,7 +427,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                         : "Coming soon"
                                                 })()}
                                             </span>
-                                        </button>
+                                        </Button>
                                     )
                                     return opt.available ? (
                                         <div
@@ -471,29 +475,33 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                 Quantity
                             </span>
                             <div className="border-border bg-muted/40 flex items-center gap-1 rounded-xl border p-1">
-                                <button
+                                <Button
+                                    variant="ghost"
+                                    size="icon-sm"
                                     onClick={() =>
                                         setQuantity((q) => Math.max(1, q - 1))
                                     }
                                     disabled={quantity <= 1}
-                                    className="text-muted-foreground hover:text-foreground flex size-7 items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-30"
+                                    className="text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
                                     aria-label="Decrease quantity"
                                 >
                                     <Minus className="size-3.5" />
-                                </button>
+                                </Button>
                                 <span className="text-foreground w-8 text-center text-sm font-semibold tabular-nums">
                                     {quantity}
                                 </span>
-                                <button
+                                <Button
+                                    variant="ghost"
+                                    size="icon-sm"
                                     onClick={() =>
                                         setQuantity((q) => Math.min(99, q + 1))
                                     }
                                     disabled={quantity >= 99}
-                                    className="text-muted-foreground hover:text-foreground flex size-7 items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-30"
+                                    className="text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
                                     aria-label="Increase quantity"
                                 >
                                     <Plus className="size-3.5" />
-                                </button>
+                                </Button>
                             </div>
                         </div>
 

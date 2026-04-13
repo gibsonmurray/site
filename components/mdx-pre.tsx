@@ -1,6 +1,7 @@
 "use client"
 
 import React, { FC, useState } from "react"
+import { Button } from "@/components/ui/button"
 
 export const Pre: FC<{ children: React.ReactNode }> = ({ children }) => {
     const [copied, setCopied] = useState(false)
@@ -26,14 +27,16 @@ export const Pre: FC<{ children: React.ReactNode }> = ({ children }) => {
 
     return (
         <pre className="bg-muted/40 border-border/50 group relative overflow-x-auto rounded-lg border p-4">
-            <button
+            <Button
+                variant="ghost"
+                size="xs"
                 onClick={handleCopy}
-                className="bg-muted/50 hover:bg-muted absolute top-2 right-2 rounded px-2 py-1 text-xs opacity-0 transition-all duration-200 group-hover:opacity-100 hover:opacity-100"
+                className="bg-muted/50 hover:bg-muted absolute top-2 right-2 opacity-0 transition-all duration-200 group-hover:opacity-100 hover:opacity-100"
                 title="Copy code"
                 aria-label="Copy code"
             >
                 {copied ? "Copied!" : "Copy"}
-            </button>
+            </Button>
             {children}
         </pre>
     )

@@ -36,14 +36,16 @@ export default function LatestBookPopup() {
                     <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">
                         Latest Book
                     </Badge>
-                    <button
+                    <Button
                         type="button"
+                        variant="ghost"
+                        size="icon-sm"
                         onClick={dismissPopup}
-                        className="text-muted-foreground hover:text-foreground -mr-1 rounded-lg p-1.5 transition-colors"
+                        className="-mr-1"
                         aria-label="Dismiss"
                     >
                         <X className="size-4" />
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Book info */}
@@ -80,12 +82,13 @@ export default function LatestBookPopup() {
                             : "See book details"}
                         <ArrowRight className="size-4" />
                     </Button>
-                    <button
+                    <Button
+                        variant="ghost"
                         onClick={dismissPopup}
-                        className="text-muted-foreground hover:text-foreground w-full py-1 text-sm transition-colors"
+                        className="w-full text-sm"
                     >
                         Maybe later
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>

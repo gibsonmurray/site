@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Share2, Check, Link as LinkIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuTrigger,
@@ -52,27 +53,33 @@ export const ShareButtons = ({
         <div className="flex items-center gap-2">
             {url && (
                 <div className="flex items-center gap-2 sm:hidden">
-                    <button
+                    <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => openExternal(shareData.x)}
-                        className="bg-muted/40 hover:bg-muted/60 inline-flex size-8 items-center justify-center rounded-md transition-all duration-200"
+                        className="bg-muted/40 hover:bg-muted/60 rounded-md"
                         aria-label="Share on X"
                         title="Share on X"
                     >
                         <span className="text-sm font-bold text-black">𝕏</span>
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => openExternal(shareData.linkedin)}
-                        className="bg-muted/40 hover:bg-muted/60 inline-flex size-8 items-center justify-center rounded-md transition-all duration-200"
+                        className="bg-muted/40 hover:bg-muted/60 rounded-md"
                         aria-label="Share on LinkedIn"
                         title="Share on LinkedIn"
                     >
                         <span className="text-sm font-bold text-blue-600">
                             in
                         </span>
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={handleCopyLink}
-                        className="bg-muted/40 hover:bg-muted/60 inline-flex size-8 items-center justify-center rounded-md transition-all duration-200"
+                        className="bg-muted/40 hover:bg-muted/60 rounded-md"
                         aria-label={copied ? "Link copied" : "Copy link"}
                         title={copied ? "Copied" : "Copy link"}
                     >
@@ -81,7 +88,7 @@ export const ShareButtons = ({
                         ) : (
                             <LinkIcon className="size-4" />
                         )}
-                    </button>
+                    </Button>
                 </div>
             )}
 

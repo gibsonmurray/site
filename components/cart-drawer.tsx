@@ -66,33 +66,39 @@ const CartLineItem = ({
                             )}
                         </p>
                     </div>
-                    <button
+                    <Button
+                        variant="ghost"
+                        size="icon-xs"
                         onClick={onRemove}
-                        className="text-muted-foreground hover:text-destructive mt-0.5 shrink-0 transition-colors"
+                        className="text-muted-foreground hover:text-destructive mt-0.5 shrink-0"
                         aria-label="Remove item"
                     >
                         <Trash2 className="size-3.5" />
-                    </button>
+                    </Button>
                 </div>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <button
+                        <Button
+                            variant="outline"
+                            size="icon-xs"
                             onClick={() => onQuantityChange(item.quantity - 1)}
-                            className="border-border hover:bg-muted flex size-6 items-center justify-center rounded border transition-colors"
+                            className="rounded"
                             aria-label="Decrease quantity"
                         >
                             <Minus className="size-3" />
-                        </button>
+                        </Button>
                         <span className="text-foreground w-6 text-center text-xs font-semibold tabular-nums">
                             {item.quantity}
                         </span>
-                        <button
+                        <Button
+                            variant="outline"
+                            size="icon-xs"
                             onClick={() => onQuantityChange(item.quantity + 1)}
-                            className="border-border hover:bg-muted flex size-6 items-center justify-center rounded border transition-colors"
+                            className="rounded"
                             aria-label="Increase quantity"
                         >
                             <Plus className="size-3" />
-                        </button>
+                        </Button>
                     </div>
                     {lineTotal !== undefined && (
                         <span className="text-foreground text-sm font-semibold tabular-nums">
@@ -188,13 +194,15 @@ export const CartDrawer = () => {
                             </span>
                         )}
                     </div>
-                    <button
+                    <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={closeCart}
-                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        className="text-muted-foreground hover:text-foreground"
                         aria-label="Close cart"
                     >
                         <X className="size-5" />
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Items */}
@@ -286,12 +294,13 @@ export const CartDrawer = () => {
                                 ? "Redirecting..."
                                 : "Checkout"}
                         </Button>
-                        <button
+                        <Button
+                            variant="ghost"
                             onClick={clearCart}
-                            className="text-muted-foreground hover:text-foreground w-full text-center text-xs transition-colors"
+                            className="w-full text-xs"
                         >
                             Clear cart
-                        </button>
+                        </Button>
                     </div>
                 )}
             </aside>

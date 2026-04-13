@@ -5,6 +5,7 @@ const robots = () => {
         rules: [
             {
                 userAgent: "*",
+                disallow: ["/books/success"],
             },
         ],
         sitemap: `${baseUrl}/sitemap.xml`,

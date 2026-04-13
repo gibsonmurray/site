@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     },
     description:
         "Gibson Murray — author and software engineer. Biblical fiction, faith, and reflections on life.",
+    alternates: {
+        canonical: baseUrl,
+    },
     openGraph: {
         title: "Gibson Murray",
         description:

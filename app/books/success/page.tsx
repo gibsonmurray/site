@@ -8,6 +8,10 @@ import { ClearCart } from "./clear-cart"
 export const metadata: Metadata = {
     title: "Order Confirmed",
     description: "Thank you for your pre-order!",
+    robots: {
+        index: false,
+        follow: false,
+    },
 }
 
 const SuccessPage = () => {

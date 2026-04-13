@@ -15,16 +15,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
         title: book.title,
         description: book.shortDescription,
+        alternates: {
+            canonical: `${baseUrl}/books/${book.slug}`,
+        },
         openGraph: {
             title: book.title,
             description: book.shortDescription,
+            url: `${baseUrl}/books/${book.slug}`,
+            type: "book",
             images: [
                 {
-                    url: `/og?title=${encodeURIComponent(book.title)}`,
-                    alt: book.title,
-                    width: 1200,
-                    height: 630,
-                    type: "image/png",
+                    url: `${baseUrl}${book.coverImageSrc}`,
+                    alt: book.coverImageAlt,
                 },
             ],
         },
@@ -32,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             card: "summary_large_image",
             title: book.title,
             description: book.shortDescription,
-            images: [`/og?title=${encodeURIComponent(book.title)}`],
+            images: [`${baseUrl}${book.coverImageSrc}`],
         },
     }
 }

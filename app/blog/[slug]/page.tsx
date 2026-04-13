@@ -50,6 +50,9 @@ export const generateMetadata = async ({
     return {
         title,
         description,
+        alternates: {
+            canonical: `${baseUrl}/blog/${post.slug}`,
+        },
         openGraph: {
             title,
             description,

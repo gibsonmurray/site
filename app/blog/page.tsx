@@ -1,28 +1,36 @@
 import { BlogPosts } from "@/components/posts"
 import { Metadata } from "next"
 import LogoIcon from "@/components/logo"
+import { baseUrl } from "@/app/sitemap"
 
 export const metadata: Metadata = {
     title: "Blog",
-    description: "Read my blog.",
+    description:
+        "Thoughts on faith, Biblical fiction, and life from Gibson Murray.",
+    alternates: {
+        canonical: `${baseUrl}/blog`,
+    },
     openGraph: {
         title: "Blog",
-        description: "Read my blog.",
+        description:
+            "Thoughts on faith, Biblical fiction, and life from Gibson Murray.",
+        url: `${baseUrl}/blog`,
         images: [
             {
-                url: "/og?title=Blog",
-                alt: "Blog",
+                url: "/headshot.jpeg",
+                alt: "Gibson Murray",
                 width: 1200,
                 height: 630,
-                type: "image/png",
+                type: "image/jpeg",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
         title: "Blog",
-        description: "Read my blog.",
-        images: ["/og?title=Blog"],
+        description:
+            "Thoughts on faith, Biblical fiction, and life from Gibson Murray.",
+        images: ["/headshot.jpeg"],
     },
 }
 

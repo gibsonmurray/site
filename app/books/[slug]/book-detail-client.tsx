@@ -35,6 +35,7 @@ import {
 import { useCartStore } from "@/lib/cart-store"
 import { usePricesStore } from "@/lib/prices-store"
 import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input"
 
 const FORMAT_CONFIG: Record<BookFormat, { label: string; icon: LucideIcon }> = {
     paperback: { label: "Paperback", icon: BookOpen },
@@ -208,7 +209,9 @@ const PreOrderNotifyForm = ({
                 <div className="flex items-center gap-2 text-sm">
                     <Check className="text-primary size-4 shrink-0" />
                     <span className="text-foreground font-medium">
-                        {"You're on the list! We'll notify you when pre-orders open."}
+                        {
+                            "You're on the list! We'll notify you when pre-orders open."
+                        }
                     </span>
                 </div>
             ) : (
@@ -219,16 +222,16 @@ const PreOrderNotifyForm = ({
                     <p className="text-muted-foreground text-xs">
                         Get notified when pre-orders open
                     </p>
-                    <input
+                    <Input
                         ref={inputRef}
                         type="email"
                         required
                         placeholder="your@email.com"
-                        className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary/40 w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2"
+                        className="h-9 w-full"
                     />
                     <Button
                         type="submit"
-                        size="sm"
+                        size="lg"
                         disabled={mutation.isPending}
                         className="w-full gap-1.5"
                     >
@@ -237,7 +240,8 @@ const PreOrderNotifyForm = ({
                     </Button>
                     {mutation.isError && (
                         <p className="text-destructive text-xs">
-                            {mutation.error?.message ?? "Something went wrong. Try again."}
+                            {mutation.error?.message ??
+                                "Something went wrong. Try again."}
                         </p>
                     )}
                 </form>
@@ -364,175 +368,186 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                 {!isPurchasable && isPreOrder && (
                     <PreOrderNotifyForm book={book} releaseDate={releaseDate} />
                 )}
-                {isPurchasable && <div className="border-border/60 bg-muted/20 flex flex-col gap-4 rounded-2xl border p-4 sm:p-5">
-                    {/* Format */}
-                    <div className="flex flex-col gap-3">
-                        <span className="text-foreground text-sm font-semibold">
-                            Format
-                        </span>
-                        <div className="flex gap-2">
-                            {(
-                                Object.entries(book.formats) as [
-                                    BookFormat,
-                                    BookFormatOption,
-                                ][]
-                            ).map(([format, opt]) => {
-                                const isSelected =
-                                    selectedFormat === format && opt.available
-                                const Icon = FORMAT_CONFIG[format].icon
-                                const btn = (
-                                    <button
-                                        key={format}
-                                        disabled={!opt.available}
-                                        onClick={() =>
-                                            opt.available &&
-                                            setSelectedFormat(format)
-                                        }
-                                        className={cn(
-                                            "flex w-full flex-col items-center gap-1.5 rounded-xl border px-2 py-2.5 text-xs font-medium transition-all",
-                                            isSelected
-                                                ? "border-primary/40 bg-primary/5 text-foreground shadow-sm"
-                                                : opt.available
-                                                  ? "border-border text-muted-foreground hover:border-primary/20 hover:text-foreground cursor-pointer"
-                                                  : "border-border/40 text-muted-foreground/40 cursor-not-allowed",
-                                        )}
-                                    >
-                                        <Icon
-                                            className={cn(
-                                                "size-4",
-                                                isSelected
-                                                    ? "text-primary"
-                                                    : "text-current",
-                                            )}
-                                        />
-                                        {FORMAT_CONFIG[format].label}
-                                        <span className="text-[11px] font-normal opacity-75">
-                                            {(() => {
-                                                const p = getPrice(book.slug, format)
-                                                return p !== undefined ? fmt(p) : "Coming soon"
-                                            })()}
-                                        </span>
-                                    </button>
-                                )
-                                return opt.available ? (
-                                    <div key={format} className="flex flex-1">
-                                        {btn}
-                                    </div>
-                                ) : (
-                                    <Tooltip key={format}>
-                                        <TooltipTrigger
-                                            render={
-                                                <span className="flex flex-1 cursor-not-allowed" />
+                {isPurchasable && (
+                    <div className="border-border/60 bg-muted/20 flex flex-col gap-4 rounded-2xl border p-4 sm:p-5">
+                        {/* Format */}
+                        <div className="flex flex-col gap-3">
+                            <span className="text-foreground text-sm font-semibold">
+                                Format
+                            </span>
+                            <div className="flex gap-2">
+                                {(
+                                    Object.entries(book.formats) as [
+                                        BookFormat,
+                                        BookFormatOption,
+                                    ][]
+                                ).map(([format, opt]) => {
+                                    const isSelected =
+                                        selectedFormat === format &&
+                                        opt.available
+                                    const Icon = FORMAT_CONFIG[format].icon
+                                    const btn = (
+                                        <button
+                                            key={format}
+                                            disabled={!opt.available}
+                                            onClick={() =>
+                                                opt.available &&
+                                                setSelectedFormat(format)
                                             }
+                                            className={cn(
+                                                "flex w-full flex-col items-center gap-1.5 rounded-xl border px-2 py-2.5 text-xs font-medium transition-all",
+                                                isSelected
+                                                    ? "border-primary/40 bg-primary/5 text-foreground shadow-sm"
+                                                    : opt.available
+                                                      ? "border-border text-muted-foreground hover:border-primary/20 hover:text-foreground cursor-pointer"
+                                                      : "border-border/40 text-muted-foreground/40 cursor-not-allowed",
+                                            )}
+                                        >
+                                            <Icon
+                                                className={cn(
+                                                    "size-4",
+                                                    isSelected
+                                                        ? "text-primary"
+                                                        : "text-current",
+                                                )}
+                                            />
+                                            {FORMAT_CONFIG[format].label}
+                                            <span className="text-[11px] font-normal opacity-75">
+                                                {(() => {
+                                                    const p = getPrice(
+                                                        book.slug,
+                                                        format,
+                                                    )
+                                                    return p !== undefined
+                                                        ? fmt(p)
+                                                        : "Coming soon"
+                                                })()}
+                                            </span>
+                                        </button>
+                                    )
+                                    return opt.available ? (
+                                        <div
+                                            key={format}
+                                            className="flex flex-1"
                                         >
                                             {btn}
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top">
-                                            Coming soon
-                                        </TooltipContent>
-                                    </Tooltip>
-                                )
-                            })}
+                                        </div>
+                                    ) : (
+                                        <Tooltip key={format}>
+                                            <TooltipTrigger
+                                                render={
+                                                    <span className="flex flex-1 cursor-not-allowed" />
+                                                }
+                                            >
+                                                {btn}
+                                            </TooltipTrigger>
+                                            <TooltipContent side="top">
+                                                Coming soon
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    )
+                                })}
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="border-border/50 flex items-center justify-between border-t pt-4">
-                        <span className="text-foreground text-sm font-semibold">
-                            Price
-                        </span>
-                        {selectedPrice !== undefined ? (
-                            <span className="text-foreground text-sm font-semibold tabular-nums">
-                                {fmt(selectedPrice)}
+                        <div className="border-border/50 flex items-center justify-between border-t pt-4">
+                            <span className="text-foreground text-sm font-semibold">
+                                Price
                             </span>
-                        ) : (
-                            <span className="text-muted-foreground text-sm">
-                                Price coming soon
-                            </span>
-                        )}
-                    </div>
-
-                    {/* Quantity */}
-                    <div className="flex items-center justify-between">
-                        <span className="text-foreground text-sm font-semibold">
-                            Quantity
-                        </span>
-                        <div className="border-border bg-muted/40 flex items-center gap-1 rounded-xl border p-1">
-                            <button
-                                onClick={() =>
-                                    setQuantity((q) => Math.max(1, q - 1))
-                                }
-                                disabled={quantity <= 1}
-                                className="text-muted-foreground hover:text-foreground flex size-7 items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-30"
-                                aria-label="Decrease quantity"
-                            >
-                                <Minus className="size-3.5" />
-                            </button>
-                            <span className="text-foreground w-8 text-center text-sm font-semibold tabular-nums">
-                                {quantity}
-                            </span>
-                            <button
-                                onClick={() =>
-                                    setQuantity((q) => Math.min(99, q + 1))
-                                }
-                                disabled={quantity >= 99}
-                                className="text-muted-foreground hover:text-foreground flex size-7 items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-30"
-                                aria-label="Increase quantity"
-                            >
-                                <Plus className="size-3.5" />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* CTAs */}
-                    {canBuy ? (
-                        <div className="border-border/50 flex flex-col gap-2.5 border-t pt-4">
-                            <Button
-                                size="lg"
-                                onClick={() => buyNowMutation.mutate()}
-                                disabled={buyNowMutation.isPending}
-                                className="w-full py-6 text-base font-semibold"
-                            >
-                                {buyNowMutation.isPending
-                                    ? "Redirecting..."
-                                    : isPreOrder
-                                      ? "Pre-order now"
-                                      : "Buy now"}
-                            </Button>
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                onClick={handleAddToCart}
-                                disabled={added}
-                                className="w-full gap-2 py-6 font-semibold"
-                            >
-                                {added ? (
-                                    <>
-                                        <Check className="size-4" />
-                                        Added to cart
-                                    </>
-                                ) : (
-                                    <>
-                                        <ShoppingCart className="size-4" />
-                                        Add to cart
-                                    </>
-                                )}
-                            </Button>
-                            {releaseDate && (
-                                <p className="text-muted-foreground text-center text-xs">
-                                    Ships {releaseDate}
-                                </p>
+                            {selectedPrice !== undefined ? (
+                                <span className="text-foreground text-sm font-semibold tabular-nums">
+                                    {fmt(selectedPrice)}
+                                </span>
+                            ) : (
+                                <span className="text-muted-foreground text-sm">
+                                    Price coming soon
+                                </span>
                             )}
                         </div>
-                    ) : (
-                        <div className="border-border/50 bg-muted/30 border-t pt-4 text-center">
-                            <p className="text-muted-foreground text-sm font-medium">
-                                {isComingSoon
-                                    ? book.status.label
-                                    : "Not available"}
-                            </p>
+
+                        {/* Quantity */}
+                        <div className="flex items-center justify-between">
+                            <span className="text-foreground text-sm font-semibold">
+                                Quantity
+                            </span>
+                            <div className="border-border bg-muted/40 flex items-center gap-1 rounded-xl border p-1">
+                                <button
+                                    onClick={() =>
+                                        setQuantity((q) => Math.max(1, q - 1))
+                                    }
+                                    disabled={quantity <= 1}
+                                    className="text-muted-foreground hover:text-foreground flex size-7 items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-30"
+                                    aria-label="Decrease quantity"
+                                >
+                                    <Minus className="size-3.5" />
+                                </button>
+                                <span className="text-foreground w-8 text-center text-sm font-semibold tabular-nums">
+                                    {quantity}
+                                </span>
+                                <button
+                                    onClick={() =>
+                                        setQuantity((q) => Math.min(99, q + 1))
+                                    }
+                                    disabled={quantity >= 99}
+                                    className="text-muted-foreground hover:text-foreground flex size-7 items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-30"
+                                    aria-label="Increase quantity"
+                                >
+                                    <Plus className="size-3.5" />
+                                </button>
+                            </div>
                         </div>
-                    )}
-                </div>}
+
+                        {/* CTAs */}
+                        {canBuy ? (
+                            <div className="border-border/50 flex flex-col gap-2.5 border-t pt-4">
+                                <Button
+                                    size="lg"
+                                    onClick={() => buyNowMutation.mutate()}
+                                    disabled={buyNowMutation.isPending}
+                                    className="w-full py-6 text-base font-semibold"
+                                >
+                                    {buyNowMutation.isPending
+                                        ? "Redirecting..."
+                                        : isPreOrder
+                                          ? "Pre-order now"
+                                          : "Buy now"}
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    onClick={handleAddToCart}
+                                    disabled={added}
+                                    className="w-full gap-2 py-6 font-semibold"
+                                >
+                                    {added ? (
+                                        <>
+                                            <Check className="size-4" />
+                                            Added to cart
+                                        </>
+                                    ) : (
+                                        <>
+                                            <ShoppingCart className="size-4" />
+                                            Add to cart
+                                        </>
+                                    )}
+                                </Button>
+                                {releaseDate && (
+                                    <p className="text-muted-foreground text-center text-xs">
+                                        Ships {releaseDate}
+                                    </p>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="border-border/50 bg-muted/30 border-t pt-4 text-center">
+                                <p className="text-muted-foreground text-sm font-medium">
+                                    {isComingSoon
+                                        ? book.status.label
+                                        : "Not available"}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* About */}

@@ -124,7 +124,7 @@ const BookImageCarousel = ({
                             variant="outline"
                             onClick={() => goTo(current - 1)}
                             disabled={current === 0}
-                            className="bg-background/80 hover:bg-background absolute top-1/2 -left-5 size-9 -translate-y-1/2 rounded-full shadow-sm backdrop-blur-sm disabled:opacity-0"
+                            className="bg-background/80 hover:bg-background absolute top-1/2 -left-5 size-9 -translate-y-1/2 rounded-full shadow-sm backdrop-blur-sm active:-translate-y-1/2 disabled:opacity-0"
                             aria-label="Previous image"
                         >
                             <ChevronLeft className="size-5" />
@@ -133,7 +133,7 @@ const BookImageCarousel = ({
                             variant="outline"
                             onClick={() => goTo(current + 1)}
                             disabled={current === images.length - 1}
-                            className="bg-background/80 hover:bg-background absolute top-1/2 -right-5 size-9 -translate-y-1/2 rounded-full shadow-sm backdrop-blur-sm disabled:opacity-0"
+                            className="bg-background/80 hover:bg-background absolute top-1/2 -right-5 size-9 -translate-y-1/2 rounded-full shadow-sm backdrop-blur-sm active:-translate-y-1/2 disabled:opacity-0"
                             aria-label="Next image"
                         >
                             <ChevronRight className="size-5" />

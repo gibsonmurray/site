@@ -1,6 +1,6 @@
 import { BlogPosts } from "@/components/posts"
 import { Metadata } from "next"
-import LogoIcon from "@/components/logo"
+import { LogoIcon } from "@/components/logo"
 import { baseUrl } from "@/app/sitemap"
 import { getBlogPosts } from "@/app/blog/utils"
 import { BlogSearch } from "@/components/blog-search"

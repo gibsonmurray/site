@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
-import { books, BookFormat } from "@/lib/books"
+import { books } from "@/lib/books"
+import { type CartItem } from "@/lib/cart-store"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
@@ -8,12 +9,6 @@ const baseUrl =
     process.env.NODE_ENV === "production"
         ? "https://gibsonmurray.com"
         : "http://localhost:3000"
-
-type CartItem = {
-    bookId: string
-    format: BookFormat
-    quantity: number
-}
 
 export async function POST(req: NextRequest) {
     const body = await req.json()

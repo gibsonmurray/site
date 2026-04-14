@@ -1,4 +1,4 @@
-import LogoIcon from "@/components/logo"
+import { LogoIcon } from "@/components/logo"
 
 export const BooksHeader = () => {
     return (

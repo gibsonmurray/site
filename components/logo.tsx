@@ -14,6 +14,4 @@ const logoIconNode: IconNode = [
     ],
 ]
 
-const LogoIcon = createLucideIcon("logo", logoIconNode)
-
-export default LogoIcon
+export const LogoIcon = createLucideIcon("logo", logoIconNode)

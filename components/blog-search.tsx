@@ -6,25 +6,9 @@ import Link from "next/link"
 import { Search, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { formatListDate, type SearchablePost } from "@/app/blog/format"
 
-const formatListDate = (dateStr: string) => {
-    const date = new Date(
-        dateStr.includes("T") ? dateStr : `${dateStr}T00:00:00`,
-    )
-    return date.toLocaleString("en-us", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-    })
-}
-
-export type SearchablePost = {
-    slug: string
-    title: string
-    summary: string
-    publishedAt: string
-    tags?: string
-}
+export type { SearchablePost }
 
 export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
     const [query, setQuery] = useState("")

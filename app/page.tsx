@@ -4,7 +4,9 @@ import LogoIcon from "@/components/logo"
 import Image from "next/image"
 import LatestBookPopup from "@/components/latest-book-popup"
 import { books } from "@/lib/books"
-import { ArrowRight, CalendarClock } from "lucide-react"
+import { currentlyReading } from "@/lib/currently-reading"
+import { NewsletterSignup } from "@/components/newsletter-signup"
+import { ArrowRight, BookOpenText, CalendarClock } from "lucide-react"
 
 const Home = () => {
     return (
@@ -15,6 +17,7 @@ const Home = () => {
                     alt="Headshot of Gibson Murray"
                     height={1000}
                     width={1000}
+                    sizes="80px"
                     className="size-20 shrink-0 rounded-full border object-cover"
                     priority
                 />
@@ -70,6 +73,7 @@ const Home = () => {
                                     alt={book.coverImageAlt}
                                     width={200}
                                     height={300}
+                                    sizes="60px"
                                     className="h-20 w-auto shrink-0 rounded-md object-contain shadow-md transition-transform duration-200 group-hover:scale-[1.03]"
                                 />
                                 <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
@@ -106,8 +110,79 @@ const Home = () => {
                     })}
                 </div>
             </div>
-            <div className="border-border/65 bg-background/80 mb-8 rounded-xl border p-4 sm:p-5">
+            {currentlyReading && (
+                <div className="border-border/65 bg-background/80 my-8 rounded-xl border p-4 sm:p-5">
+                    <h2 className="border-primary/45 text-muted-foreground mb-4 border-l-2 pl-3 text-xs font-semibold tracking-[0.12em] uppercase">
+                        Currently Reading
+                    </h2>
+                    <div className="flex gap-4">
+                        <div className="relative shrink-0">
+                            {currentlyReading.url ? (
+                                <Link
+                                    href={currentlyReading.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Image
+                                        src={currentlyReading.coverImageSrc}
+                                        alt={currentlyReading.coverImageAlt}
+                                        width={200}
+                                        height={300}
+                                        className="h-20 w-auto rounded-md object-contain shadow-md"
+                                    />
+                                </Link>
+                            ) : (
+                                <Image
+                                    src={currentlyReading.coverImageSrc}
+                                    alt={currentlyReading.coverImageAlt}
+                                    width={200}
+                                    height={300}
+                                    className="h-20 w-auto rounded-md object-contain shadow-md"
+                                />
+                            )}
+                        </div>
+                        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+                            <p className="text-foreground font-semibold tracking-tight leading-tight">
+                                {currentlyReading.title}
+                            </p>
+                            <p className="text-muted-foreground text-xs">
+                                {currentlyReading.author}
+                            </p>
+                            {currentlyReading.finishedPercent !== undefined && (
+                                <div className="mt-2 flex items-center gap-2">
+                                    <div className="bg-muted h-1.5 flex-1 overflow-hidden rounded-full">
+                                        <div
+                                            className="bg-primary h-full rounded-full transition-all"
+                                            style={{
+                                                width: `${currentlyReading.finishedPercent}%`,
+                                            }}
+                                        />
+                                    </div>
+                                    <span className="text-muted-foreground shrink-0 text-xs tabular-nums">
+                                        {currentlyReading.finishedPercent}%
+                                    </span>
+                                </div>
+                            )}
+                            {currentlyReading.url && (
+                                <Link
+                                    href={currentlyReading.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-primary hover:text-primary/80 mt-1 flex items-center gap-1 text-xs font-medium transition-colors"
+                                >
+                                    <BookOpenText className="size-3" />
+                                    View on Goodreads
+                                </Link>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+            <div className="border-border/65 bg-background/80 rounded-xl border p-4 sm:p-5">
                 <BlogPosts recentOnly recentCount={3} />
+            </div>
+            <div className="my-8">
+                <NewsletterSignup />
             </div>
             <LatestBookPopup />
         </section>

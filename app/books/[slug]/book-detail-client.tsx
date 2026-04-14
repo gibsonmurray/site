@@ -108,6 +108,7 @@ const BookImageCarousel = ({
                                     alt={`${alt}${images.length > 1 ? ` — ${i + 1} of ${images.length}` : ""}`}
                                     width={1000}
                                     height={1000}
+                                    sizes="(max-width: 640px) calc(100vw - 120px), 416px"
                                     priority={i === 0}
                                     onLoad={i === 0 ? onFirstLoad : undefined}
                                     className="size-full object-cover"
@@ -225,22 +226,24 @@ const PreOrderNotifyForm = ({
                     <p className="text-muted-foreground text-xs">
                         Get notified when pre-orders open
                     </p>
-                    <Input
-                        ref={inputRef}
-                        type="email"
-                        required
-                        placeholder="your@email.com"
-                        className="h-9 w-full"
-                    />
-                    <Button
-                        type="submit"
-                        size="lg"
-                        disabled={mutation.isPending}
-                        className="w-full gap-1.5"
-                    >
-                        <Bell className="size-3.5" />
-                        {mutation.isPending ? "..." : "Notify me"}
-                    </Button>
+                    <div className="flex flex-col gap-2 sm:flex-row">
+                        <Input
+                            ref={inputRef}
+                            type="email"
+                            required
+                            placeholder="your@email.com"
+                            className="h-9 flex-1"
+                        />
+                        <Button
+                            type="submit"
+                            size="lg"
+                            disabled={mutation.isPending}
+                            className="gap-1.5 sm:shrink-0"
+                        >
+                            <Bell className="size-3.5" />
+                            {mutation.isPending ? "..." : "Notify me"}
+                        </Button>
+                    </div>
                     {mutation.isError && (
                         <p className="text-destructive text-xs">
                             {mutation.error?.message ??

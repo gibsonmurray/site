@@ -2,6 +2,8 @@ import { BlogPosts } from "@/components/posts"
 import { Metadata } from "next"
 import LogoIcon from "@/components/logo"
 import { baseUrl } from "@/app/sitemap"
+import { getBlogPosts } from "@/app/blog/utils"
+import { BlogSearch } from "@/components/blog-search"
 
 export const metadata: Metadata = {
     title: "Blog",
@@ -35,6 +37,15 @@ export const metadata: Metadata = {
 }
 
 const BlogPage = () => {
+    const posts = getBlogPosts()
+    const searchablePosts = posts.map((p) => ({
+        slug: p.slug,
+        title: p.metadata.title,
+        summary: p.metadata.summary,
+        publishedAt: p.metadata.publishedAt,
+        tags: p.metadata.tags,
+    }))
+
     return (
         <section className="page-shell">
             <div className="mb-2 flex items-center gap-2">
@@ -43,9 +54,10 @@ const BlogPage = () => {
                     My Blog
                 </h1>
             </div>
-            <p className="mb-8 text-sm text-muted-foreground">
+            <p className="mb-6 text-sm text-muted-foreground">
                 My thoughts, ideas, and learnings on faith and life 💭
             </p>
+            <BlogSearch posts={searchablePosts} />
             <BlogPosts />
         </section>
     )

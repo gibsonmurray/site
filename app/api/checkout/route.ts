@@ -71,6 +71,15 @@ export async function POST(req: NextRequest) {
     const session = await stripe.checkout.sessions.create({
         mode: "payment",
         line_items: lineItems,
+        allow_promotion_codes: true,
+        custom_fields: [
+            {
+                key: "gift_message",
+                label: { type: "custom", custom: "Gift message (optional)" },
+                type: "text",
+                optional: true,
+            },
+        ],
         shipping_address_collection: {
             allowed_countries: [
                 "US", "CA", "GB", "AU", "NZ",

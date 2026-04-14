@@ -29,6 +29,9 @@ export const metadata: Metadata = {
         "Gibson Murray — author and software engineer. Biblical fiction, faith, and reflections on life.",
     alternates: {
         canonical: baseUrl,
+        types: {
+            "application/rss+xml": `${baseUrl}/rss`,
+        },
     },
     openGraph: {
         title: "Gibson Murray",

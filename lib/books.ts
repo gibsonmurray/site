@@ -20,6 +20,13 @@ export type BookStatus =
           label?: string
       }
 
+export type BookReview = {
+    quote: string
+    reviewer: string
+    source?: string // e.g. "Goodreads", "Amazon", "Publisher's Weekly"
+    url?: string
+}
+
 export type Book = {
     slug: string
     title: string
@@ -34,6 +41,7 @@ export type Book = {
     formats: Partial<Record<BookFormat, BookFormatOption>>
     /** Set to false to hide all add-to-cart / checkout UI sitewide */
     purchasable?: boolean
+    reviews?: BookReview[]
 }
 
 export const books: Book[] = [

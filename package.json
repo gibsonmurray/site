@@ -26,6 +26,7 @@
         "date-fns": "^4.1.0",
         "embla-carousel-react": "^8.6.0",
         "fast-average-color": "^9.5.2",
+        "fuse.js": "^7.3.0",
         "geist": "^1.7.0",
         "handlebars": "^4.7.9",
         "input-otp": "^1.4.2",

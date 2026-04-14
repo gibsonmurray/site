@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { CustomMDX } from "@/components/mdx"
 import { Badge } from "@/components/ui/badge"
 import { ShareButtons } from "@/components/share-buttons"
+import { ScrollProgressBar } from "@/components/scroll-progress-bar"
 import {
     formatDate,
     getBlogPosts,
@@ -9,6 +10,8 @@ import {
     getReadingTime,
 } from "@/app/blog/utils"
 import { baseUrl } from "@/app/sitemap"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 
 export const generateStaticParams = async () => {
     let posts = getBlogPosts()
@@ -94,6 +97,19 @@ export default async function BlogPage({
     const tags = getPostTags(post.metadata.tags)
     const scriptureCopyright = post.metadata.scriptureCopyright?.trim()
 
+    const allPosts = getBlogPosts()
+    const relatedPosts = allPosts
+        .filter((p) => p.slug !== slug)
+        .map((p) => {
+            const pTags = getPostTags(p.metadata.tags)
+            const overlap = tags.filter((t) => pTags.includes(t)).length
+            return { post: p, overlap }
+        })
+        .filter(({ overlap }) => overlap > 0)
+        .sort((a, b) => b.overlap - a.overlap)
+        .slice(0, 3)
+        .map(({ post }) => post)
+
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
@@ -117,6 +133,7 @@ export default async function BlogPage({
 
     return (
         <section className="flex flex-col relative overflow-hidden px-5 py-5 sm:px-7 sm:py-7">
+            <ScrollProgressBar />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -160,6 +177,32 @@ export default async function BlogPage({
                 <p className="text-muted-foreground text-xs leading-relaxed mt-5">
                     {scriptureCopyright}
                 </p>
+            )}
+            {relatedPosts.length > 0 && (
+                <div className="border-border/50 mt-10 border-t pt-8">
+                    <h2 className="border-primary/45 text-muted-foreground mb-4 border-l-2 pl-3 text-xs font-semibold tracking-[0.12em] uppercase">
+                        Related Posts
+                    </h2>
+                    <div className="flex flex-col gap-3">
+                        {relatedPosts.map((related) => (
+                            <Link
+                                key={related.slug}
+                                href={`/blog/${related.slug}`}
+                                className="group hover:bg-muted/30 flex flex-col gap-1 rounded-lg px-3 py-2 transition-colors"
+                            >
+                                <p className="text-muted-foreground group-hover:text-primary/60 text-xs tabular-nums transition-colors">
+                                    {formatDate(related.metadata.publishedAt, false)}
+                                </p>
+                                <div className="flex items-center justify-between gap-2">
+                                    <p className="text-foreground group-hover:text-primary tracking-tight transition-colors">
+                                        {related.metadata.title}
+                                    </p>
+                                    <ArrowRight className="text-muted-foreground group-hover:text-primary size-3.5 shrink-0 transition-colors" />
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
             )}
         </section>
     )

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
 import { books } from "@/lib/books"
 import { BookDetailClient } from "./book-detail-client"
+import { BookReviews } from "@/components/book-reviews"
 import { baseUrl } from "@/app/sitemap"
 
 type Props = { params: Promise<{ slug: string }> }
@@ -91,6 +92,11 @@ const BookPage = async ({ params }: Props) => {
                 Books
             </Link>
             <BookDetailClient book={book} />
+            {book.reviews && book.reviews.length > 0 && (
+                <div className="mt-2 px-1">
+                    <BookReviews reviews={book.reviews} />
+                </div>
+            )}
         </section>
     )
 }

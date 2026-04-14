@@ -1,5 +1,5 @@
 import Link from "next/link"
-import LogoIcon from "@/components/logo"
+import { LogoIcon } from "@/components/logo"
 
 const LINKS = [
     {
@@ -57,4 +57,3 @@ export const Footer = () => {
     )
 }
 
-export default Footer

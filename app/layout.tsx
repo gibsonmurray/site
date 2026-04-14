@@ -5,7 +5,7 @@ import { GeistMono } from "geist/font/mono"
 import { Navbar } from "../components/nav"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import Footer from "../components/footer"
+import { Footer } from "../components/footer"
 import { baseUrl } from "./sitemap"
 import { cn } from "@/lib/utils"
 import { FC } from "react"
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
         "Gibson Murray — author and software engineer. Biblical fiction, faith, and reflections on life.",
     alternates: {
         canonical: baseUrl,
+        types: {
+            "application/rss+xml": `${baseUrl}/rss`,
+        },
     },
     openGraph: {
         title: "Gibson Murray",

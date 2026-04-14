@@ -11,7 +11,7 @@ import { latestBook } from "@/lib/books"
 
 const DISMISS_KEY = "latest-book-popup-dismissed-v1"
 
-export default function LatestBookPopup() {
+export const LatestBookPopup = () => {
     const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {

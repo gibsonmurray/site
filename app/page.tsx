@@ -35,15 +35,7 @@ const Home = () => {
             </div>
 
             <p className="prose text-foreground/90 prose-a:decoration-primary/40 prose-a:underline-offset-4 dark:prose-invert mb-4 leading-7">
-                {`Hi, I'm Gibson, an author and front-end software engineer. I'm currently working at the `}
-                <Link
-                    href="https://www.gop.com"
-                    target="_blank"
-                    className="hover:text-primary"
-                >
-                    Republican National Committee
-                </Link>
-                {` 🇺🇸. On Sundays, I volunteer at `}
+                {`Hi, I'm Gibson, an author who builds websites and web apps in DC. On Sundays, I volunteer at `}
                 <Link
                     href="https://passioncitychurch.com/dc"
                     target="_blank"
@@ -74,7 +66,7 @@ const Home = () => {
                                     width={200}
                                     height={300}
                                     sizes="60px"
-                                    className="h-20 w-auto shrink-0 rounded-md object-contain shadow-md transition-transform duration-200 group-hover:scale-[1.03]"
+                                    className="h-20 w-auto shrink-0 rounded-md object-contain shadow-md transition-transform duration-200"
                                 />
                                 <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
                                     <div className="flex flex-col gap-1">
@@ -115,7 +107,7 @@ const Home = () => {
                     <h2 className="border-primary/45 text-muted-foreground mb-4 border-l-2 pl-3 text-xs font-semibold tracking-[0.12em] uppercase">
                         Currently Reading
                     </h2>
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 p-3">
                         <div className="relative shrink-0">
                             {currentlyReading.url ? (
                                 <Link

@@ -35,15 +35,7 @@ const Home = () => {
             </div>
 
             <p className="prose text-foreground/90 prose-a:decoration-primary/40 prose-a:underline-offset-4 dark:prose-invert mb-4 leading-7">
-                {`Hi, I'm Gibson, an author and front-end software engineer. I'm currently working at the `}
-                <Link
-                    href="https://www.gop.com"
-                    target="_blank"
-                    className="hover:text-primary"
-                >
-                    Republican National Committee
-                </Link>
-                {` 🇺🇸. On Sundays, I volunteer at `}
+                {`Hi, I'm Gibson, an author who builds websites and web apps in DC. On Sundays, I volunteer at `}
                 <Link
                     href="https://passioncitychurch.com/dc"
                     target="_blank"

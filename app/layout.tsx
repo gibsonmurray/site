@@ -109,8 +109,8 @@ const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
                     <PricesProvider prices={prices} />
                     <ThemeProvider
                         attribute="class"
-                        defaultTheme="system"
-                        enableSystem
+                        defaultTheme="light"
+                        enableSystem={false}
                         disableTransitionOnChange
                     >
                         <TooltipProvider delay={500}>

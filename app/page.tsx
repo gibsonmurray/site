@@ -13,6 +13,8 @@ import {
     Code2,
     Coffee,
     Feather,
+    Library,
+    Newspaper,
 } from "lucide-react"
 
 const statusLabel =
@@ -53,8 +55,9 @@ const Home = () => {
                         </Link>
                         <Link
                             href="/blog"
-                            className="border-border bg-background text-foreground hover:bg-muted inline-flex h-11 items-center justify-center rounded-full border px-5 text-sm font-medium transition-colors"
+                            className="border-border bg-background text-foreground hover:bg-muted inline-flex h-11 items-center justify-center gap-2 rounded-full border px-5 text-sm font-medium transition-colors"
                         >
+                            <Newspaper className="size-4" />
                             Read latest
                         </Link>
                     </div>
@@ -122,8 +125,9 @@ const Home = () => {
                             </Link>
                             <Link
                                 href="/books"
-                                className="inline-flex h-11 items-center justify-center rounded-full border border-white/20 px-5 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                                className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/20 px-5 text-sm font-medium text-white transition-colors hover:bg-white/10"
                             >
+                                <Library className="size-4" />
                                 View lineup
                             </Link>
                         </div>

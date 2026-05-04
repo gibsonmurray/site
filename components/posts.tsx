@@ -11,6 +11,7 @@ import { FC } from "react"
 type BlogPostsProps = {
     recentOnly?: boolean
     recentCount?: number
+    variant?: "cards" | "compact"
 }
 
 const PostList = ({
@@ -20,22 +21,27 @@ const PostList = ({
     posts: ReturnType<typeof getBlogPosts>
     compactDate?: boolean
 }) => (
-    <div className="space-y-4">
+    <div className="grid gap-3">
         {posts.map((post) => (
             <Link
                 key={post.slug}
-                className="group hover:bg-muted/30 flex flex-col space-y-1 rounded-lg px-3 py-2 transition-colors"
+                className="app-panel-compact group hover:shadow-foreground/8 min-h-48 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl"
                 href={`/blog/${post.slug}`}
             >
-                <div className="flex flex-1 flex-col space-y-1">
-                    <p className="text-muted-foreground group-hover:text-primary/60 text-xs tabular-nums transition-colors duration-200">
+                <div className="flex flex-1 flex-col gap-2">
+                    <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase tabular-nums">
                         {compactDate
                             ? formatListDay(post.metadata.publishedAt)
                             : formatDate(post.metadata.publishedAt, false)}
                     </p>
-                    <p className="text-foreground group-hover:text-primary tracking-tight transition-colors">
+                    <p className="text-foreground group-hover:text-primary text-lg font-semibold tracking-tight transition-colors">
                         {post.metadata.title}
                     </p>
+                    {post.metadata.summary && (
+                        <p className="text-muted-foreground line-clamp-2 text-sm leading-6">
+                            {post.metadata.summary}
+                        </p>
+                    )}
                     <p className="text-muted-foreground inline-block text-xs font-medium">
                         {getReadingTime(post.content)}
                     </p>
@@ -48,6 +54,7 @@ const PostList = ({
 export const BlogPosts: FC<BlogPostsProps> = ({
     recentOnly = false,
     recentCount = 3,
+    variant = "cards",
 }) => {
     const posts = getBlogPosts(recentOnly, recentCount)
 
@@ -56,11 +63,46 @@ export const BlogPosts: FC<BlogPostsProps> = ({
     }
 
     if (recentOnly) {
+        if (variant === "compact") {
+            return (
+                <section className="app-panel h-full">
+                    <h2 className="app-eyebrow">Latest writing</h2>
+                    <div className="divide-border/65 mt-8 flex flex-1 flex-col divide-y">
+                        {posts.map((post) => (
+                            <Link
+                                key={post.slug}
+                                href={`/blog/${post.slug}`}
+                                className="group flex flex-col gap-2 py-6 first:pt-0 last:pb-0"
+                            >
+                                <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase tabular-nums">
+                                    {formatDate(
+                                        post.metadata.publishedAt,
+                                        false,
+                                    )}
+                                </p>
+                                <p className="text-foreground group-hover:text-primary text-2xl font-semibold tracking-tight transition-colors">
+                                    {post.metadata.title}
+                                </p>
+                                {post.metadata.summary && (
+                                    <p className="text-muted-foreground line-clamp-2 text-base leading-7">
+                                        {post.metadata.summary}
+                                    </p>
+                                )}
+                                <p className="text-muted-foreground text-sm font-medium">
+                                    {getReadingTime(post.content)}
+                                </p>
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+            )
+        }
+
         return (
             <div className="space-y-10">
                 <section>
-                    <h2 className="border-primary/45 text-muted-foreground mb-4 border-l-2 pl-3 text-xs font-semibold tracking-[0.12em] uppercase">
-                        Recents
+                    <h2 className="text-primary mb-5 text-xs font-semibold tracking-[0.22em] uppercase">
+                        Latest writing
                     </h2>
                     <PostList posts={posts} />
                 </section>
@@ -92,15 +134,15 @@ export const BlogPosts: FC<BlogPostsProps> = ({
 
                 return (
                     <section key={year} className="space-y-4">
-                        <h2 className="border-primary/45 text-muted-foreground mb-4 border-l-2 pl-3 text-xs font-semibold tracking-[0.12em] uppercase">
+                        <h2 className="text-primary mb-4 text-xs font-semibold tracking-[0.22em] uppercase">
                             {year}
                         </h2>
                         {months.map((month) => (
                             <div
                                 key={`${year}-${month}`}
-                                className="border-border/65 bg-background/80 rounded-xl border p-4 sm:p-5"
+                                className="app-panel-muted"
                             >
-                                <h3 className="text-muted-foreground mb-3 text-xs font-semibold tracking-widest uppercase">
+                                <h3 className="text-muted-foreground mb-4 text-xs font-semibold tracking-[0.18em] uppercase">
                                     {getMonthLabel(month)}
                                 </h3>
                                 <PostList

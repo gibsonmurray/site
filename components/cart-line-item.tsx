@@ -39,8 +39,8 @@ export const CartLineItem = ({
         unitPrice !== undefined ? unitPrice * item.quantity : undefined
 
     return (
-        <li className="flex gap-3 py-4">
-            <div className="relative aspect-5/8 w-11 shrink-0 overflow-hidden rounded">
+        <li className="flex gap-3 py-5">
+            <div className="bg-muted relative aspect-5/8 w-14 shrink-0 overflow-hidden rounded-xl shadow-sm">
                 <Image
                     src={book.coverImageSrc}
                     alt={book.coverImageAlt}
@@ -49,10 +49,10 @@ export const CartLineItem = ({
                     className="object-contain"
                 />
             </div>
-            <div className="flex flex-1 min-w-0 flex-col gap-2">
+            <div className="flex min-w-0 flex-1 flex-col gap-3">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                        <p className="text-foreground truncate text-sm font-medium leading-tight">
+                        <p className="text-foreground truncate text-sm leading-tight font-semibold">
                             {book.title}
                         </p>
                         <p className="text-muted-foreground mt-0.5 text-xs">
@@ -69,19 +69,19 @@ export const CartLineItem = ({
                         variant="ghost"
                         size="icon-xs"
                         onClick={onRemove}
-                        className="text-muted-foreground hover:text-destructive mt-0.5 shrink-0"
+                        className="text-muted-foreground hover:text-destructive mt-0.5 shrink-0 rounded-full"
                         aria-label="Remove item"
                     >
                         <Trash2 className="size-3.5" />
                     </Button>
                 </div>
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="bg-muted/60 flex items-center gap-1 rounded-full p-1">
                         <Button
-                            variant="outline"
+                            variant="ghost"
                             size="icon-xs"
                             onClick={() => onQuantityChange(item.quantity - 1)}
-                            className="rounded"
+                            className="rounded-full"
                             aria-label="Decrease quantity"
                         >
                             <Minus className="size-3" />
@@ -90,10 +90,10 @@ export const CartLineItem = ({
                             {item.quantity}
                         </span>
                         <Button
-                            variant="outline"
+                            variant="ghost"
                             size="icon-xs"
                             onClick={() => onQuantityChange(item.quantity + 1)}
-                            className="rounded"
+                            className="rounded-full"
                             aria-label="Increase quantity"
                         >
                             <Plus className="size-3" />

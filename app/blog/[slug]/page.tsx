@@ -11,7 +11,7 @@ import {
 } from "@/app/blog/utils"
 import { baseUrl } from "@/app/sitemap"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, ChevronLeft } from "lucide-react"
 
 export const generateStaticParams = async () => {
     let posts = getBlogPosts()
@@ -132,78 +132,101 @@ export default async function BlogPage({
     }
 
     return (
-        <section className="flex flex-col relative overflow-hidden px-5 py-5 sm:px-7 sm:py-7">
+        <section className="bg-background relative overflow-hidden">
             <ScrollProgressBar />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <h1 className="text-2xl font-semibold tracking-tighter">
-                {post.metadata.title}
-            </h1>
-            <div className="mt-2 mb-8 space-y-3 text-sm">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex flex-wrap items-center gap-2 text-neutral-600 dark:text-neutral-400">
-                        <p>
-                            {formatDate(post.metadata.publishedAt, {
-                                includeWeekday: true,
-                            })}
-                        </p>
-                        <span aria-hidden>·</span>
-                        <p>{readingTime}</p>
-                        <span aria-hidden>·</span>
-                        <p>By {authorName}</p>
+            <header className="border-border/60 bg-muted/35 border-b">
+                <div className="mx-auto max-w-4xl px-6 py-12 sm:px-8 lg:py-18">
+                    <Link
+                        href="/blog"
+                        className="text-muted-foreground hover:text-foreground mb-8 inline-flex items-center gap-1 text-sm transition-colors"
+                    >
+                        <ChevronLeft className="size-4" />
+                        Writing
+                    </Link>
+                    <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
+                        Reflection
+                    </p>
+                    <h1 className="text-foreground mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
+                        {post.metadata.title}
+                    </h1>
+                    <div className="mt-6 space-y-4 text-sm">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div className="text-muted-foreground flex flex-wrap items-center gap-2">
+                                <p>
+                                    {formatDate(post.metadata.publishedAt, {
+                                        includeWeekday: true,
+                                    })}
+                                </p>
+                                <span aria-hidden>·</span>
+                                <p>{readingTime}</p>
+                                <span aria-hidden>·</span>
+                                <p>By {authorName}</p>
+                            </div>
+                            <ShareButtons
+                                title={post.metadata.title}
+                                slug={slug}
+                                description={post.metadata.summary}
+                            />
+                        </div>
+                        {tags.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                                {tags.map((tag) => (
+                                    <Badge
+                                        key={tag}
+                                        variant="secondary"
+                                        className="rounded-full"
+                                    >
+                                        {tag}
+                                    </Badge>
+                                ))}
+                            </div>
+                        )}
                     </div>
-                    <ShareButtons
-                        title={post.metadata.title}
-                        slug={slug}
-                        description={post.metadata.summary}
-                    />
                 </div>
-                {tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                        {tags.map((tag) => (
-                            <Badge key={tag} variant="secondary">
-                                {tag}
-                            </Badge>
-                        ))}
+            </header>
+            <div className="mx-auto max-w-3xl px-6 py-12 sm:px-8 lg:py-16">
+                <article className="prose prose-lg dark:prose-invert prose-headings:tracking-tight prose-a:text-primary prose-a:decoration-primary/35 prose-a:underline-offset-4 max-w-none">
+                    <CustomMDX source={post.content} />
+                </article>
+                {scriptureCopyright && (
+                    <p className="text-muted-foreground mt-8 text-xs leading-relaxed">
+                        {scriptureCopyright}
+                    </p>
+                )}
+                {relatedPosts.length > 0 && (
+                    <div className="border-border/60 mt-14 border-t pt-10">
+                        <h2 className="text-primary mb-5 text-xs font-semibold tracking-[0.22em] uppercase">
+                            Related posts
+                        </h2>
+                        <div className="grid gap-3">
+                            {relatedPosts.map((related) => (
+                                <Link
+                                    key={related.slug}
+                                    href={`/blog/${related.slug}`}
+                                    className="app-panel-muted group hover:bg-muted/50 min-h-40 gap-2 transition duration-300 hover:-translate-y-0.5"
+                                >
+                                    <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase tabular-nums">
+                                        {formatDate(
+                                            related.metadata.publishedAt,
+                                            false,
+                                        )}
+                                    </p>
+                                    <div className="flex items-center justify-between gap-3">
+                                        <p className="text-foreground group-hover:text-primary text-lg font-semibold tracking-tight transition-colors">
+                                            {related.metadata.title}
+                                        </p>
+                                        <ArrowRight className="text-muted-foreground group-hover:text-primary size-4 shrink-0 transition-colors" />
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>
-            <article className="prose dark:prose-invert">
-                <CustomMDX source={post.content} />
-            </article>
-            {scriptureCopyright && (
-                <p className="text-muted-foreground text-xs leading-relaxed mt-5">
-                    {scriptureCopyright}
-                </p>
-            )}
-            {relatedPosts.length > 0 && (
-                <div className="border-border/50 mt-10 border-t pt-8">
-                    <h2 className="border-primary/45 text-muted-foreground mb-4 border-l-2 pl-3 text-xs font-semibold tracking-[0.12em] uppercase">
-                        Related Posts
-                    </h2>
-                    <div className="flex flex-col gap-3">
-                        {relatedPosts.map((related) => (
-                            <Link
-                                key={related.slug}
-                                href={`/blog/${related.slug}`}
-                                className="group hover:bg-muted/30 flex flex-col gap-1 rounded-lg px-3 py-2 transition-colors"
-                            >
-                                <p className="text-muted-foreground group-hover:text-primary/60 text-xs tabular-nums transition-colors">
-                                    {formatDate(related.metadata.publishedAt, false)}
-                                </p>
-                                <div className="flex items-center justify-between gap-2">
-                                    <p className="text-foreground group-hover:text-primary tracking-tight transition-colors">
-                                        {related.metadata.title}
-                                    </p>
-                                    <ArrowRight className="text-muted-foreground group-hover:text-primary size-3.5 shrink-0 transition-colors" />
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            )}
         </section>
     )
 }

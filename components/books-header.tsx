@@ -1,17 +1,17 @@
-import { LogoIcon } from "@/components/logo"
-
 export const BooksHeader = () => {
     return (
-        <div>
-            <div className="mb-2 flex items-center gap-2">
-                <LogoIcon className="text-primary size-5" />
-                <h1 className="text-foreground text-2xl font-semibold tracking-tighter">
-                    My Books
-                </h1>
-            </div>
-            <p className="text-muted-foreground mb-8 text-sm">
-                Stories of faith, history, and the human spirit 📖
+        <header className="mx-auto max-w-4xl px-6 py-16 text-center sm:px-8 lg:py-24">
+            <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
+                Biblical fiction
             </p>
-        </div>
+            <h1 className="text-foreground mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl lg:text-7xl">
+                Books that make ancient faith feel immediate.
+            </h1>
+            <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg leading-8">
+                Cinematic stories shaped by Scripture, built for readers who
+                love courage, danger, mercy, and the promises of God moving
+                through ordinary people.
+            </p>
+        </header>
     )
 }

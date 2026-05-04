@@ -1,28 +1,32 @@
 "use client"
 
-import { useState, useRef, type SyntheticEvent } from "react"
+import { useRef, useState, type SyntheticEvent } from "react"
 import Image from "next/image"
 import { useMutation } from "@tanstack/react-query"
 import {
     Bell,
+    BookMarked,
     BookOpen,
     Check,
     ChevronLeft,
     ChevronRight,
+    Feather,
     Headphones,
     Minus,
     Plus,
+    ShieldCheck,
     ShoppingCart,
+    Sparkles,
     Tablet,
     type LucideIcon,
 } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { Input } from "@/components/ui/input"
 import { Book, BookFormat, BookFormatOption } from "@/lib/books"
 import {
     DEFAULT_GLOW,
@@ -35,7 +39,6 @@ import {
 import { useCartStore } from "@/lib/cart-store"
 import { usePricesStore } from "@/lib/prices-store"
 import { cn } from "@/lib/utils"
-import { Input } from "@/components/ui/input"
 
 const FORMAT_CONFIG: Record<BookFormat, { label: string; icon: LucideIcon }> = {
     paperback: { label: "Paperback", icon: BookOpen },
@@ -49,12 +52,9 @@ const fmt = (cents: number) =>
         currency: "USD",
     }).format(cents / 100)
 
-// ─── Carousel ────────────────────────────────────────────────────────────────
-
 type CarouselProps = {
     images: string[]
     alt: string
-    coverShadow: string
     glowColor: GlowColor
     glowColorSoft: GlowColor
     hasGlowColor: boolean
@@ -64,7 +64,6 @@ type CarouselProps = {
 const BookImageCarousel = ({
     images,
     alt,
-    coverShadow,
     glowColor,
     glowColorSoft,
     hasGlowColor,
@@ -77,64 +76,64 @@ const BookImageCarousel = ({
         setCurrent(Math.max(0, Math.min(images.length - 1, index)))
 
     return (
-        <div className="flex flex-col items-center gap-4">
-            <div className="relative w-full px-10">
-                {/* Glow halo */}
-                <div
-                    className="pointer-events-none absolute inset-[-14%] rounded-2xl blur-2xl transition-opacity duration-1000"
-                    style={{
-                        background: `radial-gradient(ellipse at center, rgba(${glowRgb(glowColor)}, 0.5) 0%, rgba(${glowRgb(glowColorSoft)}, 0.25) 50%, transparent 72%)`,
-                        opacity: hasGlowColor ? 1 : 0.5,
-                    }}
-                />
+        <div className="relative overflow-hidden rounded-[2rem] bg-white/[0.06] p-4 sm:p-6">
+            <div
+                className="pointer-events-none absolute inset-x-8 bottom-14 h-24 rounded-full blur-3xl transition-opacity duration-700"
+                style={{
+                    background: `rgba(${glowRgb(glowColor)}, 0.5)`,
+                    opacity: hasGlowColor ? 1 : 0.45,
+                }}
+            />
+            <div
+                className="pointer-events-none absolute inset-[-20%] blur-3xl"
+                style={{
+                    background: `radial-gradient(circle at center, rgba(${glowRgb(glowColorSoft)}, 0.18), transparent 48%)`,
+                }}
+            />
 
-                {/* Clipping frame */}
+            <div className="relative z-10 aspect-[4/3] w-full overflow-hidden rounded-[1.5rem]">
                 <div
-                    className="relative aspect-square size-100 w-full overflow-hidden rounded-lg"
-                    style={{ boxShadow: coverShadow }}
+                    className="flex h-full transition-transform duration-500 ease-out"
+                    style={{ transform: `translateX(-${current * 100}%)` }}
                 >
-                    {/* Sliding strip — absolute so height is guaranteed */}
-                    <div
-                        className="absolute inset-0 flex transition-transform duration-300 ease-in-out"
-                        style={{ transform: `translateX(-${current * 100}%)` }}
-                    >
-                        {images.map((src, i) => (
-                            <div
-                                key={src}
-                                className="relative size-full shrink-0"
-                            >
+                    {images.map((src, i) => (
+                        <div
+                            key={src}
+                            className="relative h-full w-full shrink-0 p-2 sm:p-4"
+                        >
+                            <div className="relative h-full w-full">
                                 <Image
                                     src={src}
-                                    alt={`${alt}${images.length > 1 ? ` — ${i + 1} of ${images.length}` : ""}`}
-                                    width={1000}
-                                    height={1000}
-                                    sizes="(max-width: 640px) calc(100vw - 120px), 416px"
+                                    alt={`${alt}${images.length > 1 ? `, view ${i + 1}` : ""}`}
+                                    fill
+                                    sizes="(min-width: 1024px) 48vw, 88vw"
                                     priority={i === 0}
                                     onLoad={i === 0 ? onFirstLoad : undefined}
-                                    className="size-full object-cover"
+                                    className="object-contain drop-shadow-2xl"
                                 />
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
 
-                {/* Prev / Next arrows */}
                 {showControls && (
                     <>
                         <Button
-                            variant="outline"
+                            variant="ghost"
+                            size="icon-lg"
                             onClick={() => goTo(current - 1)}
                             disabled={current === 0}
-                            className="bg-background/80 hover:bg-background absolute top-1/2 -left-5 size-9 -translate-y-1/2 rounded-full shadow-sm backdrop-blur-sm active:-translate-y-1/2 disabled:opacity-0"
+                            className="absolute top-1/2 left-3 z-20 !-translate-y-1/2 rounded-full bg-black/28 text-white backdrop-blur-md hover:bg-black/40 hover:text-white active:!-translate-y-1/2 disabled:pointer-events-none disabled:opacity-0 sm:left-4"
                             aria-label="Previous image"
                         >
                             <ChevronLeft className="size-5" />
                         </Button>
                         <Button
-                            variant="outline"
+                            variant="ghost"
+                            size="icon-lg"
                             onClick={() => goTo(current + 1)}
                             disabled={current === images.length - 1}
-                            className="bg-background/80 hover:bg-background absolute top-1/2 -right-5 size-9 -translate-y-1/2 rounded-full shadow-sm backdrop-blur-sm active:-translate-y-1/2 disabled:opacity-0"
+                            className="absolute top-1/2 right-3 z-20 !-translate-y-1/2 rounded-full bg-black/28 text-white backdrop-blur-md hover:bg-black/40 hover:text-white active:!-translate-y-1/2 disabled:pointer-events-none disabled:opacity-0 sm:right-4"
                             aria-label="Next image"
                         >
                             <ChevronRight className="size-5" />
@@ -143,20 +142,19 @@ const BookImageCarousel = ({
                 )}
             </div>
 
-            {/* Dot indicators */}
             {showControls && (
-                <div className="flex items-center gap-1.5">
+                <div className="relative z-10 mt-4 flex items-center justify-center gap-1.5">
                     {images.map((_, i) => (
-                        <Button
+                        <button
                             key={i}
-                            variant="ghost"
+                            type="button"
                             onClick={() => goTo(i)}
                             aria-label={`Go to image ${i + 1}`}
                             className={cn(
-                                "bg-foreground min-w-0 rounded-full p-0 transition-all duration-300 hover:bg-foreground",
+                                "rounded-full bg-white transition-all",
                                 i === current
-                                    ? "h-1.5 w-4 opacity-70"
-                                    : "size-1.5 opacity-20 hover:opacity-40",
+                                    ? "h-1.5 w-5 opacity-85"
+                                    : "size-1.5 opacity-28 hover:opacity-55",
                             )}
                         />
                     ))}
@@ -165,8 +163,6 @@ const BookImageCarousel = ({
         </div>
     )
 }
-
-// ─── Pre-order notify form ────────────────────────────────────────────────────
 
 const PreOrderNotifyForm = ({
     book,
@@ -197,66 +193,69 @@ const PreOrderNotifyForm = ({
         if (email) mutation.mutate(email)
     }
 
+    if (submitted) {
+        return (
+            <div className="app-panel-dark">
+                <div className="flex flex-1 items-center gap-3">
+                    <Check className="text-primary size-5 shrink-0" />
+                    <span className="font-medium">
+                        You are on the list. I will send an update when
+                        pre-orders open.
+                    </span>
+                </div>
+            </div>
+        )
+    }
+
     return (
-        <div className="border-border/60 bg-muted/20 flex flex-col items-center gap-4 rounded-2xl border p-5 text-center">
-            <div className="flex flex-col items-center gap-1">
-                <p className="text-foreground text-sm font-semibold">
+        <form onSubmit={handleSubmit} className="app-panel-dark">
+            <div>
+                <p className="text-2xl font-semibold tracking-tight text-white">
                     Pre-order opening soon
                 </p>
                 {releaseDate && (
-                    <p className="text-muted-foreground text-xs">
+                    <p className="mt-2 text-base leading-7 text-white/55">
                         Releasing {releaseDate}
                     </p>
                 )}
             </div>
-            {submitted ? (
-                <div className="flex items-center gap-2 text-sm">
-                    <Check className="text-primary size-4 shrink-0" />
-                    <span className="text-foreground font-medium">
-                        {
-                            "You're on the list! We'll notify you when pre-orders open."
-                        }
-                    </span>
-                </div>
-            ) : (
-                <form
-                    onSubmit={handleSubmit}
-                    className="flex w-full max-w-xs flex-col gap-2"
+            <div className="app-panel-action flex flex-col gap-3 sm:flex-row">
+                <Input
+                    ref={inputRef}
+                    type="email"
+                    required
+                    placeholder="your@email.com"
+                    className="h-12 flex-1 rounded-full border-white/15 bg-white/10 px-5 text-base text-white placeholder:text-white/35"
+                />
+                <Button
+                    type="submit"
+                    size="lg"
+                    disabled={mutation.isPending}
+                    className="h-12 rounded-full bg-white px-5 text-base text-[#111] hover:bg-white/90 sm:shrink-0"
                 >
-                    <p className="text-muted-foreground text-xs">
-                        Get notified when pre-orders open
-                    </p>
-                    <div className="flex flex-col gap-2 sm:flex-row">
-                        <Input
-                            ref={inputRef}
-                            type="email"
-                            required
-                            placeholder="your@email.com"
-                            className="h-9 flex-1"
-                        />
-                        <Button
-                            type="submit"
-                            size="lg"
-                            disabled={mutation.isPending}
-                            className="gap-1.5 sm:shrink-0"
-                        >
-                            <Bell className="size-3.5" />
-                            {mutation.isPending ? "..." : "Notify me"}
-                        </Button>
-                    </div>
-                    {mutation.isError && (
-                        <p className="text-destructive text-xs">
-                            {mutation.error?.message ??
-                                "Something went wrong. Try again."}
-                        </p>
-                    )}
-                </form>
+                    <Bell className="size-4" />
+                    {mutation.isPending ? "..." : "Notify me"}
+                </Button>
+            </div>
+            {mutation.isError && (
+                <p className="text-destructive mt-2 text-xs">
+                    {mutation.error?.message ??
+                        "Something went wrong. Try again."}
+                </p>
             )}
-        </div>
+        </form>
     )
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+const statusCopy = (book: Book, isPurchasable: boolean) => {
+    if (book.status.type === "pre-order" && !isPurchasable) {
+        return "Pre-order opening soon"
+    }
+    if (book.status.type === "pre-order")
+        return book.status.label ?? "Pre-order"
+    if (book.status.type === "coming-soon") return book.status.label
+    return book.status.label ?? "Available now"
+}
 
 export const BookDetailClient = ({ book }: { book: Book }) => {
     const [glowColor, setGlowColor] = useState<GlowColor>(DEFAULT_GLOW)
@@ -283,11 +282,13 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
     const isPreOrder = book.status.type === "pre-order"
     const isComingSoon = book.status.type === "coming-soon"
     const isPurchasable = book.purchasable !== false
+    const releaseDate =
+        book.status.type === "pre-order" ? book.status.releaseDate : null
+    const selectedPrice = getPrice(book.slug, selectedFormat)
     const canBuy =
         isPurchasable &&
         !isComingSoon &&
         (book.formats[selectedFormat]?.available ?? false)
-    const selectedPrice = getPrice(book.slug, selectedFormat)
 
     const buyNowMutation = useMutation({
         mutationFn: async () => {
@@ -323,258 +324,309 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
 
     const glowColorSoft = mixWithWhite(glowColor, 0.35)
     const glowColorDeep = mixWithBlack(glowColor, 0.18)
-    const coverShadow = hasGlowColor
-        ? `0 0 0 1px rgba(255,255,255,0.06), 0 4px 24px rgba(${glowRgb(glowColorDeep)}, 0.35), 0 0 60px rgba(${glowRgb(glowColor)}, 0.18)`
-        : `0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.28)`
-
-    const releaseDate = isPreOrder
-        ? (book.status as { type: "pre-order"; releaseDate: string })
-              .releaseDate
-        : null
 
     return (
-        <div className="flex flex-col gap-8 md:gap-10">
-            {/* Carousel */}
-            <BookImageCarousel
-                images={allImages}
-                alt={book.coverImageAlt}
-                coverShadow={coverShadow}
-                glowColor={glowColor}
-                glowColorSoft={glowColorSoft}
-                hasGlowColor={hasGlowColor}
-                onFirstLoad={handleFirstImageLoad}
-            />
+        <div className="pt-8">
+            <section
+                className="relative overflow-hidden bg-[#111] text-white"
+                style={{
+                    backgroundImage: `radial-gradient(circle at 75% 16%, rgba(${glowRgb(glowColorSoft)}, 0.2), transparent 32%), radial-gradient(circle at 20% 86%, rgba(${glowRgb(glowColorDeep)}, 0.34), transparent 34%)`,
+                }}
+            >
+                <div className="mx-auto grid max-w-6xl gap-8 px-6 py-10 sm:px-8 lg:grid-cols-[1.08fr_0.92fr] lg:py-16">
+                    <BookImageCarousel
+                        images={allImages}
+                        alt={book.coverImageAlt}
+                        glowColor={glowColor}
+                        glowColorSoft={glowColorSoft}
+                        hasGlowColor={hasGlowColor}
+                        onFirstLoad={handleFirstImageLoad}
+                    />
 
-            <div className="flex flex-col gap-7">
-                {/* Title block */}
-                <div className="flex flex-col items-center gap-1.5 text-center">
-                    <Badge variant="outline" className="text-xs">
-                        {isPreOrder && !isPurchasable
-                            ? "Pre-order coming soon"
-                            : isPreOrder
-                              ? "Pre-order"
-                              : isComingSoon
-                                ? "Coming soon"
-                                : "Available"}
-                    </Badge>
-                    <h1 className="text-foreground text-3xl font-bold tracking-tight">
-                        {book.title}
-                    </h1>
-                    <p className="text-muted-foreground text-sm">
-                        {book.genre}
-                    </p>
-                </div>
-
-                {/* Short description */}
-                <p className="text-muted-foreground mx-auto max-w-prose text-center text-sm leading-relaxed">
-                    {book.shortDescription}
-                </p>
-
-                {/* Purchase section */}
-                {!isPurchasable && isPreOrder && (
-                    <PreOrderNotifyForm book={book} releaseDate={releaseDate} />
-                )}
-                {isPurchasable && (
-                    <div className="border-border/60 bg-muted/20 flex flex-col gap-4 rounded-2xl border p-4 sm:p-5">
-                        {/* Format */}
-                        <div className="flex flex-col gap-3">
-                            <span className="text-foreground text-sm font-semibold">
-                                Format
+                    <div className="flex flex-col justify-center">
+                        <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-white/65">
+                            <span className="rounded-full bg-white/10 px-3 py-1 text-white">
+                                {statusCopy(book, isPurchasable)}
                             </span>
-                            <div className="flex gap-2">
-                                {(
-                                    Object.entries(book.formats) as [
-                                        BookFormat,
-                                        BookFormatOption,
-                                    ][]
-                                ).map(([format, opt]) => {
-                                    const isSelected =
-                                        selectedFormat === format &&
-                                        opt.available
-                                    const Icon = FORMAT_CONFIG[format].icon
-                                    const btn = (
-                                        <Button
-                                            key={format}
-                                            variant="ghost"
-                                            disabled={!opt.available}
-                                            onClick={() =>
-                                                opt.available &&
-                                                setSelectedFormat(format)
-                                            }
-                                            className={cn(
-                                                "flex h-auto w-full flex-col items-center gap-1.5 rounded-xl border px-2 py-2.5 text-xs font-medium transition-all",
-                                                isSelected
-                                                    ? "border-primary/40 bg-primary/5 text-foreground shadow-sm hover:bg-primary/5"
-                                                    : opt.available
-                                                      ? "border-border text-muted-foreground hover:border-primary/20 hover:text-foreground cursor-pointer"
-                                                      : "border-border/40 text-muted-foreground/40 cursor-not-allowed",
-                                            )}
-                                        >
-                                            <Icon
-                                                className={cn(
-                                                    "size-4",
-                                                    isSelected
-                                                        ? "text-primary"
-                                                        : "text-current",
-                                                )}
-                                            />
-                                            {FORMAT_CONFIG[format].label}
-                                            <span className="text-[11px] font-normal opacity-75">
-                                                {(() => {
-                                                    const p = getPrice(
-                                                        book.slug,
-                                                        format,
-                                                    )
-                                                    return p !== undefined
-                                                        ? fmt(p)
-                                                        : "Coming soon"
-                                                })()}
-                                            </span>
-                                        </Button>
-                                    )
-                                    return opt.available ? (
-                                        <div
-                                            key={format}
-                                            className="flex flex-1"
-                                        >
-                                            {btn}
-                                        </div>
-                                    ) : (
-                                        <Tooltip key={format}>
-                                            <TooltipTrigger
-                                                render={
-                                                    <span className="flex flex-1 cursor-not-allowed" />
-                                                }
-                                            >
-                                                {btn}
-                                            </TooltipTrigger>
-                                            <TooltipContent side="top">
-                                                Coming soon
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    )
-                                })}
-                            </div>
-                        </div>
-
-                        <div className="border-border/50 flex items-center justify-between border-t pt-4">
-                            <span className="text-foreground text-sm font-semibold">
-                                Price
-                            </span>
-                            {selectedPrice !== undefined ? (
-                                <span className="text-foreground text-sm font-semibold tabular-nums">
-                                    {fmt(selectedPrice)}
-                                </span>
-                            ) : (
-                                <span className="text-muted-foreground text-sm">
-                                    Price coming soon
+                            {releaseDate && (
+                                <span className="rounded-full bg-white/10 px-3 py-1">
+                                    {releaseDate}
                                 </span>
                             )}
-                        </div>
-
-                        {/* Quantity */}
-                        <div className="flex items-center justify-between">
-                            <span className="text-foreground text-sm font-semibold">
-                                Quantity
+                            <span className="rounded-full bg-white/10 px-3 py-1">
+                                {book.genre}
                             </span>
-                            <div className="border-border bg-muted/40 flex items-center gap-1 rounded-xl border p-1">
-                                <Button
-                                    variant="ghost"
-                                    size="icon-sm"
-                                    onClick={() =>
-                                        setQuantity((q) => Math.max(1, q - 1))
-                                    }
-                                    disabled={quantity <= 1}
-                                    className="text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
-                                    aria-label="Decrease quantity"
-                                >
-                                    <Minus className="size-3.5" />
-                                </Button>
-                                <span className="text-foreground w-8 text-center text-sm font-semibold tabular-nums">
-                                    {quantity}
-                                </span>
-                                <Button
-                                    variant="ghost"
-                                    size="icon-sm"
-                                    onClick={() =>
-                                        setQuantity((q) => Math.min(99, q + 1))
-                                    }
-                                    disabled={quantity >= 99}
-                                    className="text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
-                                    aria-label="Increase quantity"
-                                >
-                                    <Plus className="size-3.5" />
-                                </Button>
-                            </div>
                         </div>
 
-                        {/* CTAs */}
-                        {canBuy ? (
-                            <div className="border-border/50 flex flex-col gap-2.5 border-t pt-4">
-                                <Button
-                                    size="lg"
-                                    onClick={() => buyNowMutation.mutate()}
-                                    disabled={buyNowMutation.isPending}
-                                    className="w-full py-6 text-base font-semibold"
-                                >
-                                    {buyNowMutation.isPending
-                                        ? "Redirecting..."
-                                        : isPreOrder
-                                          ? "Pre-order now"
-                                          : "Buy now"}
-                                </Button>
-                                <Button
-                                    size="lg"
-                                    variant="outline"
-                                    onClick={handleAddToCart}
-                                    disabled={added}
-                                    className="w-full gap-2 py-6 font-semibold"
-                                >
-                                    {added ? (
-                                        <>
-                                            <Check className="size-4" />
-                                            Added to cart
-                                        </>
-                                    ) : (
-                                        <>
-                                            <ShoppingCart className="size-4" />
-                                            Add to cart
-                                        </>
-                                    )}
-                                </Button>
-                                {releaseDate && (
-                                    <p className="text-muted-foreground text-center text-xs">
-                                        Ships {releaseDate}
-                                    </p>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="border-border/50 bg-muted/30 border-t pt-4 text-center">
-                                <p className="text-muted-foreground text-sm font-medium">
-                                    {isComingSoon
-                                        ? book.status.label
-                                        : "Not available"}
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                )}
-            </div>
+                        <h1 className="mt-6 text-6xl font-semibold tracking-tight text-balance sm:text-7xl">
+                            {book.title}
+                        </h1>
+                        <p className="mt-6 max-w-xl text-xl leading-8 text-white/72">
+                            {book.shortDescription}
+                        </p>
+                        <p className="mt-5 max-w-xl text-sm leading-7 text-white/52">
+                            A fortified city. A dangerous mercy. A promise on
+                            the move.
+                        </p>
 
-            {/* About */}
-            <div className="border-border/50 flex flex-col gap-4 border-t pt-8">
-                <h2 className="text-foreground text-sm font-semibold">
-                    About this book
-                </h2>
-                {book.longDescription.map((paragraph, i) => (
-                    <p
-                        key={i}
-                        className="text-muted-foreground text-sm leading-relaxed"
-                    >
-                        {paragraph}
-                    </p>
-                ))}
-            </div>
+                        <div className="mt-8">
+                            {!isPurchasable && isPreOrder ? (
+                                <PreOrderNotifyForm
+                                    book={book}
+                                    releaseDate={releaseDate}
+                                />
+                            ) : (
+                                <div className="app-panel-dark">
+                                    <div className="grid gap-2 sm:grid-cols-3">
+                                        {(
+                                            Object.entries(book.formats) as [
+                                                BookFormat,
+                                                BookFormatOption,
+                                            ][]
+                                        ).map(([format, opt]) => {
+                                            const isSelected =
+                                                selectedFormat === format &&
+                                                opt.available
+                                            const Icon =
+                                                FORMAT_CONFIG[format].icon
+                                            const price = getPrice(
+                                                book.slug,
+                                                format,
+                                            )
+                                            const btn = (
+                                                <Button
+                                                    key={format}
+                                                    variant="ghost"
+                                                    disabled={!opt.available}
+                                                    onClick={() =>
+                                                        opt.available &&
+                                                        setSelectedFormat(
+                                                            format,
+                                                        )
+                                                    }
+                                                    className={cn(
+                                                        "h-auto w-full flex-col items-start gap-2 rounded-2xl border px-4 py-3 text-left text-white hover:bg-white/10 hover:text-white",
+                                                        isSelected
+                                                            ? "border-white/45 bg-white/14"
+                                                            : opt.available
+                                                              ? "border-white/12 bg-white/5"
+                                                              : "border-white/8 bg-white/[0.03] text-white/32",
+                                                    )}
+                                                >
+                                                    <Icon className="size-4" />
+                                                    <span className="text-sm font-semibold">
+                                                        {
+                                                            FORMAT_CONFIG[
+                                                                format
+                                                            ].label
+                                                        }
+                                                    </span>
+                                                    <span className="text-xs font-normal text-white/55">
+                                                        {price !== undefined
+                                                            ? fmt(price)
+                                                            : "Coming soon"}
+                                                    </span>
+                                                </Button>
+                                            )
+
+                                            return opt.available ? (
+                                                <div key={format}>{btn}</div>
+                                            ) : (
+                                                <Tooltip key={format}>
+                                                    <TooltipTrigger
+                                                        render={
+                                                            <span className="block" />
+                                                        }
+                                                    >
+                                                        {btn}
+                                                    </TooltipTrigger>
+                                                    <TooltipContent side="top">
+                                                        Coming soon
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            )
+                                        })}
+                                    </div>
+
+                                    <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
+                                        <div>
+                                            <p className="text-xs font-medium text-white/45">
+                                                Price
+                                            </p>
+                                            <p className="text-lg font-semibold tabular-nums">
+                                                {selectedPrice !== undefined
+                                                    ? fmt(selectedPrice)
+                                                    : "Coming soon"}
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center gap-1 rounded-full bg-white/8 p-1">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon-sm"
+                                                onClick={() =>
+                                                    setQuantity((q) =>
+                                                        Math.max(1, q - 1),
+                                                    )
+                                                }
+                                                disabled={quantity <= 1}
+                                                className="rounded-full text-white/70 hover:bg-white/10 hover:text-white"
+                                                aria-label="Decrease quantity"
+                                            >
+                                                <Minus className="size-3.5" />
+                                            </Button>
+                                            <span className="w-8 text-center text-sm font-semibold tabular-nums">
+                                                {quantity}
+                                            </span>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon-sm"
+                                                onClick={() =>
+                                                    setQuantity((q) =>
+                                                        Math.min(99, q + 1),
+                                                    )
+                                                }
+                                                disabled={quantity >= 99}
+                                                className="rounded-full text-white/70 hover:bg-white/10 hover:text-white"
+                                                aria-label="Increase quantity"
+                                            >
+                                                <Plus className="size-3.5" />
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    {canBuy ? (
+                                        <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                                            <Button
+                                                size="lg"
+                                                onClick={() =>
+                                                    buyNowMutation.mutate()
+                                                }
+                                                disabled={
+                                                    buyNowMutation.isPending
+                                                }
+                                                className="h-12 rounded-full bg-white text-[#111] hover:bg-white/90"
+                                            >
+                                                {buyNowMutation.isPending
+                                                    ? "Redirecting..."
+                                                    : isPreOrder
+                                                      ? "Pre-order now"
+                                                      : "Buy now"}
+                                            </Button>
+                                            <Button
+                                                size="lg"
+                                                variant="ghost"
+                                                onClick={handleAddToCart}
+                                                disabled={added}
+                                                className="h-12 rounded-full bg-white/10 text-white hover:bg-white/16 hover:text-white"
+                                            >
+                                                {added ? (
+                                                    <>
+                                                        <Check className="size-4" />
+                                                        Added
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <ShoppingCart className="size-4" />
+                                                        Add to cart
+                                                    </>
+                                                )}
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <p className="mt-4 rounded-[1.25rem] bg-white/7 p-4 text-center text-sm font-medium text-white/65">
+                                            {isComingSoon
+                                                ? book.status.label
+                                                : "Purchase options are not open yet."}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section className="bg-background">
+                <div className="mx-auto grid max-w-6xl gap-8 px-6 py-18 sm:px-8 lg:grid-cols-3 lg:py-24">
+                    <div className="app-panel-compact">
+                        <BookMarked className="text-primary mb-8 size-5" />
+                        <h2 className="app-panel-title-sm">
+                            Biblical imagination.
+                        </h2>
+                        <p className="app-panel-copy-sm">
+                            Rooted in Scripture, written with reverence for the
+                            text and curiosity about the people inside it.
+                        </p>
+                    </div>
+                    <div className="app-panel-compact">
+                        <Sparkles className="text-primary mb-8 size-5" />
+                        <h2 className="app-panel-title-sm">Cinematic pace.</h2>
+                        <p className="app-panel-copy-sm">
+                            Political pressure, impossible choices, spiritual
+                            stakes, and chapters built to keep moving.
+                        </p>
+                    </div>
+                    <div className="app-panel-compact">
+                        <ShieldCheck className="text-primary mb-8 size-5" />
+                        <h2 className="app-panel-title-sm">
+                            Faith under fire.
+                        </h2>
+                        <p className="app-panel-copy-sm">
+                            A story about courage, holiness, mercy, and what God
+                            can do through unlikely obedience.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section className="bg-muted/35">
+                <div className="mx-auto grid max-w-6xl gap-12 px-6 py-18 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:py-24">
+                    <div>
+                        <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
+                            About the book
+                        </p>
+                        <h2 className="text-foreground mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+                            Ancient walls. Human hearts. Divine promise.
+                        </h2>
+                    </div>
+                    <div className="space-y-6">
+                        {book.longDescription.map((paragraph, i) => (
+                            <p
+                                key={i}
+                                className="text-foreground/78 text-lg leading-8"
+                            >
+                                {paragraph}
+                            </p>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <section className="bg-background">
+                <div className="mx-auto grid max-w-6xl gap-8 px-6 py-18 sm:px-8 lg:grid-cols-[1fr_1fr] lg:py-24">
+                    <div className="app-panel-dark-solid">
+                        <Feather className="text-primary mb-10 size-5" />
+                        <p className="text-3xl leading-tight font-semibold tracking-tight text-balance">
+                            Written for readers who want biblical fiction to
+                            feel both faithful and alive.
+                        </p>
+                    </div>
+                    <div className="flex flex-col justify-center">
+                        <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
+                            Reader promise
+                        </p>
+                        <h2 className="text-foreground mt-4 text-4xl font-semibold tracking-tight">
+                            Reverent, vivid, and built to move.
+                        </h2>
+                        <p className="text-muted-foreground mt-5 text-sm leading-7">
+                            The aim is not to replace Scripture, but to send you
+                            back to it with a larger imagination for the people,
+                            places, fear, faith, and mercy moving through the
+                            biblical story.
+                        </p>
+                    </div>
+                </div>
+            </section>
         </div>
     )
 }

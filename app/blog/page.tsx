@@ -1,6 +1,5 @@
 import { BlogPosts } from "@/components/posts"
 import { Metadata } from "next"
-import { LogoIcon } from "@/components/logo"
 import { baseUrl } from "@/app/sitemap"
 import { getBlogPosts } from "@/app/blog/utils"
 import { BlogSearch } from "@/components/blog-search"
@@ -47,18 +46,23 @@ const BlogPage = () => {
     }))
 
     return (
-        <section className="page-shell">
-            <div className="mb-2 flex items-center gap-2">
-                <LogoIcon className="text-primary size-5" />
-                <h1 className="text-2xl font-semibold tracking-tighter text-foreground">
-                    My Blog
+        <section className="bg-background">
+            <header className="mx-auto max-w-4xl px-6 py-16 text-center sm:px-8 lg:py-24">
+                <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
+                    Essays and reflections
+                </p>
+                <h1 className="text-foreground mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl lg:text-7xl">
+                    Writing on faith, story, and ordinary life.
                 </h1>
+                <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg leading-8">
+                    Biblical reflections, book notes, and essays from the place
+                    where Christian conviction meets daily attention.
+                </p>
+            </header>
+            <div className="mx-auto max-w-4xl px-6 pb-20 sm:px-8 lg:pb-28">
+                <BlogSearch posts={searchablePosts} />
+                <BlogPosts />
             </div>
-            <p className="mb-6 text-sm text-muted-foreground">
-                My thoughts, ideas, and learnings on faith and life 💭
-            </p>
-            <BlogSearch posts={searchablePosts} />
-            <BlogPosts />
         </section>
     )
 }

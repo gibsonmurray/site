@@ -3,14 +3,7 @@
 import { useState, type SyntheticEvent } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import {
-    ArrowRight,
-    CalendarClock,
-    Check,
-    ShoppingCart,
-    Tag,
-} from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { ArrowRight, CalendarClock, Check, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Book, BookFormat, BookFormatOption } from "@/lib/books"
 import {
@@ -33,19 +26,25 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
     const [hasGlowColor, setHasGlowColor] = useState(false)
     const [added, setAdded] = useState(false)
 
+    const { addItem, openCart } = useCartStore()
     const isPreOrder = book.status.type === "pre-order"
     const isComingSoon = book.status.type === "coming-soon"
     const isPurchasable = book.purchasable !== false
-
-    const releaseDate = isPreOrder
-        ? (book.status as { type: "pre-order"; releaseDate: string }).releaseDate
-        : null
-
-    const { addItem, openCart } = useCartStore()
+    const releaseDate =
+        book.status.type === "pre-order" ? book.status.releaseDate : null
 
     const defaultFormat = (
         Object.entries(book.formats) as [BookFormat, BookFormatOption][]
     ).find(([, opt]) => opt.available)?.[0]
+
+    const statusCopy =
+        isPreOrder && !isPurchasable
+            ? "Pre-order opening soon"
+            : isPreOrder
+              ? "Pre-order"
+              : isComingSoon
+                ? book.status.label
+                : "Available now"
 
     const handleAddToCart = () => {
         if (!defaultFormat) return
@@ -64,147 +63,107 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
     }
 
     const glowColorSoft = mixWithWhite(glowColor, 0.35)
-    const glowColorDeep = mixWithBlack(glowColor, 0.18)
-    const accentColor = mixWithWhite(glowColor, 0.18)
-    const coverShadow = hasGlowColor
-        ? `0 0 0 1px rgba(255,255,255,0.06), 0 0 18px rgba(${glowRgb(glowColorDeep)}, 0.22), 0 0 46px rgba(${glowRgb(glowColor)}, 0.1)`
-        : `0 0 0 1px rgba(255,255,255,0.06), 0 18px 48px rgba(0,0,0,0.22), 0 0 18px rgba(${glowRgb(glowColorDeep)}, 0.1), 0 0 46px rgba(${glowRgb(glowColor)}, 0.05)`
+    const glowColorDeep = mixWithBlack(glowColor, 0.22)
+    const heroImage = book.images?.[0] ?? book.coverImageSrc
 
     return (
         <article
-            className="border-border/70 bg-card/90 relative overflow-hidden rounded-2xl border p-5 shadow-[0_16px_48px_rgba(0,0,0,0.08)] sm:p-6"
+            className="shadow-foreground/10 relative overflow-hidden rounded-[2rem] bg-[#111] text-white shadow-2xl"
             style={{
-                backgroundImage: `linear-gradient(140deg, rgba(${glowRgb(glowColorSoft)}, 0.14) 0%, transparent 50%)`,
+                backgroundImage: `radial-gradient(circle at 24% 20%, rgba(${glowRgb(glowColorSoft)}, 0.24), transparent 32%), linear-gradient(145deg, rgba(255,255,255,0.08), transparent 42%)`,
             }}
         >
             <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-px"
+                className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-80"
                 style={{
-                    background: `linear-gradient(90deg, rgba(${glowRgb(accentColor)}, 0.9) 0%, rgba(${glowRgb(glowColorDeep)}, 0.55) 60%, transparent 100%)`,
+                    background: `linear-gradient(90deg, transparent, rgba(${glowRgb(glowColor)}, 0.8), transparent)`,
                 }}
             />
-
-            <div className="grid gap-5 md:grid-cols-[auto,minmax(0,1fr)] md:items-start md:gap-x-7">
-                {/* Cover */}
-                <div className="relative mx-auto w-40 shrink-0 overflow-visible md:w-48">
+            <div className="grid min-h-[34rem] gap-8 p-6 sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:p-12">
+                <div className="relative flex min-h-80 items-center justify-center overflow-hidden rounded-[1.5rem] bg-white/[0.04]">
                     <div
-                        className="pointer-events-none absolute inset-[-8%] rounded-xl blur-xl transition-opacity duration-700"
+                        className="pointer-events-none absolute inset-x-10 bottom-10 h-20 rounded-full blur-3xl transition-opacity duration-700"
                         style={{
-                            background: `radial-gradient(circle at center, rgba(${glowRgb(glowColor)}, 0.42) 0%, rgba(${glowRgb(glowColorSoft)}, 0.2) 42%, transparent 70%)`,
-                            opacity: hasGlowColor ? 1 : 0.7,
+                            background: `rgba(${glowRgb(glowColor)}, 0.45)`,
+                            opacity: hasGlowColor ? 1 : 0.5,
                         }}
                     />
-                    <div
-                        className="relative aspect-5/8 w-full overflow-hidden rounded-md"
-                        style={{ boxShadow: coverShadow }}
-                    >
-                        <Image
-                            src={book.coverImageSrc}
-                            alt={book.coverImageAlt}
-                            fill
-                            sizes="(max-width: 768px) 10rem, 12rem"
-                            priority={priority}
-                            onLoad={handleCoverLoad}
-                            className="object-contain"
-                        />
-                    </div>
+                    <Image
+                        src={heroImage}
+                        alt={book.coverImageAlt}
+                        width={780}
+                        height={780}
+                        sizes="(min-width: 1024px) 48vw, 90vw"
+                        priority={priority}
+                        onLoad={handleCoverLoad}
+                        className="relative z-10 max-h-[30rem] w-full object-contain drop-shadow-2xl transition duration-500 hover:scale-[1.02]"
+                    />
                 </div>
 
-                <div className="flex min-w-0 flex-col gap-4">
-                    {/* Header */}
-                    <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                            <h2 className="text-foreground text-2xl font-semibold tracking-tight">
-                                {book.title}
-                            </h2>
-                            <p className="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
-                                <Tag className="size-3" />
-                                {book.genre}
-                            </p>
-                        </div>
-                        <Badge variant="outline" className="shrink-0 text-xs">
-                            {isPreOrder && !isPurchasable ? (
-                                <span className="flex items-center gap-1">
-                                    <CalendarClock className="size-3" />
-                                    Pre-order coming soon
-                                </span>
-                            ) : isPreOrder ? (
-                                <span className="flex items-center gap-1">
-                                    <CalendarClock className="size-3" />
-                                    Pre-order
-                                </span>
-                            ) : isComingSoon ? (
-                                "Coming soon"
-                            ) : (
-                                "Available"
-                            )}
-                        </Badge>
+                <div className="flex flex-col justify-center py-2">
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-white/65">
+                        <span className="rounded-full bg-white/10 px-3 py-1 text-white">
+                            {statusCopy}
+                        </span>
+                        {releaseDate && (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1">
+                                <CalendarClock className="size-3.5" />
+                                {releaseDate}
+                            </span>
+                        )}
+                        <span className="rounded-full bg-white/10 px-3 py-1">
+                            {book.genre}
+                        </span>
                     </div>
 
-                    <p className="text-muted-foreground text-sm leading-snug">
+                    <h2 className="mt-6 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
+                        {book.title}
+                    </h2>
+                    <p className="mt-5 max-w-xl text-xl leading-8 text-white/72">
                         {book.shortDescription}
                     </p>
+                    <p className="mt-5 max-w-xl text-sm leading-7 text-white/50">
+                        A biblical epic designed to feel vivid, human, and
+                        impossible to put down.
+                    </p>
 
-                    <div className="mt-auto flex flex-col gap-2">
-                        {!isPurchasable ? (
-                            <Link href={`/books/${book.slug}`}>
-                                <Button
-                                    size="lg"
-                                    variant="outline"
-                                    className="w-full gap-2 py-6 font-semibold"
-                                >
-                                    Learn more
-                                    <ArrowRight className="size-4" />
-                                </Button>
-                            </Link>
-                        ) : isComingSoon ? (
-                            <div className="border-border/50 bg-background/50 rounded-lg border p-4 text-center">
-                                <p className="text-muted-foreground text-sm font-medium">
-                                    {book.status.label}
-                                </p>
-                            </div>
-                        ) : (
-                            <>
-                                <Button
-                                    size="lg"
-                                    className="w-full gap-2 py-6 font-semibold"
-                                    onClick={handleAddToCart}
-                                    disabled={!defaultFormat || added}
-                                >
-                                    {added ? (
-                                        <>
-                                            <Check className="size-4" />
-                                            Added to cart
-                                        </>
-                                    ) : isPreOrder ? (
-                                        <>
-                                            <ShoppingCart className="size-4" />
-                                            Pre-order
-                                            {releaseDate && (
-                                                <span className="text-primary-foreground/60 ml-0.5 font-normal">
-                                                    · {releaseDate}
-                                                </span>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <>
-                                            <ShoppingCart className="size-4" />
-                                            Add to cart
-                                        </>
-                                    )}
-                                </Button>
-                                <Link
-                                    href={`/books/${book.slug}`}
-                                    className="text-muted-foreground hover:text-foreground flex items-center justify-center gap-1 text-sm transition-colors"
-                                >
-                                    View more info
-                                    <ArrowRight className="size-3" />
-                                </Link>
-                            </>
+                    <div className="mt-9 flex flex-wrap items-center gap-3">
+                        <Link
+                            href={`/books/${book.slug}`}
+                            className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
+                        >
+                            Learn more
+                            <ArrowRight className="size-4" />
+                        </Link>
+                        {isPurchasable && !isComingSoon && defaultFormat && (
+                            <Button
+                                size="lg"
+                                onClick={handleAddToCart}
+                                disabled={added}
+                                className="h-11 rounded-full bg-white/10 px-5 text-white hover:bg-white/16"
+                            >
+                                {added ? (
+                                    <>
+                                        <Check className="size-4" />
+                                        Added
+                                    </>
+                                ) : (
+                                    <>
+                                        <ShoppingCart className="size-4" />
+                                        {isPreOrder ? "Pre-order" : "Buy"}
+                                    </>
+                                )}
+                            </Button>
                         )}
                     </div>
                 </div>
             </div>
+            <div
+                className="pointer-events-none absolute right-0 bottom-0 h-40 w-1/2 opacity-25 blur-3xl"
+                style={{
+                    background: `rgba(${glowRgb(glowColorDeep)}, 0.75)`,
+                }}
+            />
         </article>
     )
 }

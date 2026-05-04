@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { latestBook } from "@/lib/books"
 import { SuccessConfetti } from "./success-confetti"
 import { ClearCart } from "./clear-cart"
+import { Check, LibraryBig } from "lucide-react"
 
 export const metadata: Metadata = {
     title: "Order Confirmed",
@@ -21,25 +22,30 @@ const SuccessPage = () => {
             : "the announced release window"
 
     return (
-        <section className="page-shell flex flex-col items-center justify-center gap-6 py-24 text-center">
+        <section className="mx-auto flex min-h-[calc(100svh-7rem)] max-w-4xl flex-col items-center justify-center px-6 py-16 text-center sm:px-8">
             <ClearCart />
             <SuccessConfetti />
-            <div className="flex flex-col items-center gap-3">
-                <div className="text-5xl mb-2 animate-bounce">🎉</div>
-                <h1 className="text-foreground text-4xl font-bold tracking-tight">
-                    You&apos;re in!
-                </h1>
-                <p className="text-muted-foreground max-w-sm text-base leading-relaxed">
-                    Awesome! You&apos;ve officially claimed your spot. Your copy will land
-                    in your hands <strong>{releaseDate}</strong>. I&apos;ll email you
-                    all the delivery details when it&apos;s go time. 🚀
-                </p>
-                <p className="text-muted-foreground text-sm mt-2 italic">
-                    Thanks for supporting the work — it means a lot! 💙
-                </p>
+            <div className="bg-primary/10 text-primary flex size-14 items-center justify-center rounded-full">
+                <Check className="size-7" />
             </div>
-            <Button variant="outline" size="sm">
-                <Link href="/books">Back to Books</Link>
+            <p className="text-primary mt-6 text-xs font-semibold tracking-[0.22em] uppercase">
+                Order confirmed
+            </p>
+            <h1 className="text-foreground mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
+                Your copy is reserved.
+            </h1>
+            <p className="text-muted-foreground mx-auto mt-6 max-w-xl text-lg leading-8">
+                Thank you for supporting the work. Your copy is scheduled for{" "}
+                <strong>{releaseDate}</strong>, and delivery details will arrive
+                by email when it is time.
+            </p>
+            <Button
+                variant="outline"
+                className="mt-9 h-11 rounded-full px-5"
+                render={<Link href="/books" />}
+            >
+                <LibraryBig className="size-4" />
+                Back to books
             </Button>
         </section>
     )

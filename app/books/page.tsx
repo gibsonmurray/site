@@ -31,9 +31,9 @@ export const metadata: Metadata = {
 
 const BooksPage = () => {
     return (
-        <section className="page-shell">
+        <section className="overflow-hidden">
             <BooksHeader />
-            <div className="space-y-4">
+            <div className="mx-auto grid max-w-6xl gap-6 px-6 pb-20 sm:px-8 lg:pb-28">
                 {books.map((book, index) => (
                     <BookCard
                         key={book.slug}

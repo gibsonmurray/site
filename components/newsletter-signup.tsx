@@ -30,41 +30,50 @@ export const NewsletterSignup = () => {
     }
 
     return (
-        <div className="border-border/65 bg-background/80 rounded-xl border p-4 sm:p-5">
-            <h2 className="border-primary/45 text-muted-foreground mb-4 border-l-2 pl-3 text-xs font-semibold tracking-[0.12em] uppercase">
-                Newsletter
-            </h2>
+        <div className="app-panel">
             {submitted ? (
-                <div className="flex items-center gap-2 text-sm">
-                    <Check className="text-primary size-4 shrink-0" />
-                    <span className="text-foreground font-medium">
-                        {"You're subscribed! Thanks for signing up."}
-                    </span>
+                <div className="flex flex-1 flex-col justify-center gap-4">
+                    <div className="bg-primary/10 text-primary flex size-12 items-center justify-center rounded-full">
+                        <Check className="size-5" />
+                    </div>
+                    <div>
+                        <p className="text-foreground text-3xl font-semibold tracking-tight">
+                            You&apos;re subscribed.
+                        </p>
+                        <p className="text-muted-foreground mt-3 text-base leading-7">
+                            Thanks for signing up. I&apos;ll send the next note
+                            your way.
+                        </p>
+                    </div>
                 </div>
             ) : (
-                <div className="flex flex-col gap-3">
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                        New posts, book updates, and occasional news — straight
-                        to your inbox. No spam, ever.
-                    </p>
+                <div className="flex flex-1 flex-col">
+                    <div>
+                        <h2 className="app-eyebrow">Newsletter</h2>
+                        <p className="app-panel-title">Notes from the desk.</p>
+                        <p className="app-panel-copy">
+                            Book updates, biblical reflections, essays, and
+                            occasional dispatches. No spam, ever.
+                        </p>
+                    </div>
                     <form
                         onSubmit={handleSubmit}
-                        className="flex flex-col gap-2 sm:flex-row"
+                        className="mt-auto flex flex-col gap-4 pt-10 sm:flex-row sm:gap-3 sm:pt-8"
                     >
                         <Input
                             ref={inputRef}
                             type="email"
                             required
                             placeholder="your@email.com"
-                            className="h-9 flex-1"
+                            className="h-14 flex-1 rounded-full px-6 text-lg sm:h-12 sm:px-5 sm:text-base"
                         />
                         <Button
                             type="submit"
                             size="lg"
                             disabled={mutation.isPending}
-                            className="gap-1.5 sm:shrink-0"
+                            className="h-16 gap-3 rounded-full px-6 text-lg sm:h-12 sm:shrink-0 sm:gap-2 sm:px-5 sm:text-base"
                         >
-                            <Mail className="size-3.5" />
+                            <Mail className="size-5 sm:size-4" />
                             {mutation.isPending ? "..." : "Subscribe"}
                         </Button>
                     </form>

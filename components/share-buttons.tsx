@@ -57,7 +57,7 @@ export const ShareButtons = ({
                         variant="ghost"
                         size="icon"
                         onClick={() => openExternal(shareData.x)}
-                        className="bg-muted/40 hover:bg-muted/60 rounded-md"
+                        className="bg-muted/50 hover:bg-muted rounded-full"
                         aria-label="Share on X"
                         title="Share on X"
                     >
@@ -67,7 +67,7 @@ export const ShareButtons = ({
                         variant="ghost"
                         size="icon"
                         onClick={() => openExternal(shareData.linkedin)}
-                        className="bg-muted/40 hover:bg-muted/60 rounded-md"
+                        className="bg-muted/50 hover:bg-muted rounded-full"
                         aria-label="Share on LinkedIn"
                         title="Share on LinkedIn"
                     >
@@ -79,7 +79,7 @@ export const ShareButtons = ({
                         variant="ghost"
                         size="icon"
                         onClick={handleCopyLink}
-                        className="bg-muted/40 hover:bg-muted/60 rounded-md"
+                        className="bg-muted/50 hover:bg-muted rounded-full"
                         aria-label={copied ? "Link copied" : "Copy link"}
                         title={copied ? "Copied" : "Copy link"}
                     >
@@ -94,7 +94,7 @@ export const ShareButtons = ({
 
             <DropdownMenu>
                 <DropdownMenuTrigger
-                    className="bg-muted/40 hover:bg-muted/60 hidden items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium no-underline transition-all duration-200 hover:scale-105 sm:inline-flex"
+                    className="bg-background ring-border/65 hover:bg-muted hidden items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium no-underline ring-1 transition-all duration-200 sm:inline-flex"
                     title="Share this post"
                 >
                     <Share2 className="size-4" />

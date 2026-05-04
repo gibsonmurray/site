@@ -76,13 +76,9 @@ const personJsonLd = {
     "@type": "Person",
     name: "Gibson Murray",
     url: "https://gibsonmurray.com",
-    sameAs: [
-        "https://github.com/gibsonmurray",
-        "https://x.com/gibsonmurray",
-    ],
+    sameAs: ["https://github.com/gibsonmurray", "https://x.com/gibsonmurray"],
     jobTitle: "Author",
-    description:
-        "Author of Biblical fiction and software engineer.",
+    description: "Author of Biblical fiction and software engineer.",
 }
 
 const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
@@ -98,7 +94,10 @@ const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
                 geist.variable,
             )}
         >
-            <body className="mx-auto flex min-h-screen w-full max-w-xl flex-col pt-6 antialiased sm:pt-8">
+            <body
+                suppressHydrationWarning
+                className="bg-background flex min-h-screen w-full flex-col antialiased"
+            >
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
@@ -114,9 +113,9 @@ const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
                         disableTransitionOnChange
                     >
                         <TooltipProvider delay={500}>
-                            <main className="mt-5 flex min-w-0 flex-1 flex-col sm:mt-6">
+                            <main className="flex min-w-0 flex-1 flex-col">
                                 <Navbar />
-                                <div className="px-10">{children}</div>
+                                <div>{children}</div>
                                 <div
                                     className="min-h-10 flex-1"
                                     aria-hidden="true"

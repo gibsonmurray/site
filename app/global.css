@@ -133,6 +133,54 @@
 }
 
 @layer components {
+    .page-shell {
+        @apply mx-auto w-full max-w-xl px-6 py-10 sm:px-8 sm:py-12;
+    }
+
+    .app-panel {
+        @apply border-border/65 bg-background flex min-h-72 flex-col rounded-[2rem] border p-8 sm:p-10;
+    }
+
+    .app-panel-compact {
+        @apply border-border/65 bg-background flex min-h-56 flex-col rounded-[2rem] border p-6 sm:p-8;
+    }
+
+    .app-panel-muted {
+        @apply ring-border/65 bg-muted/35 flex min-h-56 flex-col rounded-[2rem] p-6 ring-1 sm:p-8;
+    }
+
+    .app-panel-dark {
+        @apply flex min-h-64 flex-col rounded-[2rem] bg-white/8 p-6 text-white ring-1 ring-white/10 backdrop-blur-md sm:p-8;
+    }
+
+    .app-panel-dark-solid {
+        @apply flex min-h-64 flex-col rounded-[2rem] bg-[#111] p-8 text-white sm:p-10;
+    }
+
+    .app-panel-action {
+        @apply mt-auto pt-8;
+    }
+
+    .app-eyebrow {
+        @apply text-primary text-xs font-semibold tracking-[0.22em] uppercase;
+    }
+
+    .app-panel-title {
+        @apply text-foreground mt-8 text-4xl font-semibold tracking-tight;
+    }
+
+    .app-panel-title-sm {
+        @apply text-foreground text-2xl font-semibold tracking-tight;
+    }
+
+    .app-panel-copy {
+        @apply text-muted-foreground mt-5 max-w-xl text-base leading-7;
+    }
+
+    .app-panel-copy-sm {
+        @apply text-muted-foreground mt-3 text-sm leading-6;
+    }
+
     .prose blockquote p:first-of-type::before,
     .prose blockquote p:last-of-type::after {
         @apply content-none!;

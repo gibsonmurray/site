@@ -79,21 +79,23 @@ const BookPage = async ({ params }: Props) => {
     }
 
     return (
-        <section className="page-shell">
+        <section className="overflow-hidden">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <Link
-                href="/books"
-                className="text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1 text-sm transition-colors"
-            >
-                <ChevronLeft className="size-4" />
-                Books
-            </Link>
+            <div className="mx-auto max-w-6xl px-6 pt-8 sm:px-8">
+                <Link
+                    href="/books"
+                    className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm transition-colors"
+                >
+                    <ChevronLeft className="size-4" />
+                    Books
+                </Link>
+            </div>
             <BookDetailClient book={book} />
             {book.reviews && book.reviews.length > 0 && (
-                <div className="mt-2 px-1">
+                <div className="mx-auto max-w-6xl px-6 pb-20 sm:px-8">
                     <BookReviews reviews={book.reviews} />
                 </div>
             )}

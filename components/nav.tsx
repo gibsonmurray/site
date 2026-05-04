@@ -39,10 +39,10 @@ export const Navbar = () => {
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
     return (
-        <aside className="mb-10 px-5 tracking-tight sm:mb-12 sm:px-7">
-            <div className="lg:sticky lg:top-20">
+        <aside className="border-border/60 bg-background/85 supports-[backdrop-filter]:bg-background/70 sticky top-0 z-40 border-b px-4 tracking-tight backdrop-blur-xl">
+            <div className="mx-auto max-w-6xl">
                 <nav
-                    className="fade relative flex scroll-pr-6 flex-row items-start justify-between px-0 pb-0 md:relative md:overflow-auto"
+                    className="fade relative flex h-14 scroll-pr-6 flex-row items-center justify-between px-0 pb-0 md:relative md:overflow-auto"
                     id="nav"
                 >
                     <div className="flex flex-row items-center gap-1">
@@ -100,7 +100,7 @@ export const Navbar = () => {
                                 <span className="relative inline-flex">
                                     <ShoppingCart className="h-4 w-4" />
                                     {totalItems > 0 && (
-                                        <span className="bg-primary text-primary-foreground absolute -top-1.5 -right-1.5 flex size-3.5 items-center justify-center rounded-full text-[9px] font-bold leading-none">
+                                        <span className="bg-primary text-primary-foreground absolute -top-1.5 -right-1.5 flex size-3.5 items-center justify-center rounded-full text-[9px] leading-none font-bold">
                                             {totalItems > 9 ? "9+" : totalItems}
                                         </span>
                                     )}

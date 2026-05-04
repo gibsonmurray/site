@@ -5,7 +5,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, X } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { latestBook } from "@/lib/books"
 
@@ -30,18 +29,18 @@ export const LatestBookPopup = () => {
 
     return (
         <div className="fixed right-4 bottom-4 z-50 w-[calc(100%-2rem)] max-w-sm sm:right-6 sm:bottom-6">
-            <div className="border-border bg-background/95 supports-backdrop-filter:bg-background/90 rounded-2xl border p-4 shadow-2xl backdrop-blur-sm">
+            <div className="rounded-[1.5rem] border border-white/10 bg-[#111]/95 p-4 text-white shadow-2xl shadow-black/30 backdrop-blur-xl">
                 {/* Header */}
                 <div className="mb-3 flex items-center justify-between gap-2">
-                    <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">
+                    <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
                         Latest Book
-                    </Badge>
+                    </p>
                     <Button
                         type="button"
                         variant="ghost"
                         size="icon-sm"
                         onClick={dismissPopup}
-                        className="-mr-1"
+                        className="-mr-1 rounded-full text-white/55 hover:bg-white/10 hover:text-white"
                         aria-label="Dismiss"
                     >
                         <X className="size-4" />
@@ -49,22 +48,26 @@ export const LatestBookPopup = () => {
                 </div>
 
                 {/* Book info */}
-                <Link href={bookHref} onClick={dismissPopup} className="group mb-4 flex gap-3">
+                <Link
+                    href={bookHref}
+                    onClick={dismissPopup}
+                    className="group mb-5 flex gap-4"
+                >
                     <Image
                         src={latestBook.coverImageSrc}
                         alt={latestBook.coverImageAlt}
                         width={72}
                         height={108}
-                        className="w-[72px] shrink-0 rounded-md object-cover shadow-md transition-transform duration-200 group-hover:scale-[1.02]"
+                        className="w-[76px] shrink-0 rounded-xl object-cover shadow-xl shadow-black/30 transition-transform duration-200 group-hover:scale-[1.02]"
                     />
                     <div className="flex flex-col gap-1 pt-0.5">
-                        <p className="text-foreground font-semibold leading-tight">
+                        <p className="leading-tight font-semibold text-white">
                             {latestBook.title}
                         </p>
-                        <p className="text-muted-foreground text-xs font-medium">
+                        <p className="text-xs font-medium text-white/55">
                             {latestBook.genre}
                         </p>
-                        <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed">
+                        <p className="mt-0.5 line-clamp-3 text-xs leading-relaxed text-white/62">
                             {latestBook.shortDescription}
                         </p>
                     </div>
@@ -73,7 +76,7 @@ export const LatestBookPopup = () => {
                 {/* Actions */}
                 <div className="flex flex-col gap-2">
                     <Button
-                        className="w-full gap-2 font-semibold"
+                        className="w-full rounded-full bg-white font-semibold text-[#111] hover:bg-white/90"
                         render={<Link href={bookHref} onClick={dismissPopup} />}
                     >
                         {latestBook.status.type === "pre-order" &&
@@ -85,7 +88,7 @@ export const LatestBookPopup = () => {
                     <Button
                         variant="ghost"
                         onClick={dismissPopup}
-                        className="w-full text-sm"
+                        className="w-full rounded-full text-sm text-white/60 hover:bg-white/10 hover:text-white"
                     >
                         Maybe later
                     </Button>

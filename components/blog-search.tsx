@@ -36,7 +36,7 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
     const showResults = query.trim().length > 0
 
     return (
-        <div className="mb-8 flex flex-col gap-4">
+        <div className="mb-10 flex flex-col gap-4">
             <div className="relative">
                 <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
                 <Input
@@ -44,7 +44,7 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
                     placeholder="Search posts…"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="pl-9 pr-9"
+                    className="bg-background h-12 rounded-full pr-9 pl-10"
                 />
                 {query && (
                     <Button
@@ -60,14 +60,14 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
             </div>
 
             {showResults && (
-                <div className="border-border/65 bg-background/80 rounded-xl border p-4 sm:p-5">
+                <div className="app-panel-compact">
                     {results.length === 0 ? (
                         <p className="text-muted-foreground text-sm">
                             No posts found for &ldquo;{query}&rdquo;.
                         </p>
                     ) : (
                         <div className="flex flex-col gap-1">
-                            <p className="text-muted-foreground mb-3 text-xs font-semibold tracking-[0.12em] uppercase">
+                            <p className="text-primary mb-3 text-xs font-semibold tracking-[0.22em] uppercase">
                                 {results.length} result
                                 {results.length !== 1 ? "s" : ""}
                             </p>
@@ -75,7 +75,7 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
                                 <Link
                                     key={post.slug}
                                     href={`/blog/${post.slug}`}
-                                    className="group hover:bg-muted/30 flex flex-col gap-1 rounded-lg px-3 py-2 transition-colors"
+                                    className="group hover:bg-muted/45 flex flex-col gap-2 rounded-[1.25rem] px-4 py-3 transition-colors"
                                 >
                                     <p className="text-muted-foreground group-hover:text-primary/60 text-xs tabular-nums transition-colors">
                                         {formatListDate(post.publishedAt)}
@@ -84,7 +84,7 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
                                         {post.title}
                                     </p>
                                     {post.summary && (
-                                        <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed line-clamp-2">
+                                        <p className="text-muted-foreground mt-0.5 line-clamp-2 text-xs leading-relaxed">
                                             {post.summary}
                                         </p>
                                     )}

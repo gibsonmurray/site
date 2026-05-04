@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { X, ShoppingCart } from "lucide-react"
+import { ShoppingCart, X } from "lucide-react"
 import { useMutation } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { books } from "@/lib/books"
@@ -15,7 +15,6 @@ export const CartDrawer = () => {
         useCartStore()
 
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
-
     const getPrice = usePricesStore((s) => s.getPrice)
 
     const subtotal = items.reduce((sum, item) => {
@@ -27,7 +26,9 @@ export const CartDrawer = () => {
 
     const allPriced = items.every((item) => {
         const book = books.find((b) => b.slug === item.bookId)
-        return book !== undefined && getPrice(book.slug, item.format) !== undefined
+        return (
+            book !== undefined && getPrice(book.slug, item.format) !== undefined
+        )
     })
 
     useEffect(() => {
@@ -60,7 +61,6 @@ export const CartDrawer = () => {
 
     return (
         <>
-            {/* Backdrop */}
             <div
                 className={cn(
                     "fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300",
@@ -72,20 +72,18 @@ export const CartDrawer = () => {
                 aria-hidden="true"
             />
 
-            {/* Drawer */}
             <aside
                 className={cn(
-                    "border-border fixed inset-y-0 right-0 z-50 flex w-80 flex-col border-l bg-background shadow-2xl transition-transform duration-300 ease-in-out",
+                    "border-border bg-background fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col border-l shadow-2xl transition-transform duration-300 ease-in-out",
                     isOpen ? "translate-x-0" : "translate-x-full",
                 )}
                 aria-label="Shopping cart"
             >
-                {/* Header */}
-                <div className="border-border flex items-center justify-between border-b px-5 py-4">
+                <div className="border-border flex items-center justify-between border-b px-5 py-5">
                     <div className="flex items-center gap-2">
                         <ShoppingCart className="size-4" />
-                        <span className="text-foreground font-semibold">
-                            Cart
+                        <span className="text-foreground font-semibold tracking-tight">
+                            Bag
                         </span>
                         {totalItems > 0 && (
                             <span className="bg-primary text-primary-foreground flex size-5 items-center justify-center rounded-full text-xs font-bold">
@@ -97,21 +95,27 @@ export const CartDrawer = () => {
                         variant="ghost"
                         size="icon"
                         onClick={closeCart}
-                        className="text-muted-foreground hover:text-foreground"
+                        className="text-muted-foreground hover:text-foreground rounded-full"
                         aria-label="Close cart"
                     >
                         <X className="size-5" />
                     </Button>
                 </div>
 
-                {/* Items */}
                 <div className="flex-1 overflow-y-auto">
                     {items.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-                            <ShoppingCart className="text-muted-foreground/30 size-10" />
-                            <p className="text-muted-foreground text-sm">
-                                Your cart is empty
-                            </p>
+                        <div className="flex min-h-80 flex-col items-center justify-center gap-4 px-8 text-center">
+                            <div className="bg-muted text-muted-foreground flex size-14 items-center justify-center rounded-full">
+                                <ShoppingCart className="size-6" />
+                            </div>
+                            <div>
+                                <p className="text-foreground font-semibold tracking-tight">
+                                    Your bag is empty.
+                                </p>
+                                <p className="text-muted-foreground mt-2 text-sm leading-6">
+                                    Books and pre-orders will appear here.
+                                </p>
+                            </div>
                         </div>
                     ) : (
                         <ul className="divide-border divide-y px-5">
@@ -135,11 +139,9 @@ export const CartDrawer = () => {
                     )}
                 </div>
 
-                {/* Footer */}
                 {items.length > 0 && (
-                    <div className="border-border space-y-4 border-t px-5 py-4">
-                        {/* Price breakdown */}
-                        <div className="flex flex-col gap-1.5">
+                    <div className="border-border space-y-5 border-t px-5 py-5">
+                        <div className="flex flex-col gap-2">
                             {items.map((item) => {
                                 const book = books.find(
                                     (b) => b.slug === item.bookId,
@@ -156,7 +158,7 @@ export const CartDrawer = () => {
                                         <span className="text-muted-foreground truncate text-xs">
                                             {book.title}{" "}
                                             <span className="text-muted-foreground/60">
-                                                ({FORMAT_LABELS[item.format]} ×{" "}
+                                                ({FORMAT_LABELS[item.format]} x{" "}
                                                 {item.quantity})
                                             </span>
                                         </span>
@@ -166,10 +168,12 @@ export const CartDrawer = () => {
                                     </div>
                                 )
                             })}
-                            <div className="border-border/50 mt-1 border-t pt-2">
+                            <div className="border-border/60 mt-2 border-t pt-3">
                                 <div className="flex items-center justify-between">
                                     <span className="text-foreground text-sm font-semibold">
-                                        {allPriced ? "Subtotal" : "Est. subtotal"}
+                                        {allPriced
+                                            ? "Subtotal"
+                                            : "Est. subtotal"}
                                     </span>
                                     <span className="text-foreground text-sm font-semibold tabular-nums">
                                         {allPriced
@@ -177,14 +181,14 @@ export const CartDrawer = () => {
                                             : `~${fmt(subtotal)}`}
                                     </span>
                                 </div>
-                                <p className="text-muted-foreground/60 mt-0.5 text-xs">
-                                    Shipping & tax calculated at checkout
+                                <p className="text-muted-foreground/60 mt-1 text-xs">
+                                    Shipping and tax calculated at checkout.
                                 </p>
                             </div>
                         </div>
 
                         <Button
-                            className="w-full font-semibold"
+                            className="h-11 w-full rounded-full font-semibold"
                             size="lg"
                             onClick={() => checkoutMutation.mutate()}
                             disabled={checkoutMutation.isPending}
@@ -196,9 +200,9 @@ export const CartDrawer = () => {
                         <Button
                             variant="ghost"
                             onClick={clearCart}
-                            className="w-full text-xs"
+                            className="w-full rounded-full text-xs"
                         >
-                            Clear cart
+                            Clear bag
                         </Button>
                     </div>
                 )}

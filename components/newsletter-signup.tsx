@@ -48,7 +48,7 @@ export const NewsletterSignup = () => {
                 </div>
             ) : (
                 <div className="flex flex-1 flex-col">
-                    <div>
+                    <div className="flex flex-col gap-2">
                         <h2 className="app-eyebrow">Newsletter</h2>
                         <p className="app-panel-title">Notes from the desk.</p>
                         <p className="app-panel-copy">
@@ -65,7 +65,7 @@ export const NewsletterSignup = () => {
                             type="email"
                             required
                             placeholder="your@email.com"
-                            className="h-14 flex-1 rounded-full px-6 text-lg sm:h-12 sm:px-5 sm:text-base"
+                            className="min-h-12 flex-1 rounded-full px-6 text-lg sm:h-12 sm:px-5 sm:text-base"
                         />
                         <Button
                             type="submit"

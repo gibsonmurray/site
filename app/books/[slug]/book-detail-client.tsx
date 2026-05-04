@@ -26,7 +26,15 @@ import {
     Tablet,
     type LucideIcon,
 } from "lucide-react"
-import { Book3DPreview } from "@/components/book-3d-preview"
+import dynamic from "next/dynamic"
+
+const Book3DPreview = dynamic(
+    () =>
+        import("@/components/book-3d-preview").then((m) => ({
+            default: m.Book3DPreview,
+        })),
+    { ssr: false },
+)
 import { Button } from "@/components/ui/button"
 import {
     Tooltip,

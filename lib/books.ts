@@ -27,6 +27,20 @@ export type BookReview = {
     url?: string
 }
 
+export type BookModelAssets = {
+    frontImageSrc: string
+    frontImageCrop?: {
+        x: number
+        y: number
+        width: number
+        height: number
+    }
+    spineImageSrc: string
+    backImageSrc: string
+    thicknessRatio?: number
+    pageEdgeColor?: string
+}
+
 export type Book = {
     slug: string
     title: string
@@ -34,6 +48,7 @@ export type Book = {
     coverImageSrc: string
     coverImageAlt: string
     images?: string[] // Extra images shown in the carousel after coverImageSrc
+    modelAssets?: BookModelAssets
     shortDescription: string
     longDescription: string[]
     status: BookStatus
@@ -55,6 +70,19 @@ export const books: Book[] = [
             "/books/walls-mock-2.png",
             "/books/walls-cover-ebook.png",
         ],
+        modelAssets: {
+            frontImageSrc: "/books/walls-cover-print.png",
+            frontImageCrop: {
+                x: 1845,
+                y: 0,
+                width: 1575,
+                height: 2400,
+            },
+            spineImageSrc: "/books/walls-cover-side.png",
+            backImageSrc: "/books/walls-cover-back.png",
+            thicknessRatio: 273 / 1575,
+            pageEdgeColor: "#f2e7cf",
+        },
         coverImageAlt: "Walls book cover",
         shortDescription:
             "A story of unlikely alliances, faith tested, and the hidden battles that decided the course of history.",

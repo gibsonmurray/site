@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, type SyntheticEvent } from "react"
+import { useCallback, useRef, useState, type SyntheticEvent } from "react"
 import Image from "next/image"
 import { useMutation } from "@tanstack/react-query"
 import {
@@ -20,6 +20,7 @@ import {
     Tablet,
     type LucideIcon,
 } from "lucide-react"
+import { Book3DPreview } from "@/components/book-3d-preview"
 import { Button } from "@/components/ui/button"
 import {
     Tooltip,
@@ -322,6 +323,17 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
         })()
     }
 
+    const handleModelFrontImageLoad = useCallback(
+        (imageElement: HTMLImageElement) => {
+            void (async () => {
+                const nextGlowColor = await sampleGlowColor(imageElement)
+                setGlowColor(nextGlowColor)
+                setHasGlowColor(true)
+            })()
+        },
+        [],
+    )
+
     const glowColorSoft = mixWithWhite(glowColor, 0.35)
     const glowColorDeep = mixWithBlack(glowColor, 0.18)
 
@@ -334,14 +346,25 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                 }}
             >
                 <div className="mx-auto grid max-w-6xl gap-8 px-6 py-10 sm:px-8 lg:grid-cols-[1.08fr_0.92fr] lg:py-16">
-                    <BookImageCarousel
-                        images={allImages}
-                        alt={book.coverImageAlt}
-                        glowColor={glowColor}
-                        glowColorSoft={glowColorSoft}
-                        hasGlowColor={hasGlowColor}
-                        onFirstLoad={handleFirstImageLoad}
-                    />
+                    {book.modelAssets ? (
+                        <Book3DPreview
+                            assets={book.modelAssets}
+                            alt={book.coverImageAlt}
+                            glowColor={glowColor}
+                            glowColorSoft={glowColorSoft}
+                            hasGlowColor={hasGlowColor}
+                            onFrontImageLoad={handleModelFrontImageLoad}
+                        />
+                    ) : (
+                        <BookImageCarousel
+                            images={allImages}
+                            alt={book.coverImageAlt}
+                            glowColor={glowColor}
+                            glowColorSoft={glowColorSoft}
+                            hasGlowColor={hasGlowColor}
+                            onFirstLoad={handleFirstImageLoad}
+                        />
+                    )}
 
                     <div className="flex flex-col justify-center">
                         <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-white/65">

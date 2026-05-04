@@ -7,6 +7,7 @@ import {
     getYear,
 } from "@/app/blog/format"
 import { FC } from "react"
+import { Clock } from "lucide-react"
 
 type BlogPostsProps = {
     recentOnly?: boolean
@@ -42,7 +43,8 @@ const PostList = ({
                             {post.metadata.summary}
                         </p>
                     )}
-                    <p className="text-muted-foreground inline-block text-xs font-medium">
+                    <p className="text-muted-foreground inline-flex items-center gap-1 text-xs font-medium">
+                        <Clock className="size-3" />
                         {getReadingTime(post.content)}
                     </p>
                 </div>
@@ -88,7 +90,8 @@ export const BlogPosts: FC<BlogPostsProps> = ({
                                         {post.metadata.summary}
                                     </p>
                                 )}
-                                <p className="text-muted-foreground text-sm font-medium">
+                                <p className="text-muted-foreground inline-flex items-center gap-1 text-sm font-medium">
+                                    <Clock className="size-3" />
                                     {getReadingTime(post.content)}
                                 </p>
                             </Link>

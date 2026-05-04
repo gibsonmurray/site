@@ -11,19 +11,12 @@ import {
     NavigationMenuList,
 } from "@/components/ui/navigation-menu"
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
-import {
     BookOpen,
     House,
     Newspaper,
     ShoppingCart,
-    SunMoon,
     type LucideIcon,
 } from "lucide-react"
-import { useTheme } from "next-themes"
 import { useCartStore } from "@/lib/cart-store"
 import { cn } from "@/lib/utils"
 
@@ -51,10 +44,8 @@ const navItems: {
 
 export const Navbar = () => {
     const pathname = usePathname()
-    const { resolvedTheme, setTheme } = useTheme()
     const { items, openCart } = useCartStore()
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
-    const themeLabel = resolvedTheme === "dark" ? "Light mode" : "Dark mode"
 
     return (
         <aside className="border-border/55 bg-background/82 supports-[backdrop-filter]:bg-background/68 sticky top-0 z-40 border-b px-4 tracking-tight backdrop-blur-xl">
@@ -122,32 +113,6 @@ export const Navbar = () => {
                             </span>
                             <span className="hidden md:inline">Cart</span>
                         </Button>
-
-                        <Tooltip>
-                            <TooltipTrigger
-                                render={
-                                    <Button
-                                        variant="ghost"
-                                        size="lg"
-                                        onClick={() =>
-                                            setTheme(
-                                                resolvedTheme === "dark"
-                                                    ? "light"
-                                                    : "dark",
-                                            )
-                                        }
-                                        className="text-muted-foreground hover:text-foreground h-8 rounded-full bg-transparent px-2 text-xs hover:!bg-transparent focus-visible:!bg-transparent sm:px-3 sm:text-sm"
-                                        aria-label={`Switch to ${themeLabel}`}
-                                    />
-                                }
-                            >
-                                <SunMoon className="size-3.5" />
-                                <span className="hidden md:inline">Theme</span>
-                            </TooltipTrigger>
-                            <TooltipContent className="lg:hidden" side="bottom">
-                                Switch theme
-                            </TooltipContent>
-                        </Tooltip>
                     </div>
                 </nav>
             </div>

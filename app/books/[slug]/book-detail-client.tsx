@@ -249,7 +249,7 @@ const PreOrderNotifyForm = ({
     return (
         <form
             onSubmit={handleSubmit}
-            className="rounded-[2rem] bg-white p-3 text-[#111] shadow-2xl ring-1 shadow-black/25 ring-white/20"
+            className="rounded-[2rem] bg-transparent text-[#111] shadow-2xl shadow-black/25"
         >
             <div className="rounded-[1.45rem] bg-[#f5f5f7] p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-4">

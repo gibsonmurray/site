@@ -7,7 +7,7 @@ import {
     getYear,
 } from "@/app/blog/format"
 import { FC } from "react"
-import { Clock } from "lucide-react"
+import { ArrowRight, Clock } from "lucide-react"
 
 type BlogPostsProps = {
     recentOnly?: boolean
@@ -26,10 +26,10 @@ const PostList = ({
         {posts.map((post) => (
             <Link
                 key={post.slug}
-                className="app-panel-compact group hover:shadow-foreground/8 min-h-48 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+                className="border-border/65 bg-background group hover:shadow-foreground/8 grid min-h-44 gap-5 rounded-[2rem] border p-6 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl sm:grid-cols-[1fr_auto] sm:p-8"
                 href={`/blog/${post.slug}`}
             >
-                <div className="flex flex-1 flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase tabular-nums">
                         {compactDate
                             ? formatListDay(post.metadata.publishedAt)
@@ -48,6 +48,9 @@ const PostList = ({
                         {getReadingTime(post.content)}
                     </p>
                 </div>
+                <span className="text-muted-foreground group-hover:bg-foreground group-hover:text-background bg-muted flex size-10 items-center justify-center rounded-full transition-colors sm:self-center">
+                    <ArrowRight className="size-4" />
+                </span>
             </Link>
         ))}
     </div>
@@ -129,23 +132,23 @@ export const BlogPosts: FC<BlogPostsProps> = ({
         .sort((a, b) => b - a)
 
     return (
-        <div className="space-y-10">
+        <div className="grid gap-10">
             {years.map((year) => {
                 const months = Object.keys(byYearAndMonth[year])
                     .map(Number)
                     .sort((a, b) => b - a)
 
                 return (
-                    <section key={year} className="space-y-4">
-                        <h2 className="text-primary mb-4 text-xs font-semibold tracking-[0.22em] uppercase">
+                    <section key={year} className="grid gap-5">
+                        <h2 className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
                             {year}
                         </h2>
                         {months.map((month) => (
                             <div
                                 key={`${year}-${month}`}
-                                className="app-panel-muted"
+                                className="grid gap-4"
                             >
-                                <h3 className="text-muted-foreground mb-4 text-xs font-semibold tracking-[0.18em] uppercase">
+                                <h3 className="text-muted-foreground text-xs font-semibold tracking-[0.18em] uppercase">
                                     {getMonthLabel(month)}
                                 </h3>
                                 <PostList

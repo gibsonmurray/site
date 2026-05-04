@@ -1,7 +1,6 @@
 import { BlogPosts } from "@/components/posts"
 import Link from "next/link"
 import Image from "next/image"
-import { LatestBookPopup } from "@/components/latest-book-popup"
 import { books, latestBook } from "@/lib/books"
 import { currentlyReading } from "@/lib/currently-reading"
 import { NewsletterSignup } from "@/components/newsletter-signup"
@@ -10,7 +9,6 @@ import {
     BookMarked,
     BookOpenText,
     CalendarClock,
-    Code2,
     Coffee,
     Feather,
     Library,
@@ -41,9 +39,9 @@ const Home = () => {
                         Stories shaped by Scripture. Built with care.
                     </h1>
                     <p className="text-muted-foreground mt-6 max-w-2xl text-lg leading-8 sm:text-xl">
-                        I write biblical fiction, reflections on faith, and
-                        software-minded essays from the overlap of conviction,
-                        craft, and ordinary life.
+                        I write biblical fiction, biblical analysis, and
+                        reflections on faith from the overlap of Scripture,
+                        story, and ordinary life.
                     </p>
                     <div className="mt-8 flex flex-wrap items-center gap-3">
                         <Link
@@ -111,9 +109,9 @@ const Home = () => {
                             {latestBook.shortDescription}
                         </p>
                         <p className="mt-6 max-w-2xl text-sm leading-7 text-white/55">
-                            Biblical fiction with a cinematic eye, grounded in
-                            the strange courage of people caught inside the
-                            promises of God.
+                            A biblical fiction story with a cinematic eye,
+                            grounded in the strange courage of people caught
+                            inside the promises of God.
                         </p>
                         <div className="mt-8 flex flex-wrap items-center gap-3">
                             <Link
@@ -163,11 +161,11 @@ const Home = () => {
                             </p>
                         </div>
                         <div className="app-panel-compact">
-                            <Code2 className="text-primary mb-6 size-5" />
-                            <h3 className="app-panel-title-sm">Craft</h3>
+                            <BookOpenText className="text-primary mb-6 size-5" />
+                            <h3 className="app-panel-title-sm">Analysis</h3>
                             <p className="app-panel-copy-sm">
-                                Software and writing shaped by precision,
-                                usefulness, and care.
+                                Interpretation shaped by close biblical reading,
+                                context, and care.
                             </p>
                         </div>
                     </div>
@@ -193,12 +191,18 @@ const Home = () => {
                             <ArrowRight className="size-4" />
                         </Link>
                     </div>
-                    <div className="grid gap-5 md:grid-cols-2">
+                    <div
+                        className={
+                            books.length === 1
+                                ? "mx-auto grid w-full max-w-4xl gap-5"
+                                : "grid gap-5 md:grid-cols-2"
+                        }
+                    >
                         {books.map((book) => (
                             <Link
                                 key={book.slug}
                                 href={`/books/${book.slug}`}
-                                className="group bg-background ring-border/65 hover:shadow-foreground/10 grid min-h-72 overflow-hidden rounded-[2rem] p-8 ring-1 transition duration-300 hover:-translate-y-1 hover:shadow-2xl sm:grid-cols-[0.72fr_1fr] sm:p-10"
+                                className="group bg-background ring-border/65 hover:shadow-foreground/10 grid min-h-72 overflow-hidden rounded-[2rem] p-8 ring-1 transition duration-300 hover:-translate-y-1 hover:shadow-2xl sm:grid-cols-[0.58fr_1fr] sm:p-10"
                             >
                                 <div className="flex items-center justify-center">
                                     <Image
@@ -274,24 +278,32 @@ const Home = () => {
                 <div className="mx-auto grid max-w-6xl items-stretch gap-6 px-6 py-18 sm:px-8 lg:grid-cols-2 lg:py-24">
                     <BlogPosts recentOnly recentCount={2} variant="compact" />
                     {currentlyReading && (
-                        <div className="app-panel-dark-solid h-full">
-                            <p className="text-background/60 mb-6 text-xs font-semibold tracking-[0.22em] uppercase">
-                                Currently reading
-                            </p>
-                            <div className="flex flex-1 flex-col gap-6 sm:flex-row sm:items-start">
+                        <div className="app-panel-dark-solid h-full justify-between gap-8 overflow-hidden">
+                            <div className="flex items-center justify-between gap-4">
+                                <p className="text-background/60 text-xs font-semibold tracking-[0.22em] uppercase">
+                                    Currently reading
+                                </p>
+                                {currentlyReading.finishedPercent !==
+                                    undefined && (
+                                    <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/65 tabular-nums">
+                                        {currentlyReading.finishedPercent}%
+                                    </span>
+                                )}
+                            </div>
+                            <div className="grid flex-1 items-center gap-7 sm:grid-cols-[minmax(8rem,0.42fr)_1fr] sm:gap-8">
                                 {currentlyReading.url ? (
                                     <Link
                                         href={currentlyReading.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="shrink-0"
+                                        className="shrink-0 justify-self-start sm:justify-self-center"
                                     >
                                         <Image
                                             src={currentlyReading.coverImageSrc}
                                             alt={currentlyReading.coverImageAlt}
                                             width={200}
                                             height={300}
-                                            className="h-40 w-auto rounded-[1.25rem] object-contain shadow-xl shadow-black/25"
+                                            className="h-56 w-auto rounded-[1.25rem] object-contain shadow-xl shadow-black/25 sm:h-60 lg:h-64"
                                         />
                                     </Link>
                                 ) : (
@@ -300,19 +312,24 @@ const Home = () => {
                                         alt={currentlyReading.coverImageAlt}
                                         width={200}
                                         height={300}
-                                        className="h-40 w-auto shrink-0 rounded-[1.25rem] object-contain shadow-xl shadow-black/25"
+                                        className="h-56 w-auto shrink-0 rounded-[1.25rem] object-contain shadow-xl shadow-black/25 sm:h-60 lg:h-64"
                                     />
                                 )}
-                                <div className="flex min-w-0 flex-1 flex-col">
-                                    <h3 className="text-4xl font-semibold tracking-tight">
+                                <div className="min-w-0">
+                                    <h3 className="text-5xl font-semibold tracking-tight text-balance">
                                         {currentlyReading.title}
                                     </h3>
-                                    <p className="text-background/65 mt-3 text-base">
+                                    <p className="text-background/65 mt-4 text-xl">
                                         {currentlyReading.author}
                                     </p>
+                                </div>
+                            </div>
+                            {(currentlyReading.finishedPercent !== undefined ||
+                                currentlyReading.url) && (
+                                <div className="border-t border-white/10 pt-6">
                                     {currentlyReading.finishedPercent !==
                                         undefined && (
-                                        <div className="mt-8 flex items-center gap-3">
+                                        <div className="flex items-center gap-3">
                                             <div className="bg-background/20 h-2 flex-1 overflow-hidden rounded-full">
                                                 <div
                                                     className="bg-primary h-full rounded-full"
@@ -321,12 +338,6 @@ const Home = () => {
                                                     }}
                                                 />
                                             </div>
-                                            <span className="text-background/65 shrink-0 text-xs tabular-nums">
-                                                {
-                                                    currentlyReading.finishedPercent
-                                                }
-                                                %
-                                            </span>
                                         </div>
                                     )}
                                     {currentlyReading.url && (
@@ -334,14 +345,14 @@ const Home = () => {
                                             href={currentlyReading.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-primary mt-auto inline-flex items-center gap-2 pt-8 text-base font-medium"
+                                            className="text-primary mt-5 inline-flex items-center gap-2 text-base font-medium"
                                         >
                                             <BookOpenText className="size-4" />
                                             Goodreads
                                         </Link>
                                     )}
                                 </div>
-                            </div>
+                            )}
                         </div>
                     )}
                 </div>
@@ -350,8 +361,8 @@ const Home = () => {
             <section className="bg-background">
                 <div className="mx-auto grid max-w-6xl gap-6 px-6 py-18 sm:px-8 lg:grid-cols-2 lg:py-24">
                     <NewsletterSignup />
-                    <div className="app-panel">
-                        <div>
+                    <div className="app-panel min-h-[24rem] justify-center gap-8 sm:min-h-72 sm:justify-start">
+                        <div className="flex flex-col">
                             <p className="app-eyebrow">Support</p>
                             <h2 className="app-panel-title">
                                 Fuel the next chapter.
@@ -366,7 +377,7 @@ const Home = () => {
                             href="https://buymeacoffee.com/gibsonmurray"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-primary text-primary-foreground hover:bg-primary/85 mt-auto inline-flex h-12 w-fit items-center justify-center gap-2 rounded-full px-5 text-base font-medium transition-colors"
+                            className="bg-primary text-primary-foreground hover:bg-primary/85 mt-0 inline-flex h-12 w-fit items-center justify-center gap-2 rounded-full px-5 text-base font-medium transition-colors sm:mt-auto"
                         >
                             <Coffee className="size-4" />
                             Buy me a coffee
@@ -374,8 +385,6 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
-            <LatestBookPopup />
         </section>
     )
 }

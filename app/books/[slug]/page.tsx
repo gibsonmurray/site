@@ -78,7 +78,7 @@ const BookPage = async ({ params }: Props) => {
                 name: book.title,
                 headline: `${book.title} by ${AUTHOR_NAME}`,
                 description: book.shortDescription,
-                genre: [book.genre, "Christian fiction", "Biblical fiction"],
+                genre: [book.genre, "Christian fiction", "Biblical Fiction"],
                 inLanguage: "en-US",
                 url: bookUrl,
                 image: `${baseUrl}${book.coverImageSrc}`,

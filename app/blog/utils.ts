@@ -54,12 +54,17 @@ const getMDXData = (dir: string) => {
 
 export const getBlogPosts = (recentOnly = false, recentCount = 3) => {
     let posts = getMDXData(path.join(process.cwd(), "app", "blog", "posts"))
+    const sortedPosts = posts.sort((a, b) => {
+        return (
+            new Date(b.metadata.publishedAt).getTime() -
+            new Date(a.metadata.publishedAt).getTime()
+        )
+    })
+
     if (recentOnly) {
-        return posts.sort((a, b) => {
-            return new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime()
-        }).slice(0, recentCount)
+        return sortedPosts.slice(0, recentCount)
     }
-    return posts
+    return sortedPosts
 }
 
 export const formatDate = (
@@ -70,10 +75,15 @@ export const formatDate = (
 ) => {
     const options =
         typeof includeRelativeOrOptions === "boolean"
-            ? { includeRelative: includeRelativeOrOptions, includeWeekday: false }
+            ? {
+                  includeRelative: includeRelativeOrOptions,
+                  includeWeekday: false,
+              }
             : {
-                  includeRelative: includeRelativeOrOptions.includeRelative ?? false,
-                  includeWeekday: includeRelativeOrOptions.includeWeekday ?? false,
+                  includeRelative:
+                      includeRelativeOrOptions.includeRelative ?? false,
+                  includeWeekday:
+                      includeRelativeOrOptions.includeWeekday ?? false,
               }
 
     let currentDate = new Date()

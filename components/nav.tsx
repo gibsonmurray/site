@@ -1,7 +1,15 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { LogoIcon } from "@/components/logo"
+import {
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+} from "@/components/ui/navigation-menu"
 import {
     Tooltip,
     TooltipContent,
@@ -17,103 +25,110 @@ import {
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useCartStore } from "@/lib/cart-store"
+import { cn } from "@/lib/utils"
 
-const navItems = {
-    "/": {
-        name: "home",
+const navItems: {
+    href: string
+    label: string
+    icon: LucideIcon
+}[] = [
+    {
+        href: "/",
+        label: "Home",
         icon: House,
     },
-    "/books": {
-        name: "books",
+    {
+        href: "/books",
+        label: "Books",
         icon: BookOpen,
     },
-    "/blog": {
-        name: "blog",
+    {
+        href: "/blog",
+        label: "Writing",
         icon: Newspaper,
     },
-}
+]
 
 export const Navbar = () => {
+    const pathname = usePathname()
     const { resolvedTheme, setTheme } = useTheme()
     const { items, openCart } = useCartStore()
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
+    const themeLabel = resolvedTheme === "dark" ? "Light mode" : "Dark mode"
 
     return (
-        <aside className="border-border/60 bg-background/85 supports-[backdrop-filter]:bg-background/70 sticky top-0 z-40 border-b px-4 tracking-tight backdrop-blur-xl">
+        <aside className="border-border/55 bg-background/82 supports-[backdrop-filter]:bg-background/68 sticky top-0 z-40 border-b px-4 tracking-tight backdrop-blur-xl">
             <div className="mx-auto max-w-6xl">
                 <nav
-                    className="fade relative flex h-14 scroll-pr-6 flex-row items-center justify-between px-0 pb-0 md:relative md:overflow-auto"
+                    className="fade relative flex min-h-12 scroll-pr-6 flex-row items-center justify-between gap-2 md:relative md:overflow-visible"
                     id="nav"
                 >
-                    <div className="flex flex-row items-center gap-1">
-                        {Object.entries(navItems).map(
-                            ([path, { name, icon: Icon }]: [
-                                string,
-                                { name: string; icon: LucideIcon },
-                            ]) => {
+                    <Link
+                        href="/"
+                        className="text-foreground/88 hover:text-foreground inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-1 text-sm font-semibold transition-colors sm:px-2"
+                        aria-label="Gibson Murray home"
+                    >
+                        <LogoIcon className="size-3.5" />
+                        <span className="hidden md:inline">Gibson Murray</span>
+                    </Link>
+
+                    <NavigationMenu className="max-w-none min-w-0 flex-1 justify-center">
+                        <NavigationMenuList className="gap-0.5 rounded-full">
+                            {navItems.map(({ href, label, icon: Icon }) => {
+                                const isActive =
+                                    href === "/"
+                                        ? pathname === href
+                                        : pathname.startsWith(href)
+
                                 return (
-                                    <Link key={path} href={path}>
-                                        <Tooltip>
-                                            <TooltipTrigger
-                                                render={
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="group m-1 transition-all duration-200 hover:scale-110"
-                                                        aria-label={name}
-                                                    />
-                                                }
-                                            >
-                                                <span className="relative inline-flex">
-                                                    <Icon className="h-4 w-4" />
-                                                    <span className="sr-only">
-                                                        {name}
-                                                    </span>
-                                                    <span className="bg-primary/60 absolute -bottom-1 left-0 h-0.5 w-0 transition-all duration-300 group-hover:w-full"></span>
-                                                </span>
-                                            </TooltipTrigger>
-                                            <TooltipContent
-                                                className="capitalize"
-                                                side="bottom"
-                                            >
-                                                {name}
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </Link>
+                                    <NavigationMenuItem key={href}>
+                                        <NavigationMenuLink
+                                            render={<Link href={href} />}
+                                            data-active={isActive}
+                                            aria-current={
+                                                isActive ? "page" : undefined
+                                            }
+                                            className={cn(
+                                                "data-active:text-foreground text-muted-foreground hover:text-foreground h-8 rounded-full bg-transparent px-2 text-xs font-medium hover:!bg-transparent focus-visible:!bg-transparent data-active:!bg-transparent sm:px-3 sm:text-sm",
+                                                isActive && "text-foreground",
+                                            )}
+                                        >
+                                            <Icon className="size-3.5 opacity-80" />
+                                            <span className="sr-only md:not-sr-only">
+                                                {label}
+                                            </span>
+                                        </NavigationMenuLink>
+                                    </NavigationMenuItem>
                                 )
-                            },
-                        )}
-                    </div>
-                    <div className="flex items-center gap-1">
+                            })}
+                        </NavigationMenuList>
+                    </NavigationMenu>
+
+                    <div className="flex shrink-0 items-center gap-2">
+                        <Button
+                            variant="outline"
+                            size="lg"
+                            onClick={openCart}
+                            className="text-muted-foreground hover:text-foreground relative h-8 rounded-full border-transparent bg-transparent px-2 text-xs shadow-none hover:!bg-transparent focus-visible:!bg-transparent sm:px-3 sm:text-sm"
+                            aria-label="Open cart"
+                        >
+                            <span className="relative inline-flex">
+                                <ShoppingCart className="size-3.5" />
+                                {totalItems > 0 && (
+                                    <span className="bg-primary text-primary-foreground absolute -top-1.5 -right-1.5 flex size-3.5 items-center justify-center rounded-full text-[9px] leading-none font-bold">
+                                        {totalItems > 9 ? "9+" : totalItems}
+                                    </span>
+                                )}
+                            </span>
+                            <span className="hidden md:inline">Cart</span>
+                        </Button>
+
                         <Tooltip>
                             <TooltipTrigger
                                 render={
                                     <Button
                                         variant="ghost"
-                                        size="icon"
-                                        onClick={openCart}
-                                        className="hover:bg-muted/40 relative transition-all duration-200 hover:scale-110"
-                                        aria-label="Open cart"
-                                    />
-                                }
-                            >
-                                <span className="relative inline-flex">
-                                    <ShoppingCart className="h-4 w-4" />
-                                    {totalItems > 0 && (
-                                        <span className="bg-primary text-primary-foreground absolute -top-1.5 -right-1.5 flex size-3.5 items-center justify-center rounded-full text-[9px] leading-none font-bold">
-                                            {totalItems > 9 ? "9+" : totalItems}
-                                        </span>
-                                    )}
-                                </span>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Cart</TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger
-                                render={
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
+                                        size="lg"
                                         onClick={() =>
                                             setTheme(
                                                 resolvedTheme === "dark"
@@ -121,14 +136,15 @@ export const Navbar = () => {
                                                     : "dark",
                                             )
                                         }
-                                        className="hover:bg-muted/40 transition-all duration-200 hover:scale-110"
-                                        aria-label={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode`}
+                                        className="text-muted-foreground hover:text-foreground h-8 rounded-full bg-transparent px-2 text-xs hover:!bg-transparent focus-visible:!bg-transparent sm:px-3 sm:text-sm"
+                                        aria-label={`Switch to ${themeLabel}`}
                                     />
                                 }
                             >
-                                <SunMoon />
+                                <SunMoon className="size-3.5" />
+                                <span className="hidden md:inline">Theme</span>
                             </TooltipTrigger>
-                            <TooltipContent side="bottom">
+                            <TooltipContent className="lg:hidden" side="bottom">
                                 Switch theme
                             </TooltipContent>
                         </Tooltip>

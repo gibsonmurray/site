@@ -36,7 +36,7 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
     const showResults = query.trim().length > 0
 
     return (
-        <div className="mb-10 flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
             <div className="relative">
                 <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
                 <Input
@@ -60,7 +60,7 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
             </div>
 
             {showResults && (
-                <div className="app-panel-compact">
+                <div className="border-border/65 bg-background rounded-[1.5rem] border p-4">
                     {results.length === 0 ? (
                         <p className="text-muted-foreground text-sm">
                             No posts found for &ldquo;{query}&rdquo;.

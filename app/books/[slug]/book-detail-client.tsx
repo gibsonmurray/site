@@ -220,19 +220,19 @@ const PreOrderNotifyForm = ({
                     </p>
                 )}
             </div>
-            <div className="app-panel-action flex flex-col gap-3 sm:flex-row">
+            <div className="app-panel-action flex flex-col gap-4 sm:flex-row sm:gap-3">
                 <Input
                     ref={inputRef}
                     type="email"
                     required
                     placeholder="your@email.com"
-                    className="h-12 flex-1 rounded-full border-white/15 bg-white/10 px-5 text-base text-white placeholder:text-white/35"
+                    className="h-14 flex-1 rounded-full border-white/15 bg-white/10 px-6 text-lg text-white placeholder:text-white/35 sm:h-12 sm:px-5 sm:text-base"
                 />
                 <Button
                     type="submit"
                     size="lg"
                     disabled={mutation.isPending}
-                    className="h-12 rounded-full bg-white px-5 text-base text-[#111] hover:bg-white/90 sm:shrink-0"
+                    className="h-14 rounded-full bg-white px-6 text-lg text-[#111] hover:bg-white/90 sm:h-12 sm:shrink-0 sm:px-5 sm:text-base"
                 >
                     <Bell className="size-4" />
                     {mutation.isPending ? "..." : "Notify me"}
@@ -574,7 +574,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                     <div className="app-panel-compact">
                         <BookMarked className="text-primary mb-8 size-5" />
                         <h2 className="app-panel-title-sm">
-                            Biblical imagination.
+                            Imagination in the Biblical world.
                         </h2>
                         <p className="app-panel-copy-sm">
                             Rooted in Scripture, written with reverence for the

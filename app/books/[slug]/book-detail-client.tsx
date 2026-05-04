@@ -1,19 +1,25 @@
 "use client"
 
 import { useCallback, useRef, useState, type SyntheticEvent } from "react"
+import Link from "next/link"
 import Image from "next/image"
 import { useMutation } from "@tanstack/react-query"
+import { AnimatePresence, motion } from "motion/react"
 import {
     Bell,
     BookMarked,
     BookOpen,
+    Calendar,
     Check,
     ChevronLeft,
     ChevronRight,
+    CreditCard,
     Feather,
     Headphones,
+    Mail,
     Minus,
     Plus,
+    Send,
     ShieldCheck,
     ShoppingCart,
     Sparkles,
@@ -52,6 +58,8 @@ const fmt = (cents: number) =>
         style: "currency",
         currency: "USD",
     }).format(cents / 100)
+
+const PREORDER_CONFIRMATION_MIN_MS = 850
 
 type CarouselProps = {
     images: string[]
@@ -165,6 +173,24 @@ const BookImageCarousel = ({
     )
 }
 
+const ApplePaySpinner = () => (
+    <span className="apple-pay-spinner" aria-hidden="true" />
+)
+
+const ButtonCheckmark = () => (
+    <svg viewBox="0 0 52 52" className="size-5" aria-hidden="true">
+        <path
+            className="apple-pay-checkmark-path"
+            d="M14 27.2 22.1 35 38.5 17.8"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="5"
+        />
+    </svg>
+)
+
 const PreOrderNotifyForm = ({
     book,
     releaseDate,
@@ -172,17 +198,22 @@ const PreOrderNotifyForm = ({
     book: Book
     releaseDate: string | null
 }) => {
+    const [email, setEmail] = useState("")
     const [submitted, setSubmitted] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
 
     const mutation = useMutation({
         mutationFn: async (email: string) => {
+            const animationDelay = new Promise((resolve) =>
+                setTimeout(resolve, PREORDER_CONFIRMATION_MIN_MS),
+            )
             const res = await fetch("/api/notify", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, bookSlug: book.slug }),
             })
             const data = await res.json()
+            await animationDelay
             if (!res.ok) throw new Error(data.error ?? "Something went wrong")
         },
         onSuccess: () => setSubmitted(true),
@@ -190,60 +221,217 @@ const PreOrderNotifyForm = ({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        const email = inputRef.current?.value.trim() ?? ""
-        if (email) mutation.mutate(email)
+        const nextEmail = inputRef.current?.value.trim() ?? ""
+        if (nextEmail) {
+            setEmail(nextEmail)
+            mutation.mutate(nextEmail)
+        }
     }
 
-    if (submitted) {
-        return (
-            <div className="app-panel-dark">
-                <div className="flex flex-1 items-center gap-3">
-                    <Check className="text-primary size-5 shrink-0" />
-                    <span className="font-medium">
-                        You are on the list. I will send an update when
-                        pre-orders open.
-                    </span>
-                </div>
-            </div>
-        )
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value)
+        if (submitted) {
+            setSubmitted(false)
+        }
+        if (mutation.isError) {
+            mutation.reset()
+        }
     }
 
     return (
-        <form onSubmit={handleSubmit} className="app-panel-dark">
-            <div>
-                <p className="text-2xl font-semibold tracking-tight text-white">
-                    Pre-order opening soon
+        <form
+            onSubmit={handleSubmit}
+            className="rounded-[2rem] bg-white p-3 text-[#111] shadow-2xl ring-1 shadow-black/25 ring-white/20"
+        >
+            <div className="rounded-[1.45rem] bg-[#f5f5f7] p-5 sm:p-6">
+                <div className="flex items-start justify-between gap-4">
+                    <div>
+                        <p className="text-xs font-semibold tracking-[0.18em] text-black/42 uppercase">
+                            Preorder alert
+                        </p>
+                        <p className="mt-2 text-2xl font-semibold tracking-tight">
+                            Claim your first-in-line ping
+                        </p>
+                    </div>
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#111] text-white shadow-sm">
+                        <Bell className="size-5" />
+                    </div>
+                </div>
+
+                <div className="mt-5 overflow-hidden rounded-[1.2rem] bg-white shadow-sm ring-1 ring-black/5">
+                    <div className="flex items-center justify-between gap-4 border-b border-black/6 p-4">
+                        <div className="flex min-w-0 items-center gap-3">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#111] to-[#4a4a4d] text-white">
+                                <CreditCard className="size-4" />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="truncate text-sm font-semibold">
+                                    {book.title}
+                                </p>
+                                <p className="mt-0.5 text-xs text-black/45">
+                                    Preorder notification pass
+                                </p>
+                            </div>
+                        </div>
+                        <span className="rounded-full bg-[#e9f8f2] px-2.5 py-1 text-xs font-semibold text-[#0f7b58]">
+                            Free
+                        </span>
+                    </div>
+
+                    {releaseDate && (
+                        <div className="flex items-center justify-between gap-4 border-b border-black/6 px-4 py-3">
+                            <div className="flex items-center gap-2 text-sm text-black/55">
+                                <Calendar className="size-4" />
+                                <span>Release window</span>
+                            </div>
+                            <span className="text-sm font-medium">
+                                {releaseDate}
+                            </span>
+                        </div>
+                    )}
+
+                    <label className="flex items-center gap-3 px-4 py-3">
+                        <Mail className="size-4 shrink-0 text-black/38" />
+                        <Input
+                            ref={inputRef}
+                            value={email}
+                            onChange={handleEmailChange}
+                            type="email"
+                            disabled={mutation.isPending}
+                            required
+                            placeholder="your@email.com"
+                            aria-label="Email address for preorder notifications"
+                            className="h-10 border-0 bg-transparent px-0 text-base text-[#111] shadow-none placeholder:text-black/35 focus-visible:ring-0 disabled:bg-transparent disabled:text-black/58 disabled:opacity-100 md:text-sm"
+                        />
+                    </label>
+                </div>
+
+                <p className="my-5 px-1 text-center text-xs leading-5 font-medium text-black/45">
+                    One preorder alert, one launch note, and no extra noise.
                 </p>
-                {releaseDate && (
-                    <p className="mt-2 text-base leading-7 text-white/55">
-                        Releasing {releaseDate}
+
+                <motion.button
+                    layout
+                    type="submit"
+                    disabled={mutation.isPending || submitted}
+                    animate={{
+                        backgroundColor: submitted
+                            ? "#34c759"
+                            : mutation.isPending
+                              ? "#1c1c1e"
+                              : "#111111",
+                        scale: mutation.isPending ? 0.985 : 1,
+                    }}
+                    whileTap={
+                        mutation.isPending || submitted
+                            ? undefined
+                            : { scale: 0.985 }
+                    }
+                    transition={{
+                        type: "spring",
+                        stiffness: 520,
+                        damping: 38,
+                        mass: 0.75,
+                    }}
+                    className={cn(
+                        "relative inline-flex h-13 w-full items-center justify-center overflow-hidden rounded-full border border-transparent px-5 text-base font-medium whitespace-nowrap text-white transition-shadow outline-none select-none focus-visible:ring-3 focus-visible:ring-black/20 disabled:opacity-100",
+                        mutation.isPending && "shadow-inner",
+                        submitted && "shadow-lg shadow-[#34c759]/24",
+                    )}
+                >
+                    <AnimatePresence mode="wait" initial={false}>
+                        {submitted ? (
+                            <motion.span
+                                key="confirmed"
+                                className="absolute inset-0 flex items-center justify-center gap-2"
+                                initial={{
+                                    y: 10,
+                                    opacity: 0,
+                                    filter: "blur(6px)",
+                                }}
+                                animate={{
+                                    y: 0,
+                                    opacity: 1,
+                                    filter: "blur(0px)",
+                                }}
+                                exit={{
+                                    y: -10,
+                                    opacity: 0,
+                                    filter: "blur(6px)",
+                                }}
+                                transition={{
+                                    duration: 0.24,
+                                    ease: [0.22, 1, 0.36, 1],
+                                }}
+                            >
+                                <ButtonCheckmark />
+                                Notifications on
+                            </motion.span>
+                        ) : mutation.isPending ? (
+                            <motion.span
+                                key="processing"
+                                className="absolute inset-0 flex items-center justify-center gap-2"
+                                initial={{
+                                    y: 10,
+                                    opacity: 0,
+                                    filter: "blur(6px)",
+                                }}
+                                animate={{
+                                    y: 0,
+                                    opacity: 1,
+                                    filter: "blur(0px)",
+                                }}
+                                exit={{
+                                    y: -10,
+                                    opacity: 0,
+                                    filter: "blur(6px)",
+                                }}
+                                transition={{
+                                    duration: 0.22,
+                                    ease: [0.22, 1, 0.36, 1],
+                                }}
+                            >
+                                <ApplePaySpinner />
+                                Processing
+                            </motion.span>
+                        ) : (
+                            <motion.span
+                                key="ready"
+                                className="absolute inset-0 flex items-center justify-center gap-2"
+                                initial={{
+                                    y: 10,
+                                    opacity: 0,
+                                    filter: "blur(6px)",
+                                }}
+                                animate={{
+                                    y: 0,
+                                    opacity: 1,
+                                    filter: "blur(0px)",
+                                }}
+                                exit={{
+                                    y: -10,
+                                    opacity: 0,
+                                    filter: "blur(6px)",
+                                }}
+                                transition={{
+                                    duration: 0.22,
+                                    ease: [0.22, 1, 0.36, 1],
+                                }}
+                            >
+                                <Send className="size-4" />
+                                Confirm notification
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
+                </motion.button>
+
+                {mutation.isError && (
+                    <p className="text-destructive mt-3 text-sm">
+                        {mutation.error?.message ??
+                            "Something went wrong. Try again."}
                     </p>
                 )}
             </div>
-            <div className="app-panel-action flex flex-col gap-4 sm:flex-row sm:gap-3">
-                <Input
-                    ref={inputRef}
-                    type="email"
-                    required
-                    placeholder="your@email.com"
-                    className="h-14 flex-1 rounded-full border-white/15 bg-white/10 px-6 text-lg text-white placeholder:text-white/35 sm:h-12 sm:px-5 sm:text-base"
-                />
-                <Button
-                    type="submit"
-                    size="lg"
-                    disabled={mutation.isPending}
-                    className="h-14 rounded-full bg-white px-6 text-lg text-[#111] hover:bg-white/90 sm:h-12 sm:shrink-0 sm:px-5 sm:text-base"
-                >
-                    <Bell className="size-4" />
-                    {mutation.isPending ? "..." : "Notify me"}
-                </Button>
-            </div>
-            {mutation.isError && (
-                <p className="text-destructive mt-2 text-xs">
-                    {mutation.error?.message ??
-                        "Something went wrong. Try again."}
-                </p>
-            )}
         </form>
     )
 }
@@ -338,13 +526,22 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
     const glowColorDeep = mixWithBlack(glowColor, 0.18)
 
     return (
-        <div className="pt-8">
+        <div>
             <section
                 className="relative overflow-hidden bg-[#111] text-white"
                 style={{
                     backgroundImage: `radial-gradient(circle at 75% 16%, rgba(${glowRgb(glowColorSoft)}, 0.2), transparent 32%), radial-gradient(circle at 20% 86%, rgba(${glowRgb(glowColorDeep)}, 0.34), transparent 34%)`,
                 }}
             >
+                <div className="mx-auto max-w-6xl px-6 pt-8 sm:px-8">
+                    <Link
+                        href="/books"
+                        className="inline-flex items-center gap-1 text-sm text-white/50 transition-colors hover:text-white/90"
+                    >
+                        <ChevronLeft className="size-4" />
+                        Books
+                    </Link>
+                </div>
                 <div className="mx-auto grid max-w-6xl gap-8 px-6 py-10 sm:px-8 lg:grid-cols-[1.08fr_0.92fr] lg:py-16">
                     {book.modelAssets ? (
                         <Book3DPreview

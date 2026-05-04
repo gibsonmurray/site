@@ -384,7 +384,7 @@ export function Book3DPreview({
     }
 
     return (
-        <div className="relative overflow-hidden rounded-[2rem] bg-white/[0.06] p-4 sm:p-6">
+        <div className="relative h-full min-h-[24rem] overflow-hidden rounded-[2rem] bg-white/[0.06] p-4 sm:p-6">
             <div
                 className="pointer-events-none absolute inset-x-8 bottom-12 h-24 rounded-full blur-3xl transition-opacity duration-700"
                 style={{
@@ -401,7 +401,7 @@ export function Book3DPreview({
 
             <div
                 ref={frameRef}
-                className="relative z-10 aspect-[4/3] w-full overflow-hidden rounded-[1.5rem]"
+                className="relative z-10 h-full w-full overflow-hidden rounded-[1.5rem]"
             >
                 <canvas
                     ref={canvasRef}

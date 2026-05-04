@@ -1,7 +1,5 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import Link from "next/link"
-import { ChevronLeft } from "lucide-react"
 import { books } from "@/lib/books"
 import { BookDetailClient } from "./book-detail-client"
 import { BookReviews } from "@/components/book-reviews"
@@ -152,15 +150,6 @@ const BookPage = async ({ params }: Props) => {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <div className="mx-auto max-w-6xl px-6 pt-8 sm:px-8">
-                <Link
-                    href="/books"
-                    className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm transition-colors"
-                >
-                    <ChevronLeft className="size-4" />
-                    Books
-                </Link>
-            </div>
             <BookDetailClient book={book} />
             {book.reviews && book.reviews.length > 0 && (
                 <div className="mx-auto max-w-6xl px-6 pb-20 sm:px-8">

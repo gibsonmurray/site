@@ -3,35 +3,55 @@ import { Metadata } from "next"
 import { baseUrl } from "@/app/sitemap"
 import { getBlogPosts } from "@/app/blog/utils"
 import { BlogSearch } from "@/components/blog-search"
+import {
+    AUTHOR_NAME,
+    BLOG_DESCRIPTION,
+    SITE_NAME,
+    makeOgImage,
+} from "@/lib/seo"
 
 export const metadata: Metadata = {
-    title: "Blog",
-    description:
-        "Thoughts on faith, Biblical fiction, and life from Gibson Murray.",
+    title: "Writing",
+    description: BLOG_DESCRIPTION,
+    authors: [{ name: AUTHOR_NAME, url: baseUrl }],
+    keywords: [
+        "Gibson Murray blog",
+        "Christian essays",
+        "biblical reflections",
+        "faith writing",
+        "Christian author blog",
+        "biblical fiction craft",
+    ],
     alternates: {
         canonical: `${baseUrl}/blog`,
     },
     openGraph: {
-        title: "Blog",
-        description:
-            "Thoughts on faith, Biblical fiction, and life from Gibson Murray.",
+        title: `${SITE_NAME} Writing`,
+        description: BLOG_DESCRIPTION,
         url: `${baseUrl}/blog`,
+        type: "website",
         images: [
             {
-                url: "/headshot.jpeg",
-                alt: "Gibson Murray",
+                url: makeOgImage({
+                    title: `${SITE_NAME} Writing`,
+                    image: "/books/walls-mock-2.png",
+                }),
+                alt: `${SITE_NAME} writing on faith, story, and ordinary life`,
                 width: 1200,
                 height: 630,
-                type: "image/jpeg",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Blog",
-        description:
-            "Thoughts on faith, Biblical fiction, and life from Gibson Murray.",
-        images: ["/headshot.jpeg"],
+        title: `${SITE_NAME} Writing`,
+        description: BLOG_DESCRIPTION,
+        images: [
+            makeOgImage({
+                title: `${SITE_NAME} Writing`,
+                image: "/books/walls-mock-2.png",
+            }),
+        ],
     },
 }
 

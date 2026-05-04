@@ -1,14 +1,17 @@
+import type { MetadataRoute } from "next"
 import { baseUrl } from "@/app/sitemap"
 
-const robots = () => {
+const robots = (): MetadataRoute.Robots => {
     return {
         rules: [
             {
                 userAgent: "*",
-                disallow: ["/books/success"],
+                allow: "/",
+                disallow: ["/api/", "/books/success"],
             },
         ],
         sitemap: `${baseUrl}/sitemap.xml`,
+        host: baseUrl,
     }
 }
 

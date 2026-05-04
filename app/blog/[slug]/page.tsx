@@ -12,6 +12,7 @@ import {
 import { baseUrl } from "@/app/sitemap"
 import Link from "next/link"
 import { ArrowRight, ChevronLeft } from "lucide-react"
+import { AUTHOR_NAME, SITE_NAME, makeOgImage, personSchema } from "@/lib/seo"
 
 export const generateStaticParams = async () => {
     let posts = getBlogPosts()
@@ -46,13 +47,20 @@ export const generateMetadata = async ({
         summary: description,
         image,
     } = post.metadata
-    let imageParam = image ? `&image=${encodeURIComponent(image)}` : ""
-    let ogImage = `${baseUrl}/og?title=${encodeURIComponent(title)}${imageParam}`
+    let tags = getPostTags(post.metadata.tags)
+    let ogImage = makeOgImage({ title, image })
     let canonicalImage = image ? toAbsoluteUrl(image) : ogImage
 
     return {
         title,
         description,
+        authors: [{ name: post.metadata.author?.trim() || AUTHOR_NAME }],
+        keywords: [
+            ...tags,
+            "Gibson Murray",
+            "Christian essay",
+            "biblical reflection",
+        ],
         alternates: {
             canonical: `${baseUrl}/blog/${post.slug}`,
         },
@@ -61,7 +69,11 @@ export const generateMetadata = async ({
             description,
             type: "article",
             publishedTime,
+            modifiedTime: publishedTime,
             url: `${baseUrl}/blog/${post.slug}`,
+            authors: [post.metadata.author?.trim() || AUTHOR_NAME],
+            section: "Christian reflections",
+            tags,
             images: [
                 {
                     url: ogImage,
@@ -76,6 +88,9 @@ export const generateMetadata = async ({
             title,
             description,
             images: [ogImage],
+        },
+        other: {
+            thumbnail: canonicalImage,
         },
     }
 }
@@ -110,25 +125,68 @@ export default async function BlogPage({
         .slice(0, 3)
         .map(({ post }) => post)
 
+    const postUrl = `${baseUrl}/blog/${post.slug}`
+    const postImage = post.metadata.image
+        ? /^https?:\/\//i.test(post.metadata.image)
+            ? post.metadata.image
+            : `${baseUrl}${post.metadata.image.startsWith("/") ? "" : "/"}${post.metadata.image}`
+        : makeOgImage({ title: post.metadata.title })
+
     const jsonLd = {
         "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        headline: post.metadata.title,
-        datePublished: post.metadata.publishedAt,
-        dateModified: post.metadata.publishedAt,
-        description: post.metadata.summary,
-        keywords: tags,
-        image: post.metadata.image
-            ? /^https?:\/\//i.test(post.metadata.image)
-                ? post.metadata.image
-                : `${baseUrl}${post.metadata.image.startsWith("/") ? "" : "/"}${post.metadata.image}`
-            : `${baseUrl}/og?title=${encodeURIComponent(post.metadata.title)}`,
-        url: `${baseUrl}/blog/${post.slug}`,
-        author: {
-            "@type": "Person",
-            name: authorName,
-            url: baseUrl,
-        },
+        "@graph": [
+            personSchema,
+            {
+                "@type": "BlogPosting",
+                "@id": `${postUrl}#article`,
+                headline: post.metadata.title,
+                datePublished: post.metadata.publishedAt,
+                dateModified: post.metadata.publishedAt,
+                description: post.metadata.summary,
+                keywords: tags,
+                image: postImage,
+                url: postUrl,
+                inLanguage: "en-US",
+                isPartOf: {
+                    "@id": `${baseUrl}/blog#blog`,
+                },
+                mainEntityOfPage: {
+                    "@type": "WebPage",
+                    "@id": postUrl,
+                },
+                author: {
+                    "@id": `${baseUrl}/#person`,
+                    name: authorName,
+                },
+                publisher: {
+                    "@id": `${baseUrl}/#person`,
+                },
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": `${postUrl}#breadcrumb`,
+                itemListElement: [
+                    {
+                        "@type": "ListItem",
+                        position: 1,
+                        name: SITE_NAME,
+                        item: baseUrl,
+                    },
+                    {
+                        "@type": "ListItem",
+                        position: 2,
+                        name: "Writing",
+                        item: `${baseUrl}/blog`,
+                    },
+                    {
+                        "@type": "ListItem",
+                        position: 3,
+                        name: post.metadata.title,
+                        item: postUrl,
+                    },
+                ],
+            },
+        ],
     }
 
     return (

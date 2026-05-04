@@ -1,5 +1,14 @@
 import { baseUrl } from "@/app/sitemap"
 import { getBlogPosts } from "@/app/blog/utils"
+import { BLOG_DESCRIPTION, SITE_NAME } from "@/lib/seo"
+
+const escapeXml = (value: string) =>
+    value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&apos;")
 
 export const GET = async () => {
     let allBlogs = getBlogPosts()
@@ -17,12 +26,13 @@ export const GET = async () => {
         .map(
             (post) =>
                 `<item>
-          <title>${post.metadata.title}</title>
+          <title>${escapeXml(post.metadata.title)}</title>
           <link>${baseUrl}/blog/${post.slug}</link>
-          <description>${post.metadata.summary || ""}</description>
+          <guid>${baseUrl}/blog/${post.slug}</guid>
+          <description>${escapeXml(post.metadata.summary || "")}</description>
           <pubDate>${new Date(
-                    post.metadata.publishedAt,
-                ).toUTCString()}</pubDate>
+              post.metadata.publishedAt,
+          ).toUTCString()}</pubDate>
         </item>`,
         )
         .join("\n")
@@ -30,9 +40,11 @@ export const GET = async () => {
     const rssFeed = `<?xml version="1.0" encoding="UTF-8" ?>
   <rss version="2.0">
     <channel>
-        <title>Gibson Murray</title>
+        <title>${escapeXml(SITE_NAME)}</title>
         <link>${baseUrl}</link>
-        <description>Writing on faith, life, and Biblical fiction by Gibson Murray.</description>
+        <description>${escapeXml(BLOG_DESCRIPTION)}</description>
+        <language>en-us</language>
+        <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
         ${itemsXml}
     </channel>
   </rss>`

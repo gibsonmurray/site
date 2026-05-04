@@ -16,17 +16,32 @@ import { Providers } from "@/components/providers"
 import { CartDrawer } from "@/components/cart-drawer"
 import { fetchBookPrices } from "@/lib/stripe-server"
 import { PricesProvider } from "@/components/prices-provider"
+import {
+    AUTHOR_NAME,
+    BLOG_DESCRIPTION,
+    SITE_DESCRIPTION,
+    SITE_KEYWORDS,
+    SITE_NAME,
+    SITE_TITLE,
+    defaultOgImage,
+    personSchema,
+} from "@/lib/seo"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
 export const metadata: Metadata = {
     metadataBase: new URL(baseUrl),
     title: {
-        default: "Gibson Murray",
-        template: "%s | Gibson Murray",
+        default: SITE_TITLE,
+        template: `%s | ${SITE_NAME}`,
     },
-    description:
-        "Gibson Murray — author and software engineer. Biblical fiction, faith, and reflections on life.",
+    description: SITE_DESCRIPTION,
+    applicationName: SITE_NAME,
+    authors: [{ name: AUTHOR_NAME, url: baseUrl }],
+    creator: AUTHOR_NAME,
+    publisher: AUTHOR_NAME,
+    category: "Books and Writing",
+    keywords: SITE_KEYWORDS,
     alternates: {
         canonical: baseUrl,
         types: {
@@ -34,18 +49,16 @@ export const metadata: Metadata = {
         },
     },
     openGraph: {
-        title: "Gibson Murray",
-        description:
-            "Gibson Murray — author and software engineer. Biblical fiction, faith, and reflections on life.",
+        title: SITE_TITLE,
+        description: SITE_DESCRIPTION,
         url: baseUrl,
-        siteName: "Gibson Murray",
+        siteName: SITE_NAME,
         images: [
             {
-                url: "/headshot.jpeg",
-                alt: "Gibson Murray",
+                url: defaultOgImage,
+                alt: "Gibson Murray biblical fiction and writing",
                 width: 1200,
                 height: 630,
-                type: "image/jpeg",
             },
         ],
         locale: "en_US",
@@ -53,10 +66,9 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Gibson Murray",
-        description:
-            "Gibson Murray — author and software engineer. Biblical fiction, faith, and reflections on life.",
-        images: ["/headshot.jpeg"],
+        title: SITE_TITLE,
+        description: SITE_DESCRIPTION,
+        images: [defaultOgImage],
     },
     robots: {
         index: true,
@@ -71,14 +83,33 @@ export const metadata: Metadata = {
     },
 }
 
-const personJsonLd = {
+const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Gibson Murray",
-    url: "https://gibsonmurray.com",
-    sameAs: ["https://github.com/gibsonmurray", "https://x.com/gibsonmurray"],
-    jobTitle: "Author",
-    description: "Author of Biblical fiction and software engineer.",
+    "@graph": [
+        personSchema,
+        {
+            "@type": "WebSite",
+            "@id": `${baseUrl}/#website`,
+            name: SITE_NAME,
+            url: baseUrl,
+            description: SITE_DESCRIPTION,
+            inLanguage: "en-US",
+            publisher: {
+                "@id": `${baseUrl}/#person`,
+            },
+        },
+        {
+            "@type": "Blog",
+            "@id": `${baseUrl}/blog#blog`,
+            name: `${SITE_NAME} Writing`,
+            url: `${baseUrl}/blog`,
+            description: BLOG_DESCRIPTION,
+            inLanguage: "en-US",
+            publisher: {
+                "@id": `${baseUrl}/#person`,
+            },
+        },
+    ],
 }
 
 const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
@@ -101,7 +132,7 @@ const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
-                        __html: JSON.stringify(personJsonLd),
+                        __html: JSON.stringify(jsonLd),
                     }}
                 />
                 <Providers>

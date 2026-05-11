@@ -93,7 +93,7 @@ export const books: Book[] = [
         status: {
             type: "pre-order",
             label: "Pre-order",
-            releaseDate: "Summer 2026",
+            releaseDate: "June 12th",
         },
         sortOrder: 1,
         formats: {

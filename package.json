@@ -5,6 +5,7 @@
     "scripts": {
         "dev": "next dev --turbopack",
         "build": "next build",
+        "email:walls-preorder": "bun scripts/create-walls-preorder-broadcast.ts",
         "start": "next start",
         "lint": "next lint",
         "ts": "tsc --noEmit",

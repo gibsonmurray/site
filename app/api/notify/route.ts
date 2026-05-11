@@ -5,7 +5,7 @@ import { books } from "@/lib/books"
 const resend = new Resend(process.env.RESEND_API_KEY!)
 
 const AUDIENCE_ID = "652a20bd-5f37-4ad1-9579-3c9ec60748f1"
-const SUBSTACK_URL = "https://gibsonmurray.substack.com"
+const PREORDER_SEGMENT_ID = process.env.RESEND_PREORDER_SEGMENT_ID
 
 export async function POST(req: NextRequest) {
     const body = await req.json()
@@ -31,12 +31,21 @@ export async function POST(req: NextRequest) {
         book.status.type === "pre-order" ? book.status.releaseDate : null
 
     await Promise.all([
-        // Save to Resend Audience
-        resend.contacts.create({
-            audienceId: AUDIENCE_ID,
-            email,
-            unsubscribed: false,
-        }),
+        PREORDER_SEGMENT_ID
+            ? resend.contacts.create({
+                  email,
+                  unsubscribed: false,
+                  segments: [{ id: PREORDER_SEGMENT_ID }],
+                  properties: {
+                      book_slug: book.slug,
+                      book_title: book.title,
+                  },
+              })
+            : resend.contacts.create({
+                  audienceId: AUDIENCE_ID,
+                  email,
+                  unsubscribed: false,
+              }),
         // Confirmation to subscriber
         resend.emails.send({
             from: "orders@gibsonmurray.com",

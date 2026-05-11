@@ -80,7 +80,7 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                 }}
             />
             <div className="grid min-h-[34rem] gap-8 p-6 sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:p-12">
-                <div className="relative flex min-h-80 items-center justify-center overflow-hidden rounded-[1.5rem] bg-white/[0.04]">
+                <div className="relative isolate min-h-80 overflow-hidden rounded-[1.5rem] bg-white/[0.04]">
                     <div
                         className="pointer-events-none absolute inset-x-10 bottom-10 h-20 rounded-full blur-3xl transition-opacity duration-700"
                         style={{
@@ -91,12 +91,11 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                     <Image
                         src={heroImage}
                         alt={book.coverImageAlt}
-                        width={780}
-                        height={780}
+                        fill
                         sizes="(min-width: 1024px) 48vw, 90vw"
                         priority={priority}
                         onLoad={handleCoverLoad}
-                        className="relative z-10 max-h-[30rem] w-full object-contain drop-shadow-2xl transition duration-500 hover:scale-[1.02]"
+                        className="relative z-10 rounded-[inherit] object-cover"
                     />
                 </div>
 

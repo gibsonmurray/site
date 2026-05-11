@@ -6,6 +6,7 @@ import Link from "next/link"
 import { ArrowRight, CalendarClock, Check, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Book, BookFormat, BookFormatOption } from "@/lib/books"
+import { usePricesStore } from "@/lib/prices-store"
 import {
     DEFAULT_GLOW,
     mixWithBlack,
@@ -21,12 +22,20 @@ interface BookCardProps {
     priority?: boolean
 }
 
+const fmt = (cents: number) =>
+    new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
+    }).format(cents / 100)
+
 export const BookCard = ({ book, priority = false }: BookCardProps) => {
     const [glowColor, setGlowColor] = useState<GlowColor>(DEFAULT_GLOW)
     const [hasGlowColor, setHasGlowColor] = useState(false)
     const [added, setAdded] = useState(false)
 
     const { addItem, openCart } = useCartStore()
+    const getPrice = usePricesStore((s) => s.getPrice)
     const isPreOrder = book.status.type === "pre-order"
     const isComingSoon = book.status.type === "coming-soon"
     const isPurchasable = book.purchasable !== false
@@ -36,6 +45,14 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
     const defaultFormat = (
         Object.entries(book.formats) as [BookFormat, BookFormatOption][]
     ).find(([, opt]) => opt.available)?.[0]
+    const defaultFormatOption = defaultFormat
+        ? book.formats[defaultFormat]
+        : undefined
+    const defaultPrice = defaultFormat
+        ? getPrice(book.slug, defaultFormat)
+        : undefined
+    const bundleOption = book.formats.bundle
+    const bundlePrice = getPrice(book.slug, "bundle")
 
     const statusCopy =
         isPreOrder && !isPurchasable
@@ -126,6 +143,54 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                         A biblical epic designed to feel vivid, human, and
                         impossible to put down.
                     </p>
+                    {defaultPrice !== undefined && defaultFormatOption && (
+                        <div className="mt-6 flex flex-wrap items-center gap-3">
+                            <span className="text-2xl font-semibold tabular-nums">
+                                {fmt(defaultPrice)}
+                            </span>
+                            {defaultFormatOption.compareAtPriceCents !==
+                                undefined && (
+                                <span className="text-sm font-medium text-white/42 tabular-nums line-through">
+                                    {fmt(
+                                        defaultFormatOption.compareAtPriceCents,
+                                    )}
+                                </span>
+                            )}
+                            {defaultFormatOption.priceNote && (
+                                <span className="rounded-full bg-emerald-400/16 px-3 py-1 text-xs font-semibold text-emerald-100 ring-1 ring-emerald-300/20">
+                                    {defaultFormatOption.priceNote}
+                                </span>
+                            )}
+                        </div>
+                    )}
+                    {bundleOption?.available && bundlePrice !== undefined && (
+                        <div className="mt-4 max-w-xl rounded-2xl bg-white/8 px-4 py-3 ring-1 ring-white/10">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-sm font-semibold text-white">
+                                    Complete preorder bundle
+                                </span>
+                                <span className="text-sm font-semibold text-emerald-100 tabular-nums">
+                                    {fmt(bundlePrice)}
+                                </span>
+                                {bundleOption.compareAtPriceCents !==
+                                    undefined && (
+                                    <span className="text-xs font-medium text-white/38 tabular-nums line-through">
+                                        {fmt(bundleOption.compareAtPriceCents)}
+                                    </span>
+                                )}
+                                {bundleOption.priceNote && (
+                                    <span className="rounded-full bg-emerald-400/16 px-2.5 py-0.5 text-[0.7rem] font-semibold text-emerald-100 ring-1 ring-emerald-300/20">
+                                        {bundleOption.priceNote}
+                                    </span>
+                                )}
+                            </div>
+                            {bundleOption.description && (
+                                <p className="mt-1.5 text-xs leading-5 text-white/52">
+                                    {bundleOption.description}
+                                </p>
+                            )}
+                        </div>
+                    )}
 
                     <div className="mt-9 flex flex-wrap items-center gap-3">
                         <Link

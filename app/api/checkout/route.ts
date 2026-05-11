@@ -1,26 +1,51 @@
 import { NextRequest, NextResponse } from "next/server"
-import Stripe from "stripe"
+import type Stripe from "stripe"
 import { books } from "@/lib/books"
 import { type CartItem } from "@/lib/cart-store"
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+import { getStripe } from "@/lib/stripe-server"
 
 const baseUrl =
     process.env.NODE_ENV === "production"
         ? "https://gibsonmurray.com"
         : "http://localhost:3000"
 
+const PHYSICAL_FORMATS = new Set<CartItem["format"]>(["paperback", "bundle"])
+
+type CheckoutLineItem =
+    | { price: string; quantity: number }
+    | {
+          price_data: {
+              currency: "usd"
+              product: string
+              unit_amount: number
+          }
+          quantity: number
+      }
+
 export async function POST(req: NextRequest) {
+    const stripe = getStripe()
     const body = await req.json()
     const items: CartItem[] = body.items
 
     if (!Array.isArray(items) || items.length === 0) {
-        return NextResponse.json({ error: "No items provided" }, { status: 400 })
+        return NextResponse.json(
+            { error: "No items provided" },
+            { status: 400 },
+        )
     }
 
-    const lineItems: { price: string; quantity: number }[] = []
+    const lineItems: CheckoutLineItem[] = []
+    const checkoutItems: CartItem[] = []
+    let requiresShipping = false
 
     for (const { bookId, format, quantity } of items) {
+        if (!Number.isFinite(quantity)) {
+            return NextResponse.json(
+                { error: "Invalid item quantity" },
+                { status: 400 },
+            )
+        }
+
         const book = books.find((b) => b.slug === bookId)
         if (!book || book.status.type === "coming-soon") {
             return NextResponse.json(
@@ -39,28 +64,42 @@ export async function POST(req: NextRequest) {
 
         if (!formatOption.productId) {
             return NextResponse.json(
-                { error: "Book price not configured" },
+                { error: `Stripe product not configured for "${format}"` },
                 { status: 500 },
             )
         }
 
-        const product = await stripe.products.retrieve(formatOption.productId, {
-            expand: ["default_price"],
-        })
-        const defaultPrice = product.default_price
-        if (!defaultPrice || typeof defaultPrice === "string") {
+        const normalizedQuantity = Math.max(1, Math.min(99, quantity))
+        const defaultPriceId =
+            formatOption.priceCents === undefined
+                ? await getDefaultPriceId(stripe, formatOption.productId)
+                : null
+
+        if (formatOption.priceCents === undefined && !defaultPriceId) {
             return NextResponse.json(
                 { error: "Book price not configured in Stripe" },
                 { status: 500 },
             )
         }
 
-        const priceId = defaultPrice.id
+        const lineItem: CheckoutLineItem =
+            formatOption.priceCents !== undefined
+                ? {
+                      price_data: {
+                          currency: "usd",
+                          product: formatOption.productId,
+                          unit_amount: formatOption.priceCents,
+                      },
+                      quantity: normalizedQuantity,
+                  }
+                : {
+                      price: defaultPriceId!,
+                      quantity: normalizedQuantity,
+                  }
 
-        lineItems.push({
-            price: priceId,
-            quantity: Math.max(1, Math.min(99, quantity)),
-        })
+        lineItems.push(lineItem)
+        checkoutItems.push({ bookId, format, quantity: normalizedQuantity })
+        requiresShipping ||= PHYSICAL_FORMATS.has(format)
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -75,25 +114,39 @@ export async function POST(req: NextRequest) {
                 optional: true,
             },
         ],
-        shipping_address_collection: {
-            allowed_countries: [
-                "US", "CA", "GB", "AU", "NZ",
-                "DE", "FR", "IT", "ES", "NL",
-                "SE", "NO", "DK", "FI", "BE",
-                "CH", "AT", "JP", "SG", "BR",
-            ],
-        },
+        ...(requiresShipping
+            ? {
+                  shipping_address_collection: {
+                      allowed_countries: [
+                          "US",
+                          "CA",
+                          "GB",
+                          "AU",
+                          "NZ",
+                          "DE",
+                          "FR",
+                          "IT",
+                          "ES",
+                          "NL",
+                          "SE",
+                          "NO",
+                          "DK",
+                          "FI",
+                          "BE",
+                          "CH",
+                          "AT",
+                          "JP",
+                          "SG",
+                          "BR",
+                      ],
+                  },
+              }
+            : {}),
         phone_number_collection: { enabled: true },
         success_url: `${baseUrl}/books/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${baseUrl}/books`,
         metadata: {
-            items: JSON.stringify(
-                items.map(({ bookId, format, quantity }) => ({
-                    bookId,
-                    format,
-                    quantity,
-                })),
-            ),
+            items: JSON.stringify(checkoutItems),
         },
     })
 
@@ -105,4 +158,16 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ url: session.url })
+}
+
+const getDefaultPriceId = async (stripe: Stripe, productId: string) => {
+    const product = await stripe.products.retrieve(productId, {
+        expand: ["default_price"],
+    })
+    const defaultPrice = product.default_price
+    if (!defaultPrice || typeof defaultPrice === "string") {
+        return null
+    }
+
+    return defaultPrice.id
 }

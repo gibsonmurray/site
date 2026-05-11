@@ -11,12 +11,14 @@ export const FORMAT_LABELS: Record<BookFormat, string> = {
     paperback: "Paperback",
     ebook: "eBook",
     audiobook: "Audiobook",
+    bundle: "Complete bundle",
 }
 
 export const fmt = (cents: number) =>
     new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
+        maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
     }).format(cents / 100)
 
 type CartLineItemProps = {
@@ -35,6 +37,7 @@ export const CartLineItem = ({
     if (!book) return null
 
     const unitPrice = getPrice(book.slug, item.format)
+    const formatOption = book.formats[item.format]
     const lineTotal =
         unitPrice !== undefined ? unitPrice * item.quantity : undefined
 
@@ -64,6 +67,11 @@ export const CartLineItem = ({
                                 </span>
                             )}
                         </p>
+                        {formatOption?.description && (
+                            <p className="text-muted-foreground/70 mt-1 text-xs leading-4">
+                                {formatOption.description}
+                            </p>
+                        )}
                     </div>
                     <Button
                         variant="ghost"

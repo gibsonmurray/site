@@ -18,6 +18,7 @@ import {
     Headphones,
     Mail,
     Minus,
+    PackageCheck,
     Plus,
     Send,
     ShieldCheck,
@@ -59,12 +60,14 @@ const FORMAT_CONFIG: Record<BookFormat, { label: string; icon: LucideIcon }> = {
     paperback: { label: "Paperback", icon: BookOpen },
     ebook: { label: "eBook", icon: Tablet },
     audiobook: { label: "Audiobook", icon: Headphones },
+    bundle: { label: "Complete bundle", icon: PackageCheck },
 }
 
 const fmt = (cents: number) =>
     new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
+        maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
     }).format(cents / 100)
 
 const PREORDER_CONFIRMATION_MIN_MS = 850
@@ -482,6 +485,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
     const releaseDate =
         book.status.type === "pre-order" ? book.status.releaseDate : null
     const selectedPrice = getPrice(book.slug, selectedFormat)
+    const selectedFormatOption = book.formats[selectedFormat]
     const canBuy =
         isPurchasable &&
         !isComingSoon &&
@@ -605,7 +609,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                 />
                             ) : (
                                 <div className="app-panel-dark">
-                                    <div className="grid gap-2 sm:grid-cols-3">
+                                    <div className="grid auto-rows-fr gap-2 sm:grid-cols-2">
                                         {(
                                             Object.entries(book.formats) as [
                                                 BookFormat,
@@ -621,6 +625,10 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                 book.slug,
                                                 format,
                                             )
+                                            const hasSale =
+                                                opt.compareAtPriceCents !==
+                                                    undefined &&
+                                                price !== undefined
                                             const btn = (
                                                 <Button
                                                     key={format}
@@ -633,7 +641,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                         )
                                                     }
                                                     className={cn(
-                                                        "h-auto w-full flex-col items-start gap-2 rounded-2xl border px-4 py-3 text-left text-white hover:bg-white/10 hover:text-white",
+                                                        "h-full min-h-24 w-full min-w-0 flex-col items-start justify-center gap-3 overflow-hidden rounded-2xl border px-4 py-3 text-left whitespace-normal text-white hover:bg-white/10 hover:text-white",
                                                         isSelected
                                                             ? "border-white/45 bg-white/14"
                                                             : opt.available
@@ -641,29 +649,56 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                               : "border-white/8 bg-white/[0.03] text-white/32",
                                                     )}
                                                 >
-                                                    <Icon className="size-4" />
-                                                    <span className="text-sm font-semibold">
-                                                        {
-                                                            FORMAT_CONFIG[
-                                                                format
-                                                            ].label
-                                                        }
+                                                    <span className="flex max-w-full items-center gap-2">
+                                                        <Icon className="size-4 shrink-0" />
+                                                        <span className="truncate text-sm leading-5 font-semibold">
+                                                            {
+                                                                FORMAT_CONFIG[
+                                                                    format
+                                                                ].label
+                                                            }
+                                                        </span>
                                                     </span>
-                                                    <span className="text-xs font-normal text-white/55">
-                                                        {price !== undefined
-                                                            ? fmt(price)
-                                                            : "Coming soon"}
+                                                    <span className="flex min-h-6 max-w-full flex-wrap items-center gap-2 text-xs font-normal whitespace-normal text-white/55">
+                                                        {price !== undefined ? (
+                                                            <>
+                                                                <span>
+                                                                    {fmt(price)}
+                                                                </span>
+                                                                {hasSale && (
+                                                                    <span className="text-white/32 line-through">
+                                                                        {fmt(
+                                                                            opt.compareAtPriceCents!,
+                                                                        )}
+                                                                    </span>
+                                                                )}
+                                                            </>
+                                                        ) : (
+                                                            <span>
+                                                                Coming soon
+                                                            </span>
+                                                        )}
+                                                        {opt.priceNote && (
+                                                            <span className="rounded-full bg-emerald-400/14 px-2 py-0.5 text-[0.68rem] font-semibold text-emerald-100 ring-1 ring-emerald-300/18">
+                                                                {opt.priceNote}
+                                                            </span>
+                                                        )}
                                                     </span>
                                                 </Button>
                                             )
 
                                             return opt.available ? (
-                                                <div key={format}>{btn}</div>
+                                                <div
+                                                    key={format}
+                                                    className="h-full"
+                                                >
+                                                    {btn}
+                                                </div>
                                             ) : (
                                                 <Tooltip key={format}>
                                                     <TooltipTrigger
                                                         render={
-                                                            <span className="block" />
+                                                            <span className="block h-full" />
                                                         }
                                                     >
                                                         {btn}
@@ -677,15 +712,43 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                     </div>
 
                                     <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
-                                        <div>
+                                        <div className="min-w-0">
                                             <p className="text-xs font-medium text-white/45">
                                                 Price
                                             </p>
                                             <p className="text-lg font-semibold tabular-nums">
-                                                {selectedPrice !== undefined
-                                                    ? fmt(selectedPrice)
-                                                    : "Coming soon"}
+                                                {selectedPrice !== undefined ? (
+                                                    <span className="flex flex-wrap items-baseline gap-2">
+                                                        <span>
+                                                            {fmt(selectedPrice)}
+                                                        </span>
+                                                        {selectedFormatOption?.compareAtPriceCents !==
+                                                            undefined && (
+                                                            <span className="text-sm font-medium text-white/35 line-through">
+                                                                {fmt(
+                                                                    selectedFormatOption.compareAtPriceCents,
+                                                                )}
+                                                            </span>
+                                                        )}
+                                                        {selectedFormatOption?.priceNote && (
+                                                            <span className="text-xs font-semibold text-emerald-100">
+                                                                {
+                                                                    selectedFormatOption.priceNote
+                                                                }
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                ) : (
+                                                    "Coming soon"
+                                                )}
                                             </p>
+                                            {selectedFormatOption?.description && (
+                                                <p className="mt-1 max-w-md text-xs leading-5 text-white/45">
+                                                    {
+                                                        selectedFormatOption.description
+                                                    }
+                                                </p>
+                                            )}
                                         </div>
                                         <div className="flex items-center gap-1 rounded-full bg-white/8 p-1">
                                             <Button

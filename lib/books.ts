@@ -1,7 +1,12 @@
-export type BookFormat = "paperback" | "ebook" | "audiobook"
+export type BookFormat = "paperback" | "ebook" | "audiobook" | "bundle"
 
 export type BookFormatOption = {
     productId?: string // Stripe product ID for this format
+    /** Explicit checkout price in cents. Falls back to Stripe default price when omitted. */
+    priceCents?: number
+    compareAtPriceCents?: number
+    priceNote?: string
+    description?: string
     available: boolean
 }
 
@@ -97,11 +102,29 @@ export const books: Book[] = [
         },
         sortOrder: 1,
         formats: {
-            paperback: { productId: "prod_UJIRemQJC3RNFj", available: true },
-            ebook: { productId: "prod_UJIwvIDjh1OnQH", available: true },
+            paperback: {
+                productId: "prod_UJIRemQJC3RNFj",
+                priceCents: 1500,
+                compareAtPriceCents: 2000,
+                priceNote: "Preorder sale",
+                available: true,
+            },
+            ebook: {
+                productId: "prod_UJIwvIDjh1OnQH",
+                priceCents: 1000,
+                available: true,
+            },
             audiobook: { available: false },
+            bundle: {
+                productId: "prod_UUyKDof3tnKSR2",
+                priceCents: 3000,
+                compareAtPriceCents: 4500,
+                priceNote: "Bundle discount",
+                description:
+                    "Paperback, eBook, and promised audiobook delivery when audio is ready.",
+                available: true,
+            },
         },
-        purchasable: false,
     },
 ]
 

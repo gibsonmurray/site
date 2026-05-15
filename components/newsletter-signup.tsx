@@ -65,15 +65,15 @@ export const NewsletterSignup = () => {
                             type="email"
                             required
                             placeholder="your@email.com"
-                            className="min-h-12 flex-1 rounded-full px-6 text-lg sm:h-12 sm:px-5 sm:text-base"
+                            className="min-h-12 flex-1 rounded-full px-5 text-base"
                         />
                         <Button
                             type="submit"
                             size="lg"
                             disabled={mutation.isPending}
-                            className="h-16 gap-3 rounded-full px-6 text-lg sm:h-12 sm:shrink-0 sm:gap-2 sm:px-5 sm:text-base"
+                            className="h-12 gap-2 rounded-full px-5 text-base sm:shrink-0"
                         >
-                            <Mail className="size-5 sm:size-4" />
+                            <Mail className="size-4" />
                             {mutation.isPending ? "..." : "Subscribe"}
                         </Button>
                     </form>

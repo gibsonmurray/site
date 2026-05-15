@@ -1,0 +1,63 @@
+[
+    {
+        "slug": "walls",
+        "title": "Walls",
+        "genre": "Biblical Fiction",
+        "coverImageSrc": "/books/walls-cover-ebook.png",
+        "images": [
+            "/books/walls-mock-1.png",
+            "/books/walls-mock-2.png",
+            "/books/walls-cover-ebook.png"
+        ],
+        "modelAssets": {
+            "frontImageSrc": "/books/walls-cover-print.png",
+            "frontImageCrop": {
+                "x": 1845,
+                "y": 0,
+                "width": 1575,
+                "height": 2400
+            },
+            "spineImageSrc": "/books/walls-cover-side.png",
+            "backImageSrc": "/books/walls-cover-back.png",
+            "thicknessRatio": 0.17333333333333334,
+            "pageEdgeColor": "#f2e7cf"
+        },
+        "coverImageAlt": "Walls book cover",
+        "shortDescription": "A story of unlikely alliances, faith tested, and the hidden battles that decided the course of history.",
+        "longDescription": [
+            "When Joshua, son of Nun, sends two spies into the fortified city of Jericho, their mission quickly spirals into a fight for survival. Salmon, a fierce warrior of Judah, and Phinehas, a zealous Levitical priest, must navigate deadly streets, political conspiracies, and supernatural forces beyond their understanding.",
+            "Only Rahab, a resourceful prostitute with dangerous secrets, can guide them through the city's peril and challenge everything they believe about loyalty, faith, and courage. As Jericho's walls and the spies' own prejudices begin to crumble, the fate of Israel and the promise of God hang in the balance."
+        ],
+        "status": {
+            "type": "pre-order",
+            "label": "Pre-order",
+            "releaseDate": "June 12th"
+        },
+        "sortOrder": 1,
+        "formats": {
+            "paperback": {
+                "productId": "prod_UJIRemQJC3RNFj",
+                "priceCents": 1500,
+                "compareAtPriceCents": 2000,
+                "priceNote": "Preorder sale",
+                "available": true
+            },
+            "ebook": {
+                "productId": "prod_UJIwvIDjh1OnQH",
+                "priceCents": 1000,
+                "available": true
+            },
+            "audiobook": {
+                "available": false
+            },
+            "bundle": {
+                "productId": "prod_UUyKDof3tnKSR2",
+                "priceCents": 3000,
+                "compareAtPriceCents": 4500,
+                "priceNote": "Bundle discount",
+                "description": "Paperback, eBook, and promised audiobook delivery when audio is ready.",
+                "available": true
+            }
+        }
+    }
+]

@@ -19,13 +19,17 @@ import { PricesProvider } from "@/components/prices-provider"
 import {
     AUTHOR_NAME,
     BLOG_DESCRIPTION,
+    BOOKS_DESCRIPTION,
     SITE_DESCRIPTION,
     SITE_KEYWORDS,
+    SITE_LINKS,
     SITE_NAME,
     SITE_TITLE,
     defaultOgImage,
+    makeSiteNavigationSchema,
     personSchema,
 } from "@/lib/seo"
+import { books } from "@/lib/books"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -87,6 +91,13 @@ const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
         personSchema,
+        makeSiteNavigationSchema([
+            ...SITE_LINKS,
+            ...books.map((book) => ({
+                name: book.title,
+                url: `${baseUrl}/books/${book.slug}`,
+            })),
+        ]),
         {
             "@type": "WebSite",
             "@id": `${baseUrl}/#website`,
@@ -97,6 +108,28 @@ const jsonLd = {
             publisher: {
                 "@id": `${baseUrl}/#person`,
             },
+            hasPart: [
+                {
+                    "@type": "WebPage",
+                    name: "Books",
+                    url: `${baseUrl}/books`,
+                    description: BOOKS_DESCRIPTION,
+                },
+                {
+                    "@type": "Blog",
+                    "@id": `${baseUrl}/blog#blog`,
+                    name: "Writing",
+                    url: `${baseUrl}/blog`,
+                    description: BLOG_DESCRIPTION,
+                },
+                ...books.map((book) => ({
+                    "@type": "Book",
+                    "@id": `${baseUrl}/books/${book.slug}#book`,
+                    name: book.title,
+                    url: `${baseUrl}/books/${book.slug}`,
+                    description: book.shortDescription,
+                })),
+            ],
         },
         {
             "@type": "Blog",

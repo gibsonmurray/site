@@ -14,7 +14,9 @@ import {
 import { ArrowRight, Clock, Feather, Search } from "lucide-react"
 
 export const metadata: Metadata = {
-    title: "Writing",
+    title: {
+        absolute: `${SITE_NAME} Writing`,
+    },
     description: BLOG_DESCRIPTION,
     authors: [{ name: AUTHOR_NAME, url: baseUrl }],
     keywords: [

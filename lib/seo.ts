@@ -33,6 +33,21 @@ export const AUTHOR_SAME_AS = [
     "https://x.com/gibsonmurray",
 ]
 
+export const SITE_LINKS = [
+    {
+        name: "Home",
+        url: baseUrl,
+    },
+    {
+        name: "Books",
+        url: `${baseUrl}/books`,
+    },
+    {
+        name: "Writing",
+        url: `${baseUrl}/blog`,
+    },
+]
+
 export const makeOgImage = ({
     title = SITE_NAME,
     image,
@@ -66,3 +81,17 @@ export const personSchema = {
         "Story craft",
     ],
 }
+
+export const makeSiteNavigationSchema = (
+    links: { name: string; url: string }[] = SITE_LINKS,
+) => ({
+    "@type": "ItemList",
+    "@id": `${baseUrl}/#site-navigation`,
+    name: `${SITE_NAME} site navigation`,
+    itemListElement: links.map((link, index) => ({
+        "@type": "SiteNavigationElement",
+        position: index + 1,
+        name: link.name,
+        url: link.url,
+    })),
+})

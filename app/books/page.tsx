@@ -11,7 +11,9 @@ import {
 } from "@/lib/seo"
 
 export const metadata: Metadata = {
-    title: "Books",
+    title: {
+        absolute: `Books by ${SITE_NAME}`,
+    },
     description: BOOKS_DESCRIPTION,
     authors: [{ name: AUTHOR_NAME, url: baseUrl }],
     keywords: [

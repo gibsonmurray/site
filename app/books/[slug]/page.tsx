@@ -16,8 +16,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: `${book.title} by ${AUTHOR_NAME}`,
         image: book.images?.[0] ?? book.coverImageSrc,
     })
+    const title = `${book.title} by ${AUTHOR_NAME}`
+
     return {
-        title: `${book.title} by ${AUTHOR_NAME}`,
+        title: {
+            absolute: title,
+        },
         description: book.shortDescription,
         authors: [{ name: AUTHOR_NAME, url: baseUrl }],
         keywords: [
@@ -34,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             canonical: `${baseUrl}/books/${book.slug}`,
         },
         openGraph: {
-            title: `${book.title} by ${AUTHOR_NAME}`,
+            title,
             description: book.shortDescription,
             url: `${baseUrl}/books/${book.slug}`,
             type: "book",
@@ -49,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         },
         twitter: {
             card: "summary_large_image",
-            title: `${book.title} by ${AUTHOR_NAME}`,
+            title,
             description: book.shortDescription,
             images: [ogImage],
         },

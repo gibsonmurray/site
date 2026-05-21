@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { Resend } from "resend"
 import { books } from "@/lib/books"
+import { publicContactEmail } from "@/lib/contact"
 
 const resend = new Resend(process.env.RESEND_API_KEY!)
 
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest) {
         // Confirmation to subscriber
         resend.emails.send({
             from: "orders@gibsonmurray.com",
+            replyTo: publicContactEmail,
             to: email,
             subject: `You're on the list 🥳 — ${book.title}`,
             text: [
@@ -66,7 +68,7 @@ export async function POST(req: NextRequest) {
         // Notification to author
         resend.emails.send({
             from: "orders@gibsonmurray.com",
-            to: "gibmurrays@gmail.com",
+            to: publicContactEmail,
             subject: `New pre-order notification signup — ${book.title}`,
             text: [
                 `New signup for pre-order notifications:`,

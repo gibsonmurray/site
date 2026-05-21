@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { Resend } from "resend"
 import { books, type BookFormat } from "@/lib/books"
+import { publicContactEmail } from "@/lib/contact"
 import { getStripe } from "@/lib/stripe-server"
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
@@ -127,7 +128,7 @@ export async function POST(req: NextRequest) {
 
         await resend.emails.send({
             from: "orders@send.gibsonmurray.com",
-            to: "gibson@gibsonmurray.com",
+            to: publicContactEmail,
             subject: `New pre-order — ${orderItems.map((item) => item.bookId).join(", ")}`,
             text: [
                 `New pre-order received!`,

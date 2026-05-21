@@ -1,3 +1,5 @@
+import { publicContactEmail } from "@/lib/contact"
+
 const siteUrl = "https://gibsonmurray.com"
 const bookUrl = `${siteUrl}/books/walls`
 const heroImageUrl = `${siteUrl}/books/walls-mock-1.png`
@@ -5,7 +7,7 @@ const heroImageUrl = `${siteUrl}/books/walls-mock-1.png`
 export const wallsPreorderBroadcast = {
     name: "Walls preorder announcement",
     from: "Gibson Murray <orders@gibsonmurray.com>",
-    replyTo: "gibmurrays@gmail.com",
+    replyTo: publicContactEmail,
     subject: "Walls is now available for preorder",
     previewText:
         "The paperback, ebook, and complete preorder bundle are open now. Releases June 12th.",

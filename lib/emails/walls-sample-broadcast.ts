@@ -1,3 +1,5 @@
+import { publicContactEmail } from "@/lib/contact"
+
 const siteUrl = "https://gibsonmurray.com"
 const bookUrl = `${siteUrl}/books/walls`
 const sampleUrl = `${siteUrl}/books/walls/read`
@@ -6,7 +8,7 @@ const heroImageUrl = `${siteUrl}/books/walls-mock-1.png`
 export const wallsSampleBroadcast = {
     name: "Walls sample announcement",
     from: "Gibson Murray <orders@gibsonmurray.com>",
-    replyTo: "gibmurrays@gmail.com",
+    replyTo: publicContactEmail,
     subject: "You can read the first three chapters of Walls",
     previewText:
         "The first three chapters of Walls are now available to read on the site.",

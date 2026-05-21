@@ -103,16 +103,16 @@ const ProductScreenshot = ({ variant }: { variant: "desktop" | "mobile" }) => {
         <Image
             src={
                 isMobile
-                    ? "/verbatim/app-mobile.jpg"
-                    : "/verbatim/app-desktop.jpg"
+                    ? "/verbatim/app-mobile.png"
+                    : "/verbatim/app-desktop.png"
             }
             alt={
                 isMobile
                     ? "Mobile Verbatim app screenshot showing John 3:16 practice"
                     : "Verbatim app screenshot showing John 3:16 memorization practice in progress"
             }
-            width={isMobile ? 390 : 1440}
-            height={isMobile ? 844 : 960}
+            width={isMobile ? 1170 : 2880}
+            height={isMobile ? 2532 : 1920}
             sizes={isMobile ? "390px" : "(min-width: 1024px) 80vw, 92vw"}
             className={
                 isMobile
@@ -120,9 +120,21 @@ const ProductScreenshot = ({ variant }: { variant: "desktop" | "mobile" }) => {
                     : "ring-border/70 shadow-foreground/15 relative rounded-[2.25rem] shadow-2xl ring-1"
             }
             priority={!isMobile}
+            unoptimized
         />
     )
 }
+
+const ResponsiveProductScreenshot = () => (
+    <>
+        <div className="hidden md:block">
+            <ProductScreenshot variant="desktop" />
+        </div>
+        <div className="md:hidden">
+            <ProductScreenshot variant="mobile" />
+        </div>
+    </>
+)
 
 const VerbatimPage = () => {
     return (
@@ -166,7 +178,7 @@ const VerbatimPage = () => {
                 </div>
                 <div className="relative mt-14 w-full max-w-5xl">
                     <div className="bg-primary/10 absolute inset-x-10 bottom-2 h-24 rounded-full blur-3xl" />
-                    <ProductScreenshot variant="desktop" />
+                    <ResponsiveProductScreenshot />
                 </div>
             </header>
 

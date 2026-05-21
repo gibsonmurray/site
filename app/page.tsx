@@ -215,12 +215,22 @@ const Home = () => {
                     <div className="relative">
                         <div className="bg-primary/10 absolute inset-x-8 bottom-0 h-20 rounded-full blur-2xl" />
                         <Image
-                            src="/verbatim/app-desktop.jpg"
+                            src="/verbatim/app-desktop.png"
                             alt="Verbatim app showing John 3:16 memorization practice in progress"
-                            width={1440}
-                            height={960}
+                            width={2880}
+                            height={1920}
                             sizes="(min-width: 1024px) 54vw, 92vw"
-                            className="ring-border/70 shadow-foreground/10 relative rounded-[2rem] shadow-2xl ring-1"
+                            className="ring-border/70 shadow-foreground/10 relative hidden rounded-[2rem] shadow-2xl ring-1 md:block"
+                            unoptimized
+                        />
+                        <Image
+                            src="/verbatim/app-mobile.png"
+                            alt="Mobile Verbatim app showing John 3:16 memorization practice"
+                            width={1170}
+                            height={2532}
+                            sizes="min(92vw, 24rem)"
+                            className="ring-border/70 shadow-foreground/10 relative mx-auto w-full max-w-[24rem] rounded-[2rem] shadow-2xl ring-1 md:hidden"
+                            unoptimized
                         />
                     </div>
                 </div>

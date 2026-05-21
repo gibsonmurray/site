@@ -8,7 +8,7 @@ export const SITE_TITLE =
     "Gibson Murray | Christian Author and Biblical Fiction Writer"
 
 export const SITE_DESCRIPTION =
-    "Gibson Murray writes biblical fiction, biblical analysis, Christian reflections, and essays on faith, story, and ordinary life."
+    "Gibson Murray writes biblical fiction, biblical analysis, Christian reflections, essays on faith and story, and builds thoughtful software like Verbatim."
 
 export const BOOKS_DESCRIPTION =
     "Book projects in biblical fiction from Gibson Murray, including Walls, a story of faith tested, unlikely mercy, and the fall of Jericho."
@@ -16,12 +16,19 @@ export const BOOKS_DESCRIPTION =
 export const BLOG_DESCRIPTION =
     "Essays and reflections from Gibson Murray on Christian faith, biblical imagination, story, biblical analysis, and ordinary life."
 
+export const VERBATIM_DESCRIPTION =
+    "Verbatim is a minimalist Scripture memorization tool that helps you learn passages word for word with realtime typing feedback, and it works for any exact text."
+
 export const SITE_KEYWORDS = [
     "Gibson Murray",
     "Christian author",
     "biblical fiction",
     "Christian fiction",
     "faith essays",
+    "Scripture memorization app",
+    "Bible verse memorization",
+    "Verbatim typing memorization",
+    "typing memorization app",
     "biblical reflections",
     "biblical analysis",
     "Walls book",
@@ -45,6 +52,10 @@ export const SITE_LINKS = [
     {
         name: "Writing",
         url: `${baseUrl}/blog`,
+    },
+    {
+        name: "Verbatim",
+        url: `${baseUrl}/verbatim`,
     },
 ]
 
@@ -79,6 +90,7 @@ export const personSchema = {
         "Christian theology",
         "Faith and writing",
         "Story craft",
+        "Software design",
     ],
 }
 

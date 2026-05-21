@@ -172,6 +172,60 @@ const Home = () => {
                 </div>
             </section>
 
+            <section
+                id="verbatim"
+                className="border-border/60 scroll-mt-14 border-b bg-[#f6f7f4]"
+            >
+                <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-18 sm:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:py-24">
+                    <div>
+                        <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
+                            New web app
+                        </p>
+                        <h2 className="text-foreground mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+                            Verbatim turns Scripture memory into a live typing
+                            practice.
+                        </h2>
+                        <p className="text-muted-foreground mt-5 max-w-xl text-base leading-7 sm:text-lg sm:leading-8">
+                            Paste in the passage you want to carry, hide it,
+                            then type it back from memory. Verbatim checks every
+                            character in real time for Scripture, speeches,
+                            poems, and anything that needs to come back word for
+                            word.
+                        </p>
+                        <div className="mt-8 flex flex-wrap items-center gap-3">
+                            <Link
+                                href="/verbatim"
+                                className="bg-foreground text-background hover:bg-foreground/85 inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-medium transition-colors"
+                            >
+                                Explore Verbatim
+                                <ArrowRight className="size-4" />
+                            </Link>
+                            <div className="text-muted-foreground inline-flex items-center gap-2 text-sm">
+                                <img
+                                    src="/verbatim-logo.svg"
+                                    alt=""
+                                    className="size-4 rounded-[0.25rem]"
+                                    aria-hidden="true"
+                                />
+                                Scripture first, useful anywhere
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="relative">
+                        <div className="bg-primary/10 absolute inset-x-8 bottom-0 h-20 rounded-full blur-2xl" />
+                        <Image
+                            src="/verbatim/app-desktop.jpg"
+                            alt="Verbatim app showing John 3:16 memorization practice in progress"
+                            width={1440}
+                            height={960}
+                            sizes="(min-width: 1024px) 54vw, 92vw"
+                            className="ring-border/70 shadow-foreground/10 relative rounded-[2rem] shadow-2xl ring-1"
+                        />
+                    </div>
+                </div>
+            </section>
+
             <section className="bg-muted/35">
                 <div className="mx-auto max-w-6xl px-6 py-18 sm:px-8 lg:py-24">
                     <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">

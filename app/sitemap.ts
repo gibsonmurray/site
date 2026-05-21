@@ -42,6 +42,12 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
             changeFrequency: "weekly" as const,
             priority: 0.8,
         },
+        {
+            url: `${baseUrl}/verbatim`,
+            lastModified: today,
+            changeFrequency: "weekly" as const,
+            priority: 0.9,
+        },
     ]
 
     return [...routes, ...blogs, ...bookPages]

@@ -1,5 +1,10 @@
 import { baseUrl } from "@/app/sitemap"
-import { AUTHOR_NAME, VERBATIM_DESCRIPTION, makeOgImage } from "@/lib/seo"
+import {
+    AUTHOR_NAME,
+    SITE_NAME,
+    VERBATIM_DESCRIPTION,
+    makeOgImage,
+} from "@/lib/seo"
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
@@ -16,6 +21,12 @@ import {
 } from "lucide-react"
 
 const verbatimUrl = "https://verbatim.gibsonmurray.com"
+const verbatimTitle = "Verbatim | Scripture Memorization App"
+const verbatimOgImage = makeOgImage({
+    title: "Verbatim",
+    subtitle: "Memorize Scripture, exactly.",
+    image: "/verbatim/app-desktop.png",
+})
 
 const features: {
     icon: LucideIcon
@@ -51,7 +62,7 @@ const useCases = [
 
 export const metadata: Metadata = {
     title: {
-        absolute: "Verbatim | Scripture Memorization App",
+        absolute: verbatimTitle,
     },
     description: VERBATIM_DESCRIPTION,
     authors: [{ name: AUTHOR_NAME, url: baseUrl }],
@@ -69,15 +80,15 @@ export const metadata: Metadata = {
         canonical: `${baseUrl}/verbatim`,
     },
     openGraph: {
-        title: "Verbatim | Scripture Memorization App",
+        title: verbatimTitle,
         description: VERBATIM_DESCRIPTION,
         url: `${baseUrl}/verbatim`,
+        siteName: SITE_NAME,
+        locale: "en_US",
         type: "website",
         images: [
             {
-                url: makeOgImage({
-                    title: "Verbatim",
-                }),
+                url: verbatimOgImage,
                 alt: "Verbatim Scripture memorization app by Gibson Murray",
                 width: 1200,
                 height: 630,
@@ -86,13 +97,10 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Verbatim | Scripture Memorization App",
+        title: verbatimTitle,
         description: VERBATIM_DESCRIPTION,
-        images: [
-            makeOgImage({
-                title: "Verbatim",
-            }),
-        ],
+        creator: "@gibsonmurray",
+        images: [verbatimOgImage],
     },
 }
 

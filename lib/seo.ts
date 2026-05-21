@@ -61,12 +61,15 @@ export const SITE_LINKS = [
 
 export const makeOgImage = ({
     title = SITE_NAME,
+    subtitle,
     image,
 }: {
     title?: string
+    subtitle?: string
     image?: string
 } = {}) => {
     const params = new URLSearchParams({ title })
+    if (subtitle) params.set("subtitle", subtitle)
     if (image) params.set("image", image)
     return `${baseUrl}/og?${params.toString()}`
 }

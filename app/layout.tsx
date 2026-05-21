@@ -25,6 +25,7 @@ import {
     SITE_LINKS,
     SITE_NAME,
     SITE_TITLE,
+    VERBATIM_DESCRIPTION,
     defaultOgImage,
     makeSiteNavigationSchema,
     personSchema,
@@ -121,6 +122,14 @@ const jsonLd = {
                     name: "Writing",
                     url: `${baseUrl}/blog`,
                     description: BLOG_DESCRIPTION,
+                },
+                {
+                    "@type": "SoftwareApplication",
+                    name: "Verbatim",
+                    url: "https://verbatim.gibsonmurray.com",
+                    applicationCategory: "EducationalApplication",
+                    operatingSystem: "Web",
+                    description: VERBATIM_DESCRIPTION,
                 },
                 ...books.map((book) => ({
                     "@type": "Book",

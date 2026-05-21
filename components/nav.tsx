@@ -23,7 +23,8 @@ import { cn } from "@/lib/utils"
 const navItems: {
     href: string
     label: string
-    icon: LucideIcon
+    icon?: LucideIcon
+    logoSrc?: string
 }[] = [
     {
         href: "/",
@@ -39,6 +40,11 @@ const navItems: {
         href: "/blog",
         label: "Writing",
         icon: Newspaper,
+    },
+    {
+        href: "/verbatim",
+        label: "Verbatim",
+        logoSrc: "/verbatim-logo.svg",
     },
 ]
 
@@ -65,33 +71,49 @@ export const Navbar = () => {
 
                     <NavigationMenu className="max-w-none min-w-0 flex-1 justify-center">
                         <NavigationMenuList className="gap-0.5 rounded-full">
-                            {navItems.map(({ href, label, icon: Icon }) => {
-                                const isActive =
-                                    href === "/"
-                                        ? pathname === href
-                                        : pathname.startsWith(href)
+                            {navItems.map(
+                                ({ href, label, icon: Icon, logoSrc }) => {
+                                    const isActive =
+                                        href === "/"
+                                            ? pathname === href
+                                            : pathname.startsWith(href)
 
-                                return (
-                                    <NavigationMenuItem key={href}>
-                                        <NavigationMenuLink
-                                            render={<Link href={href} />}
-                                            data-active={isActive}
-                                            aria-current={
-                                                isActive ? "page" : undefined
-                                            }
-                                            className={cn(
-                                                "data-active:text-foreground text-muted-foreground hover:text-foreground h-8 rounded-full bg-transparent px-2 text-xs font-medium hover:!bg-transparent focus-visible:!bg-transparent data-active:!bg-transparent sm:px-3 sm:text-sm",
-                                                isActive && "text-foreground",
-                                            )}
-                                        >
-                                            <Icon className="size-3.5 opacity-80" />
-                                            <span className="sr-only md:not-sr-only">
-                                                {label}
-                                            </span>
-                                        </NavigationMenuLink>
-                                    </NavigationMenuItem>
-                                )
-                            })}
+                                    return (
+                                        <NavigationMenuItem key={href}>
+                                            <NavigationMenuLink
+                                                render={<Link href={href} />}
+                                                data-active={isActive}
+                                                aria-current={
+                                                    isActive
+                                                        ? "page"
+                                                        : undefined
+                                                }
+                                                className={cn(
+                                                    "data-active:text-foreground text-muted-foreground hover:text-foreground h-8 rounded-full bg-transparent px-2 text-xs font-medium hover:!bg-transparent focus-visible:!bg-transparent data-active:!bg-transparent sm:px-3 sm:text-sm",
+                                                    isActive &&
+                                                        "text-foreground",
+                                                )}
+                                            >
+                                                {logoSrc ? (
+                                                    <img
+                                                        src={logoSrc}
+                                                        alt=""
+                                                        className="size-3.5 rounded-[0.2rem] opacity-80"
+                                                        aria-hidden="true"
+                                                    />
+                                                ) : (
+                                                    Icon && (
+                                                        <Icon className="size-3.5 opacity-80" />
+                                                    )
+                                                )}
+                                                <span className="sr-only md:not-sr-only">
+                                                    {label}
+                                                </span>
+                                            </NavigationMenuLink>
+                                        </NavigationMenuItem>
+                                    )
+                                },
+                            )}
                         </NavigationMenuList>
                     </NavigationMenu>
 

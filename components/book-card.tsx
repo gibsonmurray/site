@@ -3,7 +3,13 @@
 import { useState, type SyntheticEvent } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, CalendarClock, Check, ShoppingCart } from "lucide-react"
+import {
+    ArrowRight,
+    BookOpen,
+    CalendarClock,
+    Check,
+    ShoppingCart,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Book, BookFormat, BookFormatOption } from "@/lib/books"
 import { usePricesStore } from "@/lib/prices-store"
@@ -192,9 +198,18 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                     )}
 
                     <div className="mt-9 flex flex-wrap items-center gap-3">
+                        {book.slug === "walls" && (
+                            <Link
+                                href="/books/walls/read"
+                                className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
+                            >
+                                <BookOpen className="size-4" />
+                                Read sample
+                            </Link>
+                        )}
                         <Link
                             href={`/books/${book.slug}`}
-                            className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
+                            className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white/10 px-5 text-sm font-medium text-white transition-colors hover:bg-white/16"
                         >
                             Learn more
                             <ArrowRight className="size-4" />

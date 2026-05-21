@@ -9,6 +9,7 @@ import {
     Bell,
     BookMarked,
     BookOpen,
+    ArrowRight,
     Calendar,
     Check,
     ChevronLeft,
@@ -600,6 +601,16 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                             A fortified city. A dangerous mercy. A promise on
                             the move.
                         </p>
+                        {book.slug === "walls" && (
+                            <Link
+                                href="/books/walls/read"
+                                className="mt-7 inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white transition-colors hover:bg-white/16"
+                            >
+                                <BookOpen className="size-4" />
+                                Read the first 3 chapters
+                                <ArrowRight className="size-4" />
+                            </Link>
+                        )}
 
                         <div className="mt-8">
                             {!isPurchasable && isPreOrder ? (

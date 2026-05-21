@@ -6,6 +6,7 @@
         "dev": "next dev --turbopack",
         "build": "next build",
         "email:walls-preorder": "bun scripts/create-walls-preorder-broadcast.ts",
+        "email:walls-sample": "bun scripts/create-walls-sample-broadcast.ts",
         "start": "next start",
         "lint": "next lint",
         "ts": "tsc --noEmit",

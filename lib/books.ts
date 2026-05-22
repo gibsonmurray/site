@@ -61,6 +61,8 @@ export type Book = {
     status: BookStatus
     sortOrder: number
     formats: Partial<Record<BookFormat, BookFormatOption>>
+    amazonAsin?: string
+    amazonUrl?: string
     /** Set to false to hide all add-to-cart / checkout UI sitewide */
     purchasable?: boolean
     reviews?: BookReview[]

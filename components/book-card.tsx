@@ -8,6 +8,7 @@ import {
     BookOpen,
     CalendarClock,
     Check,
+    ExternalLink,
     ShoppingCart,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -123,117 +124,162 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                 </div>
 
                 <div className="flex flex-col justify-center py-2">
-                    <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-white/65">
-                        <span className="rounded-full bg-white/10 px-3 py-1 text-white">
-                            {statusCopy}
-                        </span>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold tracking-[0.16em] text-white/48 uppercase">
+                        <span>{statusCopy}</span>
                         {releaseDate && (
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1">
+                            <span className="inline-flex items-center gap-1.5">
                                 <CalendarClock className="size-3.5" />
                                 {releaseDate}
                             </span>
                         )}
-                        <span className="rounded-full bg-white/10 px-3 py-1">
-                            {book.genre}
-                        </span>
+                        <span>{book.genre}</span>
                     </div>
 
-                    <h2 className="mt-6 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
+                    <h2 className="mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
                         {book.title}
                     </h2>
-                    <p className="mt-5 max-w-xl text-xl leading-8 text-white/72">
+                    <p className="mt-5 max-w-xl text-xl leading-8 text-white/76">
                         {book.shortDescription}
                     </p>
-                    <p className="mt-5 max-w-xl text-sm leading-7 text-white/50">
+                    <p className="mt-4 max-w-xl text-sm leading-7 text-white/48">
                         A biblical epic designed to feel vivid, human, and
                         impossible to put down.
                     </p>
-                    {defaultPrice !== undefined && defaultFormatOption && (
-                        <div className="mt-6 flex flex-wrap items-center gap-3">
-                            <span className="text-2xl font-semibold tabular-nums">
-                                {fmt(defaultPrice)}
-                            </span>
-                            {defaultFormatOption.compareAtPriceCents !==
-                                undefined && (
-                                <span className="text-sm font-medium text-white/42 tabular-nums line-through">
-                                    {fmt(
-                                        defaultFormatOption.compareAtPriceCents,
-                                    )}
-                                </span>
-                            )}
-                            {defaultFormatOption.priceNote && (
-                                <span className="rounded-full bg-emerald-400/16 px-3 py-1 text-xs font-semibold text-emerald-100 ring-1 ring-emerald-300/20">
-                                    {defaultFormatOption.priceNote}
-                                </span>
-                            )}
-                        </div>
-                    )}
-                    {bundleOption?.available && bundlePrice !== undefined && (
-                        <div className="mt-4 max-w-xl rounded-2xl bg-white/8 px-4 py-3 ring-1 ring-white/10">
-                            <div className="flex flex-wrap items-center gap-2">
-                                <span className="text-sm font-semibold text-white">
-                                    Complete preorder bundle
-                                </span>
-                                <span className="text-sm font-semibold text-emerald-100 tabular-nums">
-                                    {fmt(bundlePrice)}
-                                </span>
-                                {bundleOption.compareAtPriceCents !==
-                                    undefined && (
-                                    <span className="text-xs font-medium text-white/38 tabular-nums line-through">
-                                        {fmt(bundleOption.compareAtPriceCents)}
-                                    </span>
-                                )}
-                                {bundleOption.priceNote && (
-                                    <span className="rounded-full bg-emerald-400/16 px-2.5 py-0.5 text-[0.7rem] font-semibold text-emerald-100 ring-1 ring-emerald-300/20">
-                                        {bundleOption.priceNote}
-                                    </span>
-                                )}
-                            </div>
-                            {bundleOption.description && (
-                                <p className="mt-1.5 text-xs leading-5 text-white/52">
-                                    {bundleOption.description}
-                                </p>
-                            )}
-                        </div>
-                    )}
 
-                    <div className="mt-9 flex flex-wrap items-center gap-3">
-                        {book.slug === "walls" && (
-                            <Link
-                                href="/books/walls/read"
-                                className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
-                            >
-                                <BookOpen className="size-4" />
-                                Read sample
-                            </Link>
-                        )}
-                        <Link
-                            href={`/books/${book.slug}`}
-                            className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white/10 px-5 text-sm font-medium text-white transition-colors hover:bg-white/16"
-                        >
-                            Learn more
-                            <ArrowRight className="size-4" />
-                        </Link>
-                        {isPurchasable && !isComingSoon && defaultFormat && (
-                            <Button
-                                size="lg"
-                                onClick={handleAddToCart}
-                                disabled={added}
-                                className="h-11 rounded-full bg-white/10 px-5 text-white hover:bg-white/16"
-                            >
-                                {added ? (
-                                    <>
-                                        <Check className="size-4" />
-                                        Added
-                                    </>
-                                ) : (
-                                    <>
-                                        <ShoppingCart className="size-4" />
-                                        {isPreOrder ? "Pre-order" : "Buy"}
-                                    </>
+                    <div className="mt-8 max-w-xl overflow-hidden rounded-2xl bg-white/[0.06] ring-1 ring-white/10">
+                        <div className="p-4 sm:p-5">
+                            {defaultPrice !== undefined &&
+                                defaultFormatOption && (
+                                    <div className="flex items-start justify-between gap-5">
+                                        <div>
+                                            <p className="text-xs font-semibold tracking-[0.16em] text-white/42 uppercase">
+                                                Paperback preorder
+                                            </p>
+                                            {defaultFormatOption.priceNote && (
+                                                <p className="mt-1 text-sm font-medium text-emerald-100">
+                                                    {
+                                                        defaultFormatOption.priceNote
+                                                    }
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div className="flex items-baseline gap-2 text-right">
+                                            <span className="text-3xl font-semibold tabular-nums">
+                                                {fmt(defaultPrice)}
+                                            </span>
+                                            {defaultFormatOption.compareAtPriceCents !==
+                                                undefined && (
+                                                <span className="text-sm font-medium text-white/38 tabular-nums line-through">
+                                                    {fmt(
+                                                        defaultFormatOption.compareAtPriceCents,
+                                                    )}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
                                 )}
-                            </Button>
-                        )}
+
+                            {bundleOption?.available &&
+                                bundlePrice !== undefined && (
+                                    <div className="mt-5 border-t border-white/10 pt-4">
+                                        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                                            <span className="text-sm font-semibold text-white">
+                                                Complete preorder bundle
+                                            </span>
+                                            <span className="text-sm font-semibold text-emerald-100 tabular-nums">
+                                                {fmt(bundlePrice)}
+                                            </span>
+                                            {bundleOption.compareAtPriceCents !==
+                                                undefined && (
+                                                <span className="text-xs font-medium text-white/36 tabular-nums line-through">
+                                                    {fmt(
+                                                        bundleOption.compareAtPriceCents,
+                                                    )}
+                                                </span>
+                                            )}
+                                            {bundleOption.priceNote && (
+                                                <span className="text-xs font-semibold text-emerald-100/86">
+                                                    {bundleOption.priceNote}
+                                                </span>
+                                            )}
+                                        </div>
+                                        {bundleOption.description && (
+                                            <p className="mt-1.5 text-xs leading-5 text-white/48">
+                                                {bundleOption.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                        </div>
+
+                        <div className="border-t border-white/10 bg-black/12 p-2">
+                            {book.slug === "walls" && (
+                                <Link
+                                    href="/books/walls/read"
+                                    className="group flex items-center justify-between gap-4 rounded-xl bg-white px-4 py-3 text-[#111] transition-colors hover:bg-white/90"
+                                >
+                                    <span className="flex items-center gap-3">
+                                        <span className="flex size-9 items-center justify-center rounded-lg bg-[#111]/6">
+                                            <BookOpen className="size-4" />
+                                        </span>
+                                        <span>
+                                            <span className="block text-sm font-semibold">
+                                                Read the sample
+                                            </span>
+                                            <span className="mt-0.5 block text-xs text-[#111]/58">
+                                                First three chapters
+                                            </span>
+                                        </span>
+                                    </span>
+                                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+                                </Link>
+                            )}
+                            <div className="mt-2 grid gap-2 sm:grid-cols-3">
+                                <Link
+                                    href={`/books/${book.slug}`}
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white/8 px-3 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
+                                >
+                                    Details
+                                    <ArrowRight className="size-4" />
+                                </Link>
+                                {book.amazonUrl && (
+                                    <Link
+                                    href={book.amazonUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white/8 px-3 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
+                                >
+                                    Amazon
+                                    <ExternalLink className="size-4" />
+                                    </Link>
+                                )}
+                                {isPurchasable &&
+                                    !isComingSoon &&
+                                    defaultFormat && (
+                                        <Button
+                                            size="lg"
+                                            variant="ghost"
+                                            onClick={handleAddToCart}
+                                            disabled={added}
+                                            className="h-11 justify-center gap-2 rounded-xl bg-white/8 px-3 text-white ring-1 ring-white/10 hover:bg-white/12 hover:text-white"
+                                        >
+                                            {added ? (
+                                                <>
+                                                    <Check className="size-4" />
+                                                    Added
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <ShoppingCart className="size-4" />
+                                                    {isPreOrder
+                                                        ? "Pre-order"
+                                                        : "Buy"}
+                                                </>
+                                            )}
+                                        </Button>
+                                    )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -15,6 +15,7 @@ import {
     ChevronLeft,
     ChevronRight,
     CreditCard,
+    ExternalLink,
     Feather,
     Headphones,
     Mail,
@@ -601,15 +602,30 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                             A fortified city. A dangerous mercy. A promise on
                             the move.
                         </p>
-                        {book.slug === "walls" && (
-                            <Link
-                                href="/books/walls/read"
-                                className="mt-7 inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white transition-colors hover:bg-white/16"
-                            >
-                                <BookOpen className="size-4" />
-                                Read the first 3 chapters
-                                <ArrowRight className="size-4" />
-                            </Link>
+                        {(book.slug === "walls" || book.amazonUrl) && (
+                            <div className="mt-7 flex flex-wrap items-center gap-3">
+                                {book.slug === "walls" && (
+                                    <Link
+                                        href="/books/walls/read"
+                                        className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white transition-colors hover:bg-white/16"
+                                    >
+                                        <BookOpen className="size-4" />
+                                        Read the first 3 chapters
+                                        <ArrowRight className="size-4" />
+                                    </Link>
+                                )}
+                                {book.amazonUrl && (
+                                    <Link
+                                        href={book.amazonUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
+                                    >
+                                        View on Amazon
+                                        <ExternalLink className="size-4" />
+                                    </Link>
+                                )}
+                            </div>
                         )}
 
                         <div className="mt-8">
@@ -797,7 +813,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                     </div>
 
                                     {canBuy ? (
-                                        <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                                        <div className="mt-4 grid gap-2">
                                             <Button
                                                 size="lg"
                                                 onClick={() =>
@@ -806,33 +822,47 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                 disabled={
                                                     buyNowMutation.isPending
                                                 }
-                                                className="h-12 rounded-full bg-white text-[#111] hover:bg-white/90"
+                                                className="h-12 justify-between rounded-xl bg-white px-4 text-[#111] hover:bg-white/90"
                                             >
-                                                {buyNowMutation.isPending
-                                                    ? "Redirecting..."
-                                                    : isPreOrder
-                                                      ? "Pre-order now"
-                                                      : "Buy now"}
+                                                <span>
+                                                    {buyNowMutation.isPending
+                                                        ? "Redirecting..."
+                                                        : isPreOrder
+                                                          ? "Pre-order now"
+                                                          : "Buy now"}
+                                                </span>
+                                                <CreditCard className="size-4" />
                                             </Button>
                                             <Button
                                                 size="lg"
                                                 variant="ghost"
                                                 onClick={handleAddToCart}
                                                 disabled={added}
-                                                className="h-12 rounded-full bg-white/10 text-white hover:bg-white/16 hover:text-white"
+                                                className="h-12 justify-between rounded-xl bg-white/10 px-4 text-white hover:bg-white/16 hover:text-white"
                                             >
                                                 {added ? (
                                                     <>
+                                                        <span>Added</span>
                                                         <Check className="size-4" />
-                                                        Added
                                                     </>
                                                 ) : (
                                                     <>
+                                                        <span>Add to cart</span>
                                                         <ShoppingCart className="size-4" />
-                                                        Add to cart
                                                     </>
                                                 )}
                                             </Button>
+                                            {book.amazonUrl && (
+                                                <Link
+                                                    href={book.amazonUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex h-12 items-center justify-between gap-2 rounded-xl bg-white/10 px-4 text-sm font-medium text-white transition-colors hover:bg-white/16"
+                                                >
+                                                    <span>Amazon</span>
+                                                    <ExternalLink className="size-4" />
+                                                </Link>
+                                            )}
                                         </div>
                                     ) : (
                                         <p className="mt-4 rounded-[1.25rem] bg-white/7 p-4 text-center text-sm font-medium text-white/65">

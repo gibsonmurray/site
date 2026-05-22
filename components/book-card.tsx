@@ -8,11 +8,17 @@ import {
     BookOpen,
     CalendarClock,
     Check,
-    ExternalLink,
     ShoppingCart,
+    Star,
 } from "lucide-react"
+import { AmazonLogo } from "@/components/amazon-logo"
 import { Button } from "@/components/ui/button"
-import { Book, BookFormat, BookFormatOption } from "@/lib/books"
+import {
+    Book,
+    BookFormat,
+    BookFormatOption,
+    getFeaturedReviewHeadline,
+} from "@/lib/books"
 import { usePricesStore } from "@/lib/prices-store"
 import {
     DEFAULT_GLOW,
@@ -60,6 +66,7 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
         : undefined
     const bundleOption = book.formats.bundle
     const bundlePrice = getPrice(book.slug, "bundle")
+    const reviewHeadline = getFeaturedReviewHeadline(book)
 
     const statusCopy =
         isPreOrder && !isPurchasable
@@ -141,10 +148,29 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                     <p className="mt-5 max-w-xl text-xl leading-8 text-white/76">
                         {book.shortDescription}
                     </p>
-                    <p className="mt-4 max-w-xl text-sm leading-7 text-white/48">
-                        A biblical epic designed to feel vivid, human, and
-                        impossible to put down.
-                    </p>
+                    {reviewHeadline ? (
+                        <div className="mt-5 max-w-xl rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5">
+                            <div className="mb-2 flex items-center gap-1.5 text-emerald-100">
+                                {Array.from({ length: 5 }).map((_, index) => (
+                                    <Star
+                                        key={index}
+                                        className="size-3.5 fill-current"
+                                    />
+                                ))}
+                                <span className="ml-2 text-xs font-semibold tracking-[0.16em] text-white/44 uppercase">
+                                    Reader praise
+                                </span>
+                            </div>
+                            <p className="text-sm leading-6 font-medium text-white/82">
+                                “{reviewHeadline}”
+                            </p>
+                        </div>
+                    ) : (
+                        <p className="mt-4 max-w-xl text-sm leading-7 text-white/48">
+                            A biblical epic designed to feel vivid, human, and
+                            impossible to put down.
+                        </p>
+                    )}
 
                     <div className="mt-8 max-w-xl overflow-hidden rounded-2xl bg-white/[0.06] ring-1 ring-white/10">
                         <div className="p-4 sm:p-5">
@@ -212,11 +238,11 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                                 )}
                         </div>
 
-                        <div className="border-t border-white/10 bg-black/12 p-2">
+                        <div className="border-t border-white/10 bg-black/12 p-4 sm:p-5">
                             {book.slug === "walls" && (
                                 <Link
                                     href="/books/walls/read"
-                                    className="group flex items-center justify-between gap-4 rounded-xl bg-white px-4 py-3 text-[#111] transition-colors hover:bg-white/90"
+                                    className="group flex items-center justify-between gap-4 rounded-2xl bg-white px-5 py-4 text-[#111] transition-colors hover:bg-white/90"
                                 >
                                     <span className="flex items-center gap-3">
                                         <span className="flex size-9 items-center justify-center rounded-lg bg-[#111]/6">
@@ -234,23 +260,25 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                                     <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
                                 </Link>
                             )}
-                            <div className="mt-2 grid gap-2 sm:grid-cols-3">
+                            <div className="mt-5 grid gap-3 sm:grid-cols-3">
                                 <Link
                                     href={`/books/${book.slug}`}
-                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white/8 px-3 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
+                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/8 px-4 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
                                 >
                                     Details
                                     <ArrowRight className="size-4" />
                                 </Link>
                                 {book.amazonUrl && (
                                     <Link
-                                    href={book.amazonUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white/8 px-3 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
-                                >
-                                    Amazon
-                                    <ExternalLink className="size-4" />
+                                        href={book.amazonUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-white/8 px-4 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
+                                    >
+                                        Amazon
+                                        <span className="flex h-6 w-16 items-center justify-center rounded-full bg-white px-1.5">
+                                            <AmazonLogo className="h-3.5 w-auto" />
+                                        </span>
                                     </Link>
                                 )}
                                 {isPurchasable &&
@@ -261,7 +289,7 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                                             variant="ghost"
                                             onClick={handleAddToCart}
                                             disabled={added}
-                                            className="h-11 justify-center gap-2 rounded-xl bg-white/8 px-3 text-white ring-1 ring-white/10 hover:bg-white/12 hover:text-white"
+                                            className="h-12 justify-center gap-2 rounded-2xl bg-white/8 px-4 text-white ring-1 ring-white/10 hover:bg-white/12 hover:text-white"
                                         >
                                             {added ? (
                                                 <>

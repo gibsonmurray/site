@@ -15,7 +15,6 @@ import {
     ChevronLeft,
     ChevronRight,
     CreditCard,
-    ExternalLink,
     Feather,
     Headphones,
     Mail,
@@ -26,10 +25,12 @@ import {
     ShieldCheck,
     ShoppingCart,
     Sparkles,
+    Star,
     Tablet,
     type LucideIcon,
 } from "lucide-react"
 import dynamic from "next/dynamic"
+import { AmazonLogo } from "@/components/amazon-logo"
 
 const Book3DPreview = dynamic(
     () =>
@@ -45,7 +46,12 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Input } from "@/components/ui/input"
-import { Book, BookFormat, BookFormatOption } from "@/lib/books"
+import {
+    Book,
+    BookFormat,
+    BookFormatOption,
+    getFeaturedReviewHeadline,
+} from "@/lib/books"
 import {
     DEFAULT_GLOW,
     mixWithBlack,
@@ -486,6 +492,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
     const isPurchasable = book.purchasable !== false
     const releaseDate =
         book.status.type === "pre-order" ? book.status.releaseDate : null
+    const reviewHeadline = getFeaturedReviewHeadline(book)
     const selectedPrice = getPrice(book.slug, selectedFormat)
     const selectedFormatOption = book.formats[selectedFormat]
     const canBuy =
@@ -598,10 +605,31 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                         <p className="mt-6 max-w-xl text-xl leading-8 text-white/72">
                             {book.shortDescription}
                         </p>
-                        <p className="mt-5 max-w-xl text-sm leading-7 text-white/52">
-                            A fortified city. A dangerous mercy. A promise on
-                            the move.
-                        </p>
+                        {reviewHeadline ? (
+                            <div className="mt-6 max-w-xl rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5">
+                                <div className="mb-2 flex items-center gap-1.5 text-emerald-100">
+                                    {Array.from({ length: 5 }).map(
+                                        (_, index) => (
+                                            <Star
+                                                key={index}
+                                                className="size-3.5 fill-current"
+                                            />
+                                        ),
+                                    )}
+                                    <span className="ml-2 text-xs font-semibold tracking-[0.16em] text-white/44 uppercase">
+                                        Reader praise
+                                    </span>
+                                </div>
+                                <p className="text-sm leading-6 font-medium text-white/82">
+                                    “{reviewHeadline}”
+                                </p>
+                            </div>
+                        ) : (
+                            <p className="mt-5 max-w-xl text-sm leading-7 text-white/52">
+                                A fortified city. A dangerous mercy. A promise
+                                on the move.
+                            </p>
+                        )}
                         {(book.slug === "walls" || book.amazonUrl) && (
                             <div className="mt-7 flex flex-wrap items-center gap-3">
                                 {book.slug === "walls" && (
@@ -622,7 +650,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                         className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
                                     >
                                         View on Amazon
-                                        <ExternalLink className="size-4" />
+                                        <AmazonLogo className="h-4 w-auto" />
                                     </Link>
                                 )}
                             </div>
@@ -852,17 +880,6 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                     </>
                                                 )}
                                             </Button>
-                                            {book.amazonUrl && (
-                                                <Link
-                                                    href={book.amazonUrl}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-flex h-12 items-center justify-between gap-2 rounded-xl bg-white/10 px-4 text-sm font-medium text-white transition-colors hover:bg-white/16"
-                                                >
-                                                    <span>Amazon</span>
-                                                    <ExternalLink className="size-4" />
-                                                </Link>
-                                            )}
                                         </div>
                                     ) : (
                                         <p className="mt-4 rounded-[1.25rem] bg-white/7 p-4 text-center text-sm font-medium text-white/65">

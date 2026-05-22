@@ -28,6 +28,8 @@ export type BookStatus =
       }
 
 export type BookReview = {
+    headline?: string
+    rating?: number
     quote: string
     reviewer: string
     source?: string // e.g. "Goodreads", "Amazon", "Publisher's Weekly"
@@ -71,3 +73,6 @@ export type Book = {
 export const books = booksData as Book[]
 
 export const latestBook = books.toSorted((a, b) => b.sortOrder - a.sortOrder)[0]
+
+export const getFeaturedReviewHeadline = (book: Book) =>
+    book.reviews?.find((review) => review.headline)?.headline

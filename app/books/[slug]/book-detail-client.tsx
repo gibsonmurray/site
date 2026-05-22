@@ -25,10 +25,12 @@ import {
     ShieldCheck,
     ShoppingCart,
     Sparkles,
+    Star,
     Tablet,
     type LucideIcon,
 } from "lucide-react"
 import dynamic from "next/dynamic"
+import { AmazonLogo } from "@/components/amazon-logo"
 
 const Book3DPreview = dynamic(
     () =>
@@ -44,7 +46,12 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Input } from "@/components/ui/input"
-import { Book, BookFormat, BookFormatOption } from "@/lib/books"
+import {
+    Book,
+    BookFormat,
+    BookFormatOption,
+    getFeaturedReviewHeadline,
+} from "@/lib/books"
 import {
     DEFAULT_GLOW,
     mixWithBlack,
@@ -485,6 +492,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
     const isPurchasable = book.purchasable !== false
     const releaseDate =
         book.status.type === "pre-order" ? book.status.releaseDate : null
+    const reviewHeadline = getFeaturedReviewHeadline(book)
     const selectedPrice = getPrice(book.slug, selectedFormat)
     const selectedFormatOption = book.formats[selectedFormat]
     const canBuy =
@@ -597,19 +605,55 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                         <p className="mt-6 max-w-xl text-xl leading-8 text-white/72">
                             {book.shortDescription}
                         </p>
-                        <p className="mt-5 max-w-xl text-sm leading-7 text-white/52">
-                            A fortified city. A dangerous mercy. A promise on
-                            the move.
-                        </p>
-                        {book.slug === "walls" && (
-                            <Link
-                                href="/books/walls/read"
-                                className="mt-7 inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white transition-colors hover:bg-white/16"
-                            >
-                                <BookOpen className="size-4" />
-                                Read the first 3 chapters
-                                <ArrowRight className="size-4" />
-                            </Link>
+                        {reviewHeadline ? (
+                            <div className="mt-6 max-w-xl rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5">
+                                <div className="mb-2 flex items-center gap-1.5 text-emerald-100">
+                                    {Array.from({ length: 5 }).map(
+                                        (_, index) => (
+                                            <Star
+                                                key={index}
+                                                className="size-3.5 fill-current"
+                                            />
+                                        ),
+                                    )}
+                                    <span className="ml-2 text-xs font-semibold tracking-[0.16em] text-white/44 uppercase">
+                                        Reader praise
+                                    </span>
+                                </div>
+                                <p className="text-sm leading-6 font-medium text-white/82">
+                                    “{reviewHeadline}”
+                                </p>
+                            </div>
+                        ) : (
+                            <p className="mt-5 max-w-xl text-sm leading-7 text-white/52">
+                                A fortified city. A dangerous mercy. A promise
+                                on the move.
+                            </p>
+                        )}
+                        {(book.slug === "walls" || book.amazonUrl) && (
+                            <div className="mt-7 flex flex-wrap items-center gap-3">
+                                {book.slug === "walls" && (
+                                    <Link
+                                        href="/books/walls/read"
+                                        className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white transition-colors hover:bg-white/16"
+                                    >
+                                        <BookOpen className="size-4" />
+                                        Read the first 3 chapters
+                                        <ArrowRight className="size-4" />
+                                    </Link>
+                                )}
+                                {book.amazonUrl && (
+                                    <Link
+                                        href={book.amazonUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
+                                    >
+                                        View on Amazon
+                                        <AmazonLogo className="h-4 w-auto" />
+                                    </Link>
+                                )}
+                            </div>
                         )}
 
                         <div className="mt-8">
@@ -797,7 +841,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                     </div>
 
                                     {canBuy ? (
-                                        <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                                        <div className="mt-4 grid gap-2">
                                             <Button
                                                 size="lg"
                                                 onClick={() =>
@@ -806,30 +850,33 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                 disabled={
                                                     buyNowMutation.isPending
                                                 }
-                                                className="h-12 rounded-full bg-white text-[#111] hover:bg-white/90"
+                                                className="h-12 justify-between rounded-xl bg-white px-4 text-[#111] hover:bg-white/90"
                                             >
-                                                {buyNowMutation.isPending
-                                                    ? "Redirecting..."
-                                                    : isPreOrder
-                                                      ? "Pre-order now"
-                                                      : "Buy now"}
+                                                <span>
+                                                    {buyNowMutation.isPending
+                                                        ? "Redirecting..."
+                                                        : isPreOrder
+                                                          ? "Pre-order now"
+                                                          : "Buy now"}
+                                                </span>
+                                                <CreditCard className="size-4" />
                                             </Button>
                                             <Button
                                                 size="lg"
                                                 variant="ghost"
                                                 onClick={handleAddToCart}
                                                 disabled={added}
-                                                className="h-12 rounded-full bg-white/10 text-white hover:bg-white/16 hover:text-white"
+                                                className="h-12 justify-between rounded-xl bg-white/10 px-4 text-white hover:bg-white/16 hover:text-white"
                                             >
                                                 {added ? (
                                                     <>
+                                                        <span>Added</span>
                                                         <Check className="size-4" />
-                                                        Added
                                                     </>
                                                 ) : (
                                                     <>
+                                                        <span>Add to cart</span>
                                                         <ShoppingCart className="size-4" />
-                                                        Add to cart
                                                     </>
                                                 )}
                                             </Button>

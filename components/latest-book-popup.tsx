@@ -6,7 +6,7 @@ import Link from "next/link"
 import { ArrowRight, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { latestBook } from "@/lib/books"
+import { getFeaturedReviewHeadline, latestBook } from "@/lib/books"
 
 const DISMISS_KEY = "latest-book-popup-dismissed-v1"
 
@@ -26,6 +26,7 @@ export const LatestBookPopup = () => {
     if (!isOpen || !latestBook) return null
 
     const bookHref = `/books/${latestBook.slug}`
+    const reviewHeadline = getFeaturedReviewHeadline(latestBook)
 
     return (
         <div className="fixed right-4 bottom-4 z-50 w-[calc(100%-2rem)] max-w-sm sm:right-6 sm:bottom-6">
@@ -68,7 +69,7 @@ export const LatestBookPopup = () => {
                             {latestBook.genre}
                         </p>
                         <p className="mt-0.5 line-clamp-3 text-xs leading-relaxed text-white/62">
-                            {latestBook.shortDescription}
+                            {reviewHeadline ?? latestBook.shortDescription}
                         </p>
                     </div>
                 </Link>

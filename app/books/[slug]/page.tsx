@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { books } from "@/lib/books"
+import { books, getFeaturedReviewHeadline } from "@/lib/books"
 import { BookDetailClient } from "./book-detail-client"
 import { BookReviews } from "@/components/book-reviews"
 import { baseUrl } from "@/app/sitemap"
@@ -12,8 +12,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params
     const book = books.find((b) => b.slug === slug)
     if (!book) return {}
+    const reviewHeadline = getFeaturedReviewHeadline(book)
+    const description = reviewHeadline
+        ? `${book.shortDescription} Reader praise: “${reviewHeadline}”`
+        : book.shortDescription
     const ogImage = makeOgImage({
         title: `${book.title} by ${AUTHOR_NAME}`,
+        subtitle: reviewHeadline,
         image: book.images?.[0] ?? book.coverImageSrc,
     })
     const title = `${book.title} by ${AUTHOR_NAME}`
@@ -22,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: {
             absolute: title,
         },
-        description: book.shortDescription,
+        description,
         authors: [{ name: AUTHOR_NAME, url: baseUrl }],
         keywords: [
             book.title,
@@ -39,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         },
         openGraph: {
             title,
-            description: book.shortDescription,
+            description,
             url: `${baseUrl}/books/${book.slug}`,
             type: "book",
             images: [
@@ -54,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         twitter: {
             card: "summary_large_image",
             title,
-            description: book.shortDescription,
+            description,
             images: [ogImage],
         },
     }
@@ -70,6 +75,10 @@ const BookPage = async ({ params }: Props) => {
     if (!book) notFound()
 
     const bookUrl = `${baseUrl}/books/${book.slug}`
+    const reviewHeadline = getFeaturedReviewHeadline(book)
+    const description = reviewHeadline
+        ? `${book.shortDescription} Reader praise: “${reviewHeadline}”`
+        : book.shortDescription
     const jsonLd: Record<string, unknown> = {
         "@context": "https://schema.org",
         "@graph": [
@@ -79,7 +88,7 @@ const BookPage = async ({ params }: Props) => {
                 "@id": `${bookUrl}#book`,
                 name: book.title,
                 headline: `${book.title} by ${AUTHOR_NAME}`,
-                description: book.shortDescription,
+                description,
                 genre: [book.genre, "Christian fiction", "Biblical Fiction"],
                 inLanguage: "en-US",
                 url: bookUrl,

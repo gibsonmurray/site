@@ -1,7 +1,7 @@
 import { BlogPosts } from "@/components/posts"
 import Link from "next/link"
 import Image from "next/image"
-import { books, latestBook } from "@/lib/books"
+import { books, getFeaturedReviewHeadline, latestBook } from "@/lib/books"
 import { currentlyReading } from "@/lib/currently-reading"
 import { NewsletterSignup } from "@/components/newsletter-signup"
 import {
@@ -13,6 +13,7 @@ import {
     Feather,
     Library,
     Newspaper,
+    Star,
 } from "lucide-react"
 
 const statusLabel =
@@ -26,6 +27,8 @@ const releaseLabel =
     latestBook.status.type === "pre-order"
         ? latestBook.status.releaseDate
         : null
+
+const latestBookReviewHeadline = getFeaturedReviewHeadline(latestBook)
 
 const Home = () => {
     return (
@@ -108,12 +111,33 @@ const Home = () => {
                         <p className="mt-5 max-w-2xl text-xl leading-8 text-white/72">
                             {latestBook.shortDescription}
                         </p>
-                        <p className="mt-6 max-w-2xl text-sm leading-7 text-white/55">
-                            A biblical fiction story with a cinematic eye,
-                            grounded in the strange courage of people caught
-                            inside the promises of God.
-                        </p>
-                        <div className="mt-8 flex flex-wrap items-center gap-3">
+                        {latestBookReviewHeadline ? (
+                            <div className="mt-6 max-w-2xl rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5">
+                                <div className="text-primary mb-2 flex items-center gap-1.5">
+                                    {Array.from({ length: 5 }).map(
+                                        (_, index) => (
+                                            <Star
+                                                key={index}
+                                                className="size-3.5 fill-current"
+                                            />
+                                        ),
+                                    )}
+                                    <span className="ml-2 text-xs font-semibold tracking-[0.16em] text-white/48 uppercase">
+                                        Reader praise
+                                    </span>
+                                </div>
+                                <p className="text-base leading-7 font-medium text-white/86">
+                                    “{latestBookReviewHeadline}”
+                                </p>
+                            </div>
+                        ) : (
+                            <p className="mt-6 max-w-2xl text-sm leading-7 text-white/55">
+                                A biblical fiction story with a cinematic eye,
+                                grounded in the strange courage of people caught
+                                inside the promises of God.
+                            </p>
+                        )}
+                        <div className="mt-7 flex flex-wrap items-center gap-3">
                             <Link
                                 href={`/books/${latestBook.slug}`}
                                 className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
@@ -262,41 +286,51 @@ const Home = () => {
                                 : "grid gap-5 md:grid-cols-2"
                         }
                     >
-                        {books.map((book) => (
-                            <Link
-                                key={book.slug}
-                                href={`/books/${book.slug}`}
-                                className="group bg-background ring-border/65 hover:shadow-foreground/10 grid min-h-72 overflow-hidden rounded-[2rem] p-8 ring-1 transition duration-300 hover:-translate-y-1 hover:shadow-2xl sm:grid-cols-[0.58fr_1fr] sm:p-10"
-                            >
-                                <div className="flex items-center justify-center">
-                                    <Image
-                                        src={book.coverImageSrc}
-                                        alt={book.coverImageAlt}
-                                        width={260}
-                                        height={390}
-                                        sizes="220px"
-                                        className="shadow-foreground/15 max-h-64 w-auto rounded-xl object-contain shadow-xl transition duration-300 group-hover:scale-[1.03]"
-                                    />
-                                </div>
-                                <div className="mt-6 flex flex-col justify-between gap-8 sm:mt-0">
-                                    <div>
-                                        <p className="text-muted-foreground text-xs font-semibold tracking-[0.18em] uppercase">
-                                            {book.genre}
-                                        </p>
-                                        <h3 className="text-foreground mt-3 text-3xl font-semibold tracking-tight">
-                                            {book.title}
-                                        </h3>
-                                        <p className="text-muted-foreground mt-3 line-clamp-4 text-sm leading-6">
-                                            {book.shortDescription}
-                                        </p>
+                        {books.map((book) => {
+                            const reviewHeadline =
+                                getFeaturedReviewHeadline(book)
+
+                            return (
+                                <Link
+                                    key={book.slug}
+                                    href={`/books/${book.slug}`}
+                                    className="group bg-background ring-border/65 hover:shadow-foreground/10 grid min-h-72 overflow-hidden rounded-[2rem] p-8 ring-1 transition duration-300 hover:-translate-y-1 hover:shadow-2xl sm:grid-cols-[0.58fr_1fr] sm:p-10"
+                                >
+                                    <div className="flex items-center justify-center">
+                                        <Image
+                                            src={book.coverImageSrc}
+                                            alt={book.coverImageAlt}
+                                            width={260}
+                                            height={390}
+                                            sizes="220px"
+                                            className="shadow-foreground/15 max-h-64 w-auto rounded-xl object-contain shadow-xl transition duration-300 group-hover:scale-[1.03]"
+                                        />
                                     </div>
-                                    <span className="text-primary inline-flex items-center gap-1 text-sm font-medium">
-                                        Learn more
-                                        <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-                                    </span>
-                                </div>
-                            </Link>
-                        ))}
+                                    <div className="mt-6 flex flex-col justify-between gap-8 sm:mt-0">
+                                        <div>
+                                            <p className="text-muted-foreground text-xs font-semibold tracking-[0.18em] uppercase">
+                                                {book.genre}
+                                            </p>
+                                            <h3 className="text-foreground mt-3 text-3xl font-semibold tracking-tight">
+                                                {book.title}
+                                            </h3>
+                                            <p className="text-muted-foreground mt-3 line-clamp-4 text-sm leading-6">
+                                                {book.shortDescription}
+                                            </p>
+                                            {reviewHeadline && (
+                                                <p className="border-border/70 text-foreground mt-5 border-l-2 pl-4 text-sm leading-6 font-medium">
+                                                    “{reviewHeadline}”
+                                                </p>
+                                            )}
+                                        </div>
+                                        <span className="text-primary inline-flex items-center gap-1 text-sm font-medium">
+                                            Learn more
+                                            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+                                        </span>
+                                    </div>
+                                </Link>
+                            )
+                        })}
                     </div>
                 </div>
             </section>

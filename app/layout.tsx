@@ -30,7 +30,7 @@ import {
     makeSiteNavigationSchema,
     personSchema,
 } from "@/lib/seo"
-import { books } from "@/lib/books"
+import { books, getFeaturedReviewHeadline } from "@/lib/books"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -136,7 +136,9 @@ const jsonLd = {
                     "@id": `${baseUrl}/books/${book.slug}#book`,
                     name: book.title,
                     url: `${baseUrl}/books/${book.slug}`,
-                    description: book.shortDescription,
+                    description:
+                        getFeaturedReviewHeadline(book) ??
+                        book.shortDescription,
                 })),
             ],
         },

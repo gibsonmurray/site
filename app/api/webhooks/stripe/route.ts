@@ -83,10 +83,18 @@ export async function POST(req: NextRequest) {
                 name?: string | null
                 address?: Stripe.Address | null
             } | null
+            collected_information?: {
+                shipping_details?: {
+                    name?: string | null
+                    address?: Stripe.Address | null
+                } | null
+            } | null
         }
 
         const orderItems = parseOrderItems(session)
-        const shipping = session.shipping_details
+        const shipping =
+            session.collected_information?.shipping_details ??
+            session.shipping_details
         const customer = {
             name: session.customer_details?.name,
             email: session.customer_details?.email,

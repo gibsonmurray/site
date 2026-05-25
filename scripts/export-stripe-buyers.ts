@@ -15,6 +15,12 @@ type CheckoutSessionWithShipping = Stripe.Checkout.Session & {
         name?: string | null
         address?: Stripe.Address | null
     } | null
+    collected_information?: {
+        shipping_details?: {
+            name?: string | null
+            address?: Stripe.Address | null
+        } | null
+    } | null
 }
 
 type ExportRow = Record<(typeof csvHeaders)[number], string>
@@ -71,9 +77,9 @@ if (shouldShowHelp) {
     process.exit(0)
 }
 
-const stripeKey = process.env.STRIPE_SECRET_KEY
+const stripeKey = process.env.STRIPE_LIVE_KEY
 if (!stripeKey) {
-    throw new Error("Missing STRIPE_SECRET_KEY")
+    throw new Error("Missing STRIPE_LIVE_KEY")
 }
 
 const stripe = new Stripe(stripeKey, { apiVersion: "2026-04-22.dahlia" })
@@ -103,8 +109,9 @@ for await (const session of sessions) {
     if (!includeAllOrders && physicalItems.length === 0) continue
 
     const fulfillmentId = `stripe:${session.id}`
-    const shipping = (session as CheckoutSessionWithShipping).shipping_details
-    const address = shipping?.address
+    const shipping = getShippingDetails(session)
+    const customerAddress = session.customer_details?.address
+    const address = shipping?.address ?? customerAddress
     const customer = session.customer_details
     const exportedItems = includeAllOrders ? orderItems : physicalItems
     const giftMessage = session.custom_fields?.find(
@@ -129,6 +136,14 @@ for await (const session of sessions) {
         "Physical Quantity": String(sumQuantity(physicalItems)),
         "Gift Message": giftMessage ?? "",
     })
+}
+
+function getShippingDetails(session: Stripe.Checkout.Session) {
+    const sessionWithShipping = session as CheckoutSessionWithShipping
+    return (
+        sessionWithShipping.collected_information?.shipping_details ??
+        sessionWithShipping.shipping_details
+    )
 }
 
 console.log(toCsv(rows))

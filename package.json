@@ -7,6 +7,7 @@
         "build": "next build",
         "email:walls-preorder": "bun scripts/create-walls-preorder-broadcast.ts",
         "email:walls-sample": "bun scripts/create-walls-sample-broadcast.ts",
+        "orders:buyers": "bun scripts/export-stripe-buyers.ts",
         "start": "next start",
         "lint": "next lint",
         "ts": "tsc --noEmit",

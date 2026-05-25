@@ -121,6 +121,11 @@ export async function POST(req: NextRequest) {
             const title = book?.title ?? item.bookId
             return `  ${title} — ${formatLabels[item.format]} x ${item.quantity}`
         })
+        const fulfillmentId = `stripe:${session.id}`
+        const paymentIntentId =
+            typeof session.payment_intent === "string"
+                ? session.payment_intent
+                : session.payment_intent?.id
 
         const giftMessage = session.custom_fields?.find(
             (field) => field.key === "gift_message",
@@ -132,6 +137,7 @@ export async function POST(req: NextRequest) {
             subject: `New pre-order — ${orderItems.map((item) => item.bookId).join(", ")}`,
             text: [
                 `New pre-order received!`,
+                `Fulfillment ID: ${fulfillmentId}`,
                 ``,
                 `Items`,
                 ...itemLines,
@@ -147,6 +153,9 @@ export async function POST(req: NextRequest) {
                 giftMessage ? `` : null,
                 ``,
                 `Stripe session: ${session.id}`,
+                paymentIntentId
+                    ? `Stripe payment intent: ${paymentIntentId}`
+                    : null,
             ]
                 .filter((l) => l !== null)
                 .join("\n"),

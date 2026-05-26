@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 import { getBlogPosts } from "@/app/blog/utils"
 import { books } from "@/lib/books"
+import sample from "@/data/walls-sample.json"
 
 export const baseUrl =
     process.env.NODE_ENV === "production"
@@ -10,7 +11,7 @@ export const baseUrl =
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     const today = new Date().toISOString().split("T")[0]
     let blogs = getBlogPosts().map((post) => ({
-        url: `${baseUrl}/blog/${post.slug}`,
+        url: `${baseUrl}/writings/${post.slug}`,
         lastModified: post.metadata.publishedAt,
         changeFrequency: "monthly" as const,
         priority: 0.7,
@@ -21,6 +22,13 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
         lastModified: today,
         changeFrequency: "weekly" as const,
         priority: 0.9,
+    }))
+
+    let wallsSamplePages = sample.chapters.map((chapter) => ({
+        url: `${baseUrl}/books/walls/read/${chapter.id}`,
+        lastModified: today,
+        changeFrequency: "monthly" as const,
+        priority: 0.8,
     }))
 
     let routes = [
@@ -37,16 +45,16 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
             priority: 0.9,
         },
         {
-            url: `${baseUrl}/books/walls/read`,
-            lastModified: today,
-            changeFrequency: "monthly" as const,
-            priority: 0.8,
-        },
-        {
-            url: `${baseUrl}/blog`,
+            url: `${baseUrl}/writings`,
             lastModified: today,
             changeFrequency: "weekly" as const,
             priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/apps`,
+            lastModified: today,
+            changeFrequency: "weekly" as const,
+            priority: 0.9,
         },
         {
             url: `${baseUrl}/verbatim`,
@@ -56,7 +64,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
         },
     ]
 
-    return [...routes, ...blogs, ...bookPages]
+    return [...routes, ...blogs, ...bookPages, ...wallsSamplePages]
 }
 
 export default sitemap

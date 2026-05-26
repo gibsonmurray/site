@@ -74,7 +74,7 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
                             {results.map((post) => (
                                 <Link
                                     key={post.slug}
-                                    href={`/blog/${post.slug}`}
+                                    href={`/writings/${post.slug}`}
                                     className="group hover:bg-muted/45 flex flex-col gap-2 rounded-[1.25rem] px-4 py-3 transition-colors"
                                 >
                                     <p className="text-muted-foreground group-hover:text-primary/60 text-xs tabular-nums transition-colors">

@@ -17,6 +17,7 @@ import { CartDrawer } from "@/components/cart-drawer"
 import { fetchBookPrices } from "@/lib/stripe-server"
 import { PricesProvider } from "@/components/prices-provider"
 import {
+    APPS_DESCRIPTION,
     AUTHOR_NAME,
     BLOG_DESCRIPTION,
     BOOKS_DESCRIPTION,
@@ -25,11 +26,12 @@ import {
     SITE_LINKS,
     SITE_NAME,
     SITE_TITLE,
-    VERBATIM_DESCRIPTION,
     defaultOgImage,
     makeSiteNavigationSchema,
+    organizationSchema,
     personSchema,
 } from "@/lib/seo"
+import { apps } from "@/lib/apps"
 import { books, getFeaturedReviewHeadline } from "@/lib/books"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
@@ -42,11 +44,25 @@ export const metadata: Metadata = {
     },
     description: SITE_DESCRIPTION,
     applicationName: SITE_NAME,
+    generator: "Next.js",
     authors: [{ name: AUTHOR_NAME, url: baseUrl }],
     creator: AUTHOR_NAME,
     publisher: AUTHOR_NAME,
     category: "Books and Writing",
     keywords: SITE_KEYWORDS,
+    referrer: "origin-when-cross-origin",
+    formatDetection: {
+        email: false,
+        address: false,
+        telephone: false,
+    },
+    icons: {
+        icon: [
+            { url: "/gm-logo.svg", type: "image/svg+xml" },
+            { url: "/gm-logo.png", type: "image/png", sizes: "184x184" },
+        ],
+        apple: [{ url: "/gm-logo.png", sizes: "184x184" }],
+    },
     alternates: {
         canonical: baseUrl,
         types: {
@@ -92,8 +108,13 @@ const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
         personSchema,
+        organizationSchema,
         makeSiteNavigationSchema([
             ...SITE_LINKS,
+            ...apps.map((app) => ({
+                name: app.name,
+                url: `${baseUrl}${app.href}`,
+            })),
             ...books.map((book) => ({
                 name: book.title,
                 url: `${baseUrl}/books/${book.slug}`,
@@ -107,6 +128,9 @@ const jsonLd = {
             description: SITE_DESCRIPTION,
             inLanguage: "en-US",
             publisher: {
+                "@id": `${baseUrl}/#organization`,
+            },
+            author: {
                 "@id": `${baseUrl}/#person`,
             },
             hasPart: [
@@ -118,19 +142,27 @@ const jsonLd = {
                 },
                 {
                     "@type": "Blog",
-                    "@id": `${baseUrl}/blog#blog`,
+                    "@id": `${baseUrl}/writings#blog`,
                     name: "Writing",
-                    url: `${baseUrl}/blog`,
+                    url: `${baseUrl}/writings`,
                     description: BLOG_DESCRIPTION,
                 },
                 {
-                    "@type": "SoftwareApplication",
-                    name: "Verbatim",
-                    url: "https://verbatim.gibsonmurray.com",
-                    applicationCategory: "EducationalApplication",
-                    operatingSystem: "Web",
-                    description: VERBATIM_DESCRIPTION,
+                    "@type": "CollectionPage",
+                    name: "Apps",
+                    url: `${baseUrl}/apps`,
+                    description: APPS_DESCRIPTION,
                 },
+                ...apps.map((app) => ({
+                    "@type": "SoftwareApplication",
+                    "@id": `${baseUrl}${app.href}#software`,
+                    name: app.name,
+                    url: app.externalUrl,
+                    sameAs: `${baseUrl}${app.href}`,
+                    applicationCategory: app.category,
+                    operatingSystem: "Web",
+                    description: app.description,
+                })),
                 ...books.map((book) => ({
                     "@type": "Book",
                     "@id": `${baseUrl}/books/${book.slug}#book`,
@@ -144,9 +176,9 @@ const jsonLd = {
         },
         {
             "@type": "Blog",
-            "@id": `${baseUrl}/blog#blog`,
+            "@id": `${baseUrl}/writings#blog`,
             name: `${SITE_NAME} Writing`,
-            url: `${baseUrl}/blog`,
+            url: `${baseUrl}/writings`,
             description: BLOG_DESCRIPTION,
             inLanguage: "en-US",
             publisher: {

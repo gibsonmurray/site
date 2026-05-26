@@ -26,7 +26,7 @@ export const ShareButtons = ({
 
     useEffect(() => {
         // Construct URL only after client-side hydration
-        const fullUrl = `${window.location.origin}/blog/${slug}`
+        const fullUrl = `${window.location.origin}/writings/${slug}`
         setUrl(fullUrl)
     }, [slug])
 

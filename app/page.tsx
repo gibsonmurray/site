@@ -1,9 +1,18 @@
 import { BlogPosts } from "@/components/posts"
+import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import { books, getFeaturedReviewHeadline, latestBook } from "@/lib/books"
 import { currentlyReading } from "@/lib/currently-reading"
 import { NewsletterSignup } from "@/components/newsletter-signup"
+import { baseUrl } from "@/app/sitemap"
+import {
+    SITE_DESCRIPTION,
+    SITE_NAME,
+    SITE_TITLE,
+    defaultOgImage,
+    makeBreadcrumbSchema,
+} from "@/lib/seo"
 import {
     ArrowRight,
     BookMarked,
@@ -30,9 +39,81 @@ const releaseLabel =
 
 const latestBookReviewHeadline = getFeaturedReviewHeadline(latestBook)
 
+export const metadata: Metadata = {
+    title: {
+        absolute: SITE_TITLE,
+    },
+    description: SITE_DESCRIPTION,
+    alternates: {
+        canonical: baseUrl,
+        types: {
+            "application/rss+xml": `${baseUrl}/rss`,
+        },
+    },
+    openGraph: {
+        title: SITE_TITLE,
+        description: SITE_DESCRIPTION,
+        url: baseUrl,
+        type: "website",
+        images: [
+            {
+                url: defaultOgImage,
+                alt: "Gibson Murray biblical fiction and writing",
+                width: 1200,
+                height: 630,
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: SITE_TITLE,
+        description: SITE_DESCRIPTION,
+        images: [defaultOgImage],
+    },
+}
+
+const homeJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "WebPage",
+            "@id": `${baseUrl}/#webpage`,
+            url: baseUrl,
+            name: SITE_TITLE,
+            description: SITE_DESCRIPTION,
+            inLanguage: "en-US",
+            isPartOf: {
+                "@id": `${baseUrl}/#website`,
+            },
+            about: {
+                "@id": `${baseUrl}/#person`,
+            },
+            primaryImageOfPage: {
+                "@type": "ImageObject",
+                url: defaultOgImage,
+            },
+        },
+        makeBreadcrumbSchema(
+            [
+                {
+                    name: SITE_NAME,
+                    url: baseUrl,
+                },
+            ],
+            `${baseUrl}/#breadcrumb`,
+        ),
+    ],
+}
+
 const Home = () => {
     return (
         <section className="overflow-hidden">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(homeJsonLd),
+                }}
+            />
             <div className="mx-auto grid min-h-[calc(100svh-3.5rem)] w-full max-w-6xl items-center gap-12 px-6 py-16 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:py-20">
                 <div className="flex flex-col items-start">
                     <p className="text-primary mb-5 text-xs font-semibold tracking-[0.22em] uppercase">
@@ -55,7 +136,7 @@ const Home = () => {
                             <ArrowRight className="size-4" />
                         </Link>
                         <Link
-                            href="/blog"
+                            href="/writings"
                             className="border-border bg-background text-foreground hover:bg-muted inline-flex h-11 items-center justify-center gap-2 rounded-full border px-5 text-sm font-medium transition-colors"
                         >
                             <Newspaper className="size-4" />

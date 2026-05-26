@@ -7,6 +7,8 @@ import {
     AUTHOR_NAME,
     BOOKS_DESCRIPTION,
     SITE_NAME,
+    absoluteUrl,
+    makeBreadcrumbSchema,
     makeOgImage,
 } from "@/lib/seo"
 
@@ -57,8 +59,70 @@ export const metadata: Metadata = {
 }
 
 const BooksPage = () => {
+    const booksUrl = `${baseUrl}/books`
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "CollectionPage",
+                "@id": `${booksUrl}#webpage`,
+                url: booksUrl,
+                name: `Books by ${SITE_NAME}`,
+                description: BOOKS_DESCRIPTION,
+                inLanguage: "en-US",
+                isPartOf: {
+                    "@id": `${baseUrl}/#website`,
+                },
+                mainEntity: {
+                    "@id": `${booksUrl}#books`,
+                },
+            },
+            {
+                "@type": "ItemList",
+                "@id": `${booksUrl}#books`,
+                name: `Books by ${SITE_NAME}`,
+                itemListElement: books.map((book, index) => ({
+                    "@type": "ListItem",
+                    position: index + 1,
+                    url: `${booksUrl}/${book.slug}`,
+                    name: book.title,
+                })),
+            },
+            ...books.map((book) => ({
+                "@type": "Book",
+                "@id": `${booksUrl}/${book.slug}#book`,
+                name: book.title,
+                url: `${booksUrl}/${book.slug}`,
+                description: book.shortDescription,
+                genre: [book.genre, "Christian fiction", "Biblical Fiction"],
+                inLanguage: "en-US",
+                image: absoluteUrl(book.coverImageSrc),
+                author: {
+                    "@id": `${baseUrl}/#person`,
+                },
+            })),
+            makeBreadcrumbSchema(
+                [
+                    {
+                        name: SITE_NAME,
+                        url: baseUrl,
+                    },
+                    {
+                        name: "Books",
+                        url: booksUrl,
+                    },
+                ],
+                `${booksUrl}#breadcrumb`,
+            ),
+        ],
+    }
+
     return (
         <section className="overflow-hidden">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <BooksHeader />
             <div className="mx-auto grid max-w-6xl gap-6 px-6 pb-20 sm:px-8 lg:pb-28">
                 {books.map((book, index) => (

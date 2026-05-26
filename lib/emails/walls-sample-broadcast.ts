@@ -2,7 +2,7 @@ import { publicContactEmail } from "@/lib/contact"
 
 const siteUrl = "https://gibsonmurray.com"
 const bookUrl = `${siteUrl}/books/walls`
-const sampleUrl = `${siteUrl}/books/walls/read`
+const sampleUrl = `${siteUrl}/books/walls/read/chapter-1#chapter`
 const heroImageUrl = `${siteUrl}/books/walls-mock-1.png`
 
 export const wallsSampleBroadcast = {

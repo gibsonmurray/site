@@ -3,6 +3,8 @@ import {
     AUTHOR_NAME,
     SITE_NAME,
     VERBATIM_DESCRIPTION,
+    absoluteUrl,
+    makeBreadcrumbSchema,
     makeOgImage,
 } from "@/lib/seo"
 import type { Metadata } from "next"
@@ -104,6 +106,62 @@ export const metadata: Metadata = {
     },
 }
 
+const verbatimPageUrl = `${baseUrl}/verbatim`
+const verbatimJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "WebPage",
+            "@id": `${verbatimPageUrl}#webpage`,
+            url: verbatimPageUrl,
+            name: verbatimTitle,
+            description: VERBATIM_DESCRIPTION,
+            inLanguage: "en-US",
+            isPartOf: {
+                "@id": `${baseUrl}/#website`,
+            },
+            primaryImageOfPage: {
+                "@type": "ImageObject",
+                url: absoluteUrl("/verbatim/app-desktop.png"),
+            },
+            mainEntity: {
+                "@id": `${verbatimPageUrl}#software`,
+            },
+        },
+        {
+            "@type": "SoftwareApplication",
+            "@id": `${verbatimPageUrl}#software`,
+            name: "Verbatim",
+            url: verbatimUrl,
+            sameAs: verbatimPageUrl,
+            applicationCategory: "EducationalApplication",
+            operatingSystem: "Web",
+            description: VERBATIM_DESCRIPTION,
+            image: absoluteUrl("/verbatim/app-desktop.png"),
+            author: {
+                "@id": `${baseUrl}/#person`,
+            },
+        },
+        makeBreadcrumbSchema(
+            [
+                {
+                    name: SITE_NAME,
+                    url: baseUrl,
+                },
+                {
+                    name: "Apps",
+                    url: `${baseUrl}/apps`,
+                },
+                {
+                    name: "Verbatim",
+                    url: verbatimPageUrl,
+                },
+            ],
+            `${verbatimPageUrl}#breadcrumb`,
+        ),
+    ],
+}
+
 const ProductScreenshot = ({ variant }: { variant: "desktop" | "mobile" }) => {
     const isMobile = variant === "mobile"
 
@@ -147,6 +205,12 @@ const ResponsiveProductScreenshot = () => (
 const VerbatimPage = () => {
     return (
         <section className="bg-background overflow-hidden">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(verbatimJsonLd),
+                }}
+            />
             <header className="mx-auto flex min-h-[calc(100svh-3.5rem)] max-w-6xl flex-col items-center justify-center px-6 py-16 text-center sm:px-8 lg:py-20">
                 <img
                     src="/verbatim-logo.svg"

@@ -3,18 +3,23 @@ import { baseUrl } from "@/app/sitemap"
 export const SITE_NAME = "Gibson Murray"
 export const AUTHOR_NAME = "Gibson Murray"
 export const AUTHOR_URL = baseUrl
+export const SITE_IMAGE = `${baseUrl}/headshot.jpeg`
+export const SITE_LOGO = `${baseUrl}/gm-logo.png`
 
 export const SITE_TITLE =
     "Gibson Murray | Christian Author and Biblical Fiction Writer"
 
 export const SITE_DESCRIPTION =
-    "Gibson Murray writes biblical fiction, biblical analysis, Christian reflections, essays on faith and story, and builds thoughtful software like Verbatim."
+    "Gibson Murray writes biblical fiction, biblical analysis, Christian reflections, essays on faith and story, and builds thoughtful apps like Verbatim."
 
 export const BOOKS_DESCRIPTION =
     "Book projects in biblical fiction from Gibson Murray, including Walls, a story of faith tested, unlikely mercy, and the fall of Jericho."
 
 export const BLOG_DESCRIPTION =
     "Essays and reflections from Gibson Murray on Christian faith, biblical imagination, story, biblical analysis, and ordinary life."
+
+export const APPS_DESCRIPTION =
+    "Thoughtful apps from Gibson Murray for Scripture, story, exact words, and focused practice, including Verbatim for Scripture memorization."
 
 export const VERBATIM_DESCRIPTION =
     "Verbatim is a minimalist Scripture memorization tool that helps you learn passages word for word with realtime typing feedback, and it works for any exact text."
@@ -25,6 +30,8 @@ export const SITE_KEYWORDS = [
     "biblical fiction",
     "Christian fiction",
     "faith essays",
+    "Christian software",
+    "Gibson Murray apps",
     "Scripture memorization app",
     "Bible verse memorization",
     "Verbatim typing memorization",
@@ -51,11 +58,11 @@ export const SITE_LINKS = [
     },
     {
         name: "Writing",
-        url: `${baseUrl}/blog`,
+        url: `${baseUrl}/writings`,
     },
     {
-        name: "Verbatim",
-        url: `${baseUrl}/verbatim`,
+        name: "Apps",
+        url: `${baseUrl}/apps`,
     },
 ]
 
@@ -74,6 +81,28 @@ export const makeOgImage = ({
     return `${baseUrl}/og?${params.toString()}`
 }
 
+export const absoluteUrl = (value: string) => {
+    if (/^https?:\/\//i.test(value)) {
+        return value
+    }
+
+    return `${baseUrl}${value.startsWith("/") ? "" : "/"}${value}`
+}
+
+export const makeBreadcrumbSchema = (
+    items: { name: string; url: string }[],
+    id: string,
+) => ({
+    "@type": "BreadcrumbList",
+    "@id": id,
+    itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        item: item.url,
+    })),
+})
+
 export const defaultOgImage = makeOgImage({
     title: SITE_NAME,
     image: "/books/walls-mock-1.png",
@@ -84,6 +113,7 @@ export const personSchema = {
     "@id": `${baseUrl}/#person`,
     name: AUTHOR_NAME,
     url: AUTHOR_URL,
+    image: SITE_IMAGE,
     sameAs: AUTHOR_SAME_AS,
     jobTitle: "Christian author and software engineer",
     description: SITE_DESCRIPTION,
@@ -95,6 +125,23 @@ export const personSchema = {
         "Story craft",
         "Software design",
     ],
+}
+
+export const organizationSchema = {
+    "@type": "Organization",
+    "@id": `${baseUrl}/#organization`,
+    name: SITE_NAME,
+    url: baseUrl,
+    logo: {
+        "@type": "ImageObject",
+        url: SITE_LOGO,
+        width: 184,
+        height: 184,
+    },
+    founder: {
+        "@id": `${baseUrl}/#person`,
+    },
+    sameAs: AUTHOR_SAME_AS,
 }
 
 export const makeSiteNavigationSchema = (

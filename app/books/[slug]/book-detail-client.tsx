@@ -634,7 +634,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                             <div className="mt-7 flex flex-wrap items-center gap-3">
                                 {book.slug === "walls" && (
                                     <Link
-                                        href="/books/walls/read"
+                                        href="/books/walls/read/chapter-1#chapter"
                                         className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white transition-colors hover:bg-white/16"
                                     >
                                         <BookOpen className="size-4" />
@@ -647,7 +647,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                         href={book.amazonUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
+                                        className="inline-flex h-11 min-w-52 flex-1 items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
                                     >
                                         View on Amazon
                                         <AmazonLogo className="h-4 w-auto" />

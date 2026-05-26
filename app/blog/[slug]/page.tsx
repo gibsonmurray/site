@@ -12,7 +12,14 @@ import {
 import { baseUrl } from "@/app/sitemap"
 import Link from "next/link"
 import { ArrowRight, ChevronLeft } from "lucide-react"
-import { AUTHOR_NAME, SITE_NAME, makeOgImage, personSchema } from "@/lib/seo"
+import {
+    AUTHOR_NAME,
+    SITE_NAME,
+    absoluteUrl,
+    makeBreadcrumbSchema,
+    makeOgImage,
+    personSchema,
+} from "@/lib/seo"
 
 export const generateStaticParams = async () => {
     let posts = getBlogPosts()
@@ -27,14 +34,6 @@ export const generateMetadata = async ({
 }: {
     params: Promise<{ slug: string }>
 }) => {
-    const toAbsoluteUrl = (value: string) => {
-        if (/^https?:\/\//i.test(value)) {
-            return value
-        }
-
-        return `${baseUrl}${value.startsWith("/") ? "" : "/"}${value}`
-    }
-
     let { slug } = await params
     let post = getBlogPosts().find((post) => post.slug === slug)
     if (!post) {
@@ -49,7 +48,7 @@ export const generateMetadata = async ({
     } = post.metadata
     let tags = getPostTags(post.metadata.tags)
     let ogImage = makeOgImage({ title, image })
-    let canonicalImage = image ? toAbsoluteUrl(image) : ogImage
+    let canonicalImage = image ? absoluteUrl(image) : ogImage
 
     return {
         title,
@@ -62,7 +61,7 @@ export const generateMetadata = async ({
             "biblical reflection",
         ],
         alternates: {
-            canonical: `${baseUrl}/blog/${post.slug}`,
+            canonical: `${baseUrl}/writings/${post.slug}`,
         },
         openGraph: {
             title,
@@ -70,7 +69,7 @@ export const generateMetadata = async ({
             type: "article",
             publishedTime,
             modifiedTime: publishedTime,
-            url: `${baseUrl}/blog/${post.slug}`,
+            url: `${baseUrl}/writings/${post.slug}`,
             authors: [post.metadata.author?.trim() || AUTHOR_NAME],
             section: "Christian reflections",
             tags,
@@ -111,6 +110,8 @@ export default async function BlogPage({
     const authorName = post.metadata.author?.trim() || "Gibson Murray"
     const tags = getPostTags(post.metadata.tags)
     const scriptureCopyright = post.metadata.scriptureCopyright?.trim()
+    const wordCount = post.content.trim().split(/\s+/).filter(Boolean).length
+    const readingMinutes = Math.max(1, Math.ceil(wordCount / 200))
 
     const allPosts = getBlogPosts()
     const relatedPosts = allPosts
@@ -125,11 +126,9 @@ export default async function BlogPage({
         .slice(0, 3)
         .map(({ post }) => post)
 
-    const postUrl = `${baseUrl}/blog/${post.slug}`
+    const postUrl = `${baseUrl}/writings/${post.slug}`
     const postImage = post.metadata.image
-        ? /^https?:\/\//i.test(post.metadata.image)
-            ? post.metadata.image
-            : `${baseUrl}${post.metadata.image.startsWith("/") ? "" : "/"}${post.metadata.image}`
+        ? absoluteUrl(post.metadata.image)
         : makeOgImage({ title: post.metadata.title })
 
     const jsonLd = {
@@ -144,11 +143,18 @@ export default async function BlogPage({
                 dateModified: post.metadata.publishedAt,
                 description: post.metadata.summary,
                 keywords: tags,
-                image: postImage,
+                articleSection: tags[0] ?? "Christian reflections",
+                wordCount,
+                timeRequired: `PT${readingMinutes}M`,
+                isAccessibleForFree: true,
+                image: {
+                    "@type": "ImageObject",
+                    url: postImage,
+                },
                 url: postUrl,
                 inLanguage: "en-US",
                 isPartOf: {
-                    "@id": `${baseUrl}/blog#blog`,
+                    "@id": `${baseUrl}/writings#blog`,
                 },
                 mainEntityOfPage: {
                     "@type": "WebPage",
@@ -162,30 +168,23 @@ export default async function BlogPage({
                     "@id": `${baseUrl}/#person`,
                 },
             },
-            {
-                "@type": "BreadcrumbList",
-                "@id": `${postUrl}#breadcrumb`,
-                itemListElement: [
+            makeBreadcrumbSchema(
+                [
                     {
-                        "@type": "ListItem",
-                        position: 1,
                         name: SITE_NAME,
-                        item: baseUrl,
+                        url: baseUrl,
                     },
                     {
-                        "@type": "ListItem",
-                        position: 2,
                         name: "Writing",
-                        item: `${baseUrl}/blog`,
+                        url: `${baseUrl}/writings`,
                     },
                     {
-                        "@type": "ListItem",
-                        position: 3,
                         name: post.metadata.title,
-                        item: postUrl,
+                        url: postUrl,
                     },
                 ],
-            },
+                `${postUrl}#breadcrumb`,
+            ),
         ],
     }
 
@@ -199,7 +198,7 @@ export default async function BlogPage({
             <header className="border-border/60 bg-muted/35 border-b">
                 <div className="mx-auto max-w-4xl px-6 py-12 sm:px-8 lg:py-18">
                     <Link
-                        href="/blog"
+                        href="/writings"
                         className="text-muted-foreground hover:text-foreground mb-8 inline-flex items-center gap-1 text-sm transition-colors"
                     >
                         <ChevronLeft className="size-4" />
@@ -264,7 +263,7 @@ export default async function BlogPage({
                             {relatedPosts.map((related) => (
                                 <Link
                                     key={related.slug}
-                                    href={`/blog/${related.slug}`}
+                                    href={`/writings/${related.slug}`}
                                     className="app-panel-muted group hover:bg-muted/50 min-h-40 gap-2 transition duration-300 hover:-translate-y-0.5"
                                 >
                                     <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase tabular-nums">

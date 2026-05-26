@@ -4,7 +4,14 @@ import { books, getFeaturedReviewHeadline } from "@/lib/books"
 import { BookDetailClient } from "./book-detail-client"
 import { BookReviews } from "@/components/book-reviews"
 import { baseUrl } from "@/app/sitemap"
-import { AUTHOR_NAME, SITE_NAME, makeOgImage, personSchema } from "@/lib/seo"
+import {
+    AUTHOR_NAME,
+    SITE_NAME,
+    absoluteUrl,
+    makeBreadcrumbSchema,
+    makeOgImage,
+    personSchema,
+} from "@/lib/seo"
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -62,6 +69,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             description,
             images: [ogImage],
         },
+        other: {
+            thumbnail: absoluteUrl(book.coverImageSrc),
+        },
     }
 }
 
@@ -92,7 +102,10 @@ const BookPage = async ({ params }: Props) => {
                 genre: [book.genre, "Christian fiction", "Biblical Fiction"],
                 inLanguage: "en-US",
                 url: bookUrl,
-                image: `${baseUrl}${book.coverImageSrc}`,
+                image: Array.from(
+                    new Set([book.coverImageSrc, ...(book.images ?? [])]),
+                ).map(absoluteUrl),
+                sameAs: book.amazonUrl,
                 author: {
                     "@id": `${baseUrl}/#person`,
                 },
@@ -104,30 +117,23 @@ const BookPage = async ({ params }: Props) => {
                     "@id": bookUrl,
                 },
             },
-            {
-                "@type": "BreadcrumbList",
-                "@id": `${bookUrl}#breadcrumb`,
-                itemListElement: [
+            makeBreadcrumbSchema(
+                [
                     {
-                        "@type": "ListItem",
-                        position: 1,
                         name: SITE_NAME,
-                        item: baseUrl,
+                        url: baseUrl,
                     },
                     {
-                        "@type": "ListItem",
-                        position: 2,
                         name: "Books",
-                        item: `${baseUrl}/books`,
+                        url: `${baseUrl}/books`,
                     },
                     {
-                        "@type": "ListItem",
-                        position: 3,
                         name: book.title,
-                        item: bookUrl,
+                        url: bookUrl,
                     },
                 ],
-            },
+                `${bookUrl}#breadcrumb`,
+            ),
         ],
     }
 
@@ -135,25 +141,63 @@ const BookPage = async ({ params }: Props) => {
         (item) => item["@type"] === "Book",
     )
 
-    if (book.status.type === "pre-order") {
-        bookSchema!.offers = {
+    const availability =
+        book.status.type === "pre-order"
+            ? "https://schema.org/PreOrder"
+            : book.status.type === "available"
+              ? "https://schema.org/InStock"
+              : "https://schema.org/PreSale"
+    const offers = Object.entries(book.formats)
+        .filter(([, option]) => option?.available)
+        .map(([format, option]) => ({
             "@type": "Offer",
-            availability: "https://schema.org/PreOrder",
+            name: `${book.title} ${format}`,
+            availability,
             itemCondition: "https://schema.org/NewCondition",
+            price: option.priceCents
+                ? (option.priceCents / 100).toFixed(2)
+                : undefined,
+            priceCurrency: option.priceCents ? "USD" : undefined,
             seller: {
                 "@id": `${baseUrl}/#person`,
             },
             url: bookUrl,
-        }
-    } else if (book.status.type === "available") {
-        bookSchema!.offers = {
-            "@type": "Offer",
-            availability: "https://schema.org/InStock",
-            itemCondition: "https://schema.org/NewCondition",
-            seller: {
-                "@id": `${baseUrl}/#person`,
+        }))
+
+    if (offers.length > 0) {
+        bookSchema!.offers = offers
+    }
+
+    if (book.reviews && book.reviews.length > 0) {
+        bookSchema!.review = book.reviews.map((review) => ({
+            "@type": "Review",
+            reviewBody: review.quote,
+            name: review.headline,
+            author: {
+                "@type": "Person",
+                name: review.reviewer,
             },
-            url: bookUrl,
+            reviewRating: review.rating
+                ? {
+                      "@type": "Rating",
+                      ratingValue: review.rating,
+                      bestRating: 5,
+                  }
+                : undefined,
+        }))
+
+        const ratedReviews = book.reviews.filter((review) => review.rating)
+        if (ratedReviews.length > 0) {
+            const ratingTotal = ratedReviews.reduce(
+                (sum, review) => sum + (review.rating ?? 0),
+                0,
+            )
+            bookSchema!.aggregateRating = {
+                "@type": "AggregateRating",
+                ratingValue: (ratingTotal / ratedReviews.length).toFixed(1),
+                reviewCount: ratedReviews.length,
+                bestRating: 5,
+            }
         }
     }
 

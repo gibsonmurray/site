@@ -9,6 +9,7 @@ import {
     AUTHOR_NAME,
     BLOG_DESCRIPTION,
     SITE_NAME,
+    makeBreadcrumbSchema,
     makeOgImage,
 } from "@/lib/seo"
 import { ArrowRight, Clock, Feather, Search } from "lucide-react"
@@ -28,12 +29,15 @@ export const metadata: Metadata = {
         "biblical fiction craft",
     ],
     alternates: {
-        canonical: `${baseUrl}/blog`,
+        canonical: `${baseUrl}/writings`,
+        types: {
+            "application/rss+xml": `${baseUrl}/rss`,
+        },
     },
     openGraph: {
         title: `${SITE_NAME} Writing`,
         description: BLOG_DESCRIPTION,
-        url: `${baseUrl}/blog`,
+        url: `${baseUrl}/writings`,
         type: "website",
         images: [
             {
@@ -70,9 +74,80 @@ const BlogPage = () => {
         publishedAt: p.metadata.publishedAt,
         tags: p.metadata.tags,
     }))
+    const blogUrl = `${baseUrl}/writings`
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "CollectionPage",
+                "@id": `${blogUrl}#webpage`,
+                url: blogUrl,
+                name: `${SITE_NAME} Writing`,
+                description: BLOG_DESCRIPTION,
+                inLanguage: "en-US",
+                isPartOf: {
+                    "@id": `${baseUrl}/#website`,
+                },
+                mainEntity: {
+                    "@id": `${blogUrl}#blog`,
+                },
+            },
+            {
+                "@type": "Blog",
+                "@id": `${blogUrl}#blog`,
+                name: `${SITE_NAME} Writing`,
+                url: blogUrl,
+                description: BLOG_DESCRIPTION,
+                inLanguage: "en-US",
+                publisher: {
+                    "@id": `${baseUrl}/#person`,
+                },
+                blogPost: posts.map((post) => ({
+                    "@type": "BlogPosting",
+                    "@id": `${blogUrl}/${post.slug}#article`,
+                    headline: post.metadata.title,
+                    url: `${blogUrl}/${post.slug}`,
+                    datePublished: post.metadata.publishedAt,
+                    dateModified: post.metadata.publishedAt,
+                    description: post.metadata.summary,
+                    author: {
+                        "@id": `${baseUrl}/#person`,
+                    },
+                })),
+            },
+            {
+                "@type": "ItemList",
+                "@id": `${blogUrl}#posts`,
+                name: `${SITE_NAME} writing archive`,
+                itemListElement: posts.map((post, index) => ({
+                    "@type": "ListItem",
+                    position: index + 1,
+                    url: `${blogUrl}/${post.slug}`,
+                    name: post.metadata.title,
+                })),
+            },
+            makeBreadcrumbSchema(
+                [
+                    {
+                        name: SITE_NAME,
+                        url: baseUrl,
+                    },
+                    {
+                        name: "Writing",
+                        url: blogUrl,
+                    },
+                ],
+                `${blogUrl}#breadcrumb`,
+            ),
+        ],
+    }
 
     return (
         <section className="bg-background overflow-hidden">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <header className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-24">
                 <div>
                     <p className="app-eyebrow">Essays and reflections</p>
@@ -86,7 +161,7 @@ const BlogPage = () => {
                 </div>
                 {featuredPost && (
                     <Link
-                        href={`/blog/${featuredPost.slug}`}
+                        href={`/writings/${featuredPost.slug}`}
                         className="group shadow-foreground/10 relative min-h-[34rem] overflow-hidden rounded-[2rem] bg-[#111] text-white shadow-2xl"
                     >
                         {featuredPost.metadata.image && (

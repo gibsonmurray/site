@@ -27,8 +27,8 @@ export const GET = async () => {
             (post) =>
                 `<item>
           <title>${escapeXml(post.metadata.title)}</title>
-          <link>${baseUrl}/blog/${post.slug}</link>
-          <guid>${baseUrl}/blog/${post.slug}</guid>
+          <link>${baseUrl}/writings/${post.slug}</link>
+          <guid>${baseUrl}/writings/${post.slug}</guid>
           <description>${escapeXml(post.metadata.summary || "")}</description>
           <pubDate>${new Date(
               post.metadata.publishedAt,

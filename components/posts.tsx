@@ -27,7 +27,7 @@ const PostList = ({
             <Link
                 key={post.slug}
                 className="border-border/65 bg-background group hover:shadow-foreground/8 grid min-h-44 gap-5 rounded-[2rem] border p-6 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl sm:grid-cols-[1fr_auto] sm:p-8"
-                href={`/blog/${post.slug}`}
+                href={`/writings/${post.slug}`}
             >
                 <div className="flex flex-col gap-2">
                     <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase tabular-nums">
@@ -76,7 +76,7 @@ export const BlogPosts: FC<BlogPostsProps> = ({
                         {posts.map((post) => (
                             <Link
                                 key={post.slug}
-                                href={`/blog/${post.slug}`}
+                                href={`/writings/${post.slug}`}
                                 className="group flex flex-col gap-2 py-6 first:pt-0 last:pb-0"
                             >
                                 <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase tabular-nums">

@@ -241,7 +241,7 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                         <div className="border-t border-white/10 bg-black/12 p-4 sm:p-5">
                             {book.slug === "walls" && (
                                 <Link
-                                    href="/books/walls/read"
+                                    href="/books/walls/read/chapter-1#chapter"
                                     className="group flex items-center justify-between gap-4 rounded-2xl bg-white px-5 py-4 text-[#111] transition-colors hover:bg-white/90"
                                 >
                                     <span className="flex items-center gap-3">
@@ -261,26 +261,6 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                                 </Link>
                             )}
                             <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                                <Link
-                                    href={`/books/${book.slug}`}
-                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/8 px-4 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
-                                >
-                                    Details
-                                    <ArrowRight className="size-4" />
-                                </Link>
-                                {book.amazonUrl && (
-                                    <Link
-                                        href={book.amazonUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-white/8 px-4 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
-                                    >
-                                        Amazon
-                                        <span className="flex h-6 w-16 items-center justify-center rounded-full bg-white px-1.5">
-                                            <AmazonLogo className="h-3.5 w-auto" />
-                                        </span>
-                                    </Link>
-                                )}
                                 {isPurchasable &&
                                     !isComingSoon &&
                                     defaultFormat && (
@@ -306,6 +286,26 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                                             )}
                                         </Button>
                                     )}
+                                {book.amazonUrl && (
+                                    <Link
+                                        href={book.amazonUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-white/8 px-4 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
+                                    >
+                                        Amazon
+                                        <span className="flex h-6 w-16 items-center justify-center rounded-full bg-white px-1.5">
+                                            <AmazonLogo className="h-3.5 w-auto" />
+                                        </span>
+                                    </Link>
+                                )}
+                                <Link
+                                    href={`/books/${book.slug}`}
+                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/8 px-4 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
+                                >
+                                    Details
+                                    <ArrowRight className="size-4" />
+                                </Link>
                             </div>
                         </div>
                     </div>

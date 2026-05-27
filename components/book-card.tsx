@@ -42,6 +42,14 @@ const fmt = (cents: number) =>
         maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
     }).format(cents / 100)
 
+const ctaClass =
+    "group/book-cta inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-white/8 px-4 text-sm font-medium whitespace-nowrap text-white ring-1 ring-white/10 transition-colors hover:bg-white/12 hover:text-white"
+const ctaContentClass =
+    "inline-grid grid-cols-[auto_1.75rem] items-center justify-center gap-2.5"
+const ctaLabelClass = "text-center"
+const ctaIconClass =
+    "flex size-7 shrink-0 items-center justify-center"
+
 export const BookCard = ({ book, priority = false }: BookCardProps) => {
     const [glowColor, setGlowColor] = useState<GlowColor>(DEFAULT_GLOW)
     const [hasGlowColor, setHasGlowColor] = useState(false)
@@ -269,20 +277,44 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                                             variant="ghost"
                                             onClick={handleAddToCart}
                                             disabled={added}
-                                            className="h-12 justify-center gap-2 rounded-2xl bg-white/8 px-4 text-white ring-1 ring-white/10 hover:bg-white/12 hover:text-white"
+                                            className={ctaClass}
                                         >
                                             {added ? (
-                                                <>
-                                                    <Check className="size-4" />
-                                                    Added
-                                                </>
+                                                <span className={ctaContentClass}>
+                                                    <span
+                                                        className={
+                                                            ctaLabelClass
+                                                        }
+                                                    >
+                                                        Added
+                                                    </span>
+                                                    <span
+                                                        className={
+                                                            ctaIconClass
+                                                        }
+                                                    >
+                                                        <Check className="size-4" />
+                                                    </span>
+                                                </span>
                                             ) : (
-                                                <>
-                                                    <ShoppingCart className="size-4" />
-                                                    {isPreOrder
-                                                        ? "Pre-order"
-                                                        : "Buy"}
-                                                </>
+                                                <span className={ctaContentClass}>
+                                                    <span
+                                                        className={
+                                                            ctaLabelClass
+                                                        }
+                                                    >
+                                                        {isPreOrder
+                                                            ? "Pre-order"
+                                                            : "Buy"}
+                                                    </span>
+                                                    <span
+                                                        className={
+                                                            ctaIconClass
+                                                        }
+                                                    >
+                                                        <ShoppingCart className="size-4" />
+                                                    </span>
+                                                </span>
                                             )}
                                         </Button>
                                     )}
@@ -291,20 +323,32 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                                         href={book.amazonUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-white/8 px-4 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
+                                        className={ctaClass}
                                     >
-                                        Amazon
-                                        <span className="flex h-6 w-16 items-center justify-center rounded-full bg-white px-1.5">
-                                            <AmazonLogo className="h-3.5 w-auto" />
+                                        <span className={ctaContentClass}>
+                                            <span className={ctaLabelClass}>
+                                                Amazon
+                                            </span>
+                                            <span className={ctaIconClass}>
+                                                <span className="flex size-7 items-center justify-center rounded-full bg-white">
+                                                    <AmazonLogo className="size-4" />
+                                                </span>
+                                            </span>
                                         </span>
                                     </Link>
                                 )}
                                 <Link
                                     href={`/books/${book.slug}`}
-                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white/8 px-4 text-sm font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/12"
+                                    className={ctaClass}
                                 >
-                                    Details
-                                    <ArrowRight className="size-4" />
+                                    <span className={ctaContentClass}>
+                                        <span className={ctaLabelClass}>
+                                            Details
+                                        </span>
+                                        <span className={ctaIconClass}>
+                                            <ArrowRight className="size-4 transition-transform group-hover/book-cta:translate-x-0.5" />
+                                        </span>
+                                    </span>
                                 </Link>
                             </div>
                         </div>

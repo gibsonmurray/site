@@ -96,7 +96,7 @@ export function Book3DPreview({
 
             const scene = new THREE.Scene()
             const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100)
-            camera.position.set(0, 0.04, 9.25)
+            camera.position.set(0, 0.04, 10.15)
 
             const group = new THREE.Group()
             scene.add(group)
@@ -115,20 +115,6 @@ export function Book3DPreview({
             const rimLight = new THREE.DirectionalLight(0xffffff, 1.45)
             rimLight.position.set(-3, 2.5, -4)
             scene.add(rimLight)
-
-            const shadowGeometry = new THREE.CircleGeometry(1, 64)
-            const shadowMaterial = new THREE.MeshBasicMaterial({
-                color: 0x000000,
-                depthWrite: false,
-                transparent: true,
-                opacity: 0.24,
-            })
-            const shadow = new THREE.Mesh(shadowGeometry, shadowMaterial)
-            shadow.position.set(0.12, -2.28, -0.72)
-            shadow.scale.set(2, 0.33, 1)
-            scene.add(shadow)
-            geometries.push(shadowGeometry)
-            materials.push(shadowMaterial)
 
             const loader = new THREE.TextureLoader()
 

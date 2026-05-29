@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { ShoppingCart, X } from "lucide-react"
-import { useMutation } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { books } from "@/lib/books"
 import { useCartStore } from "@/lib/cart-store"
@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 import { CartLineItem, FORMAT_LABELS, fmt } from "@/components/cart-line-item"
 
 export const CartDrawer = () => {
+    const router = useRouter()
     const { items, isOpen, closeCart, removeItem, updateQuantity, clearCart } =
         useCartStore()
 
@@ -45,19 +46,6 @@ export const CartDrawer = () => {
         document.addEventListener("keydown", handleKeyDown)
         return () => document.removeEventListener("keydown", handleKeyDown)
     }, [closeCart])
-
-    const checkoutMutation = useMutation({
-        mutationFn: async () => {
-            const res = await fetch("/api/checkout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ items }),
-            })
-            const { url, error } = await res.json()
-            if (!res.ok) throw new Error(error)
-            window.location.href = url
-        },
-    })
 
     return (
         <>
@@ -190,12 +178,12 @@ export const CartDrawer = () => {
                         <Button
                             className="h-11 w-full rounded-full font-semibold"
                             size="lg"
-                            onClick={() => checkoutMutation.mutate()}
-                            disabled={checkoutMutation.isPending}
+                            onClick={() => {
+                                closeCart()
+                                router.push("/books/checkout")
+                            }}
                         >
-                            {checkoutMutation.isPending
-                                ? "Redirecting..."
-                                : "Checkout"}
+                            Checkout
                         </Button>
                         <Button
                             variant="ghost"

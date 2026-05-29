@@ -563,7 +563,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                         Books
                     </Link>
                 </div>
-                <div className="mx-auto grid max-w-6xl gap-8 px-6 py-10 sm:px-8 lg:grid-cols-[1.08fr_0.92fr] lg:py-16">
+                <div className="mx-auto grid max-w-6xl gap-8 px-6 py-10 sm:px-8 lg:grid-cols-2 lg:py-16">
                     {book.modelAssets ? (
                         <Book3DPreview
                             assets={book.modelAssets}
@@ -602,11 +602,11 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                         <h1 className="mt-6 text-6xl font-semibold tracking-tight text-balance sm:text-7xl">
                             {book.title}
                         </h1>
-                        <p className="mt-6 max-w-xl text-xl leading-8 text-white/72">
+                        <p className="mt-6 max-w-none text-xl leading-8 text-white/72 lg:max-w-xl">
                             {book.shortDescription}
                         </p>
                         {reviewHeadline ? (
-                            <div className="mt-6 max-w-xl rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5">
+                            <div className="mt-6 max-w-none rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5 lg:max-w-xl">
                                 <div className="mb-2 flex items-center gap-1.5 text-emerald-100">
                                     {Array.from({ length: 5 }).map(
                                         (_, index) => (
@@ -625,17 +625,17 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                 </p>
                             </div>
                         ) : (
-                            <p className="mt-5 max-w-xl text-sm leading-7 text-white/52">
+                            <p className="mt-5 max-w-none text-sm leading-7 text-white/52 lg:max-w-xl">
                                 A fortified city. A dangerous mercy. A promise
                                 on the move.
                             </p>
                         )}
                         {(book.slug === "walls" || book.amazonUrl) && (
-                            <div className="mt-7 flex flex-wrap items-center gap-3">
+                            <div className="mt-7 grid gap-3">
                                 {book.slug === "walls" && (
                                     <Link
                                         href="/books/walls/read/chapter-1#chapter"
-                                        className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white transition-colors hover:bg-white/16"
+                                        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium whitespace-nowrap text-white transition-colors hover:bg-white/16"
                                     >
                                         <BookOpen className="size-4" />
                                         Read the first 3 chapters
@@ -647,7 +647,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                         href={book.amazonUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex h-11 min-w-52 flex-1 items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
+                                        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-medium whitespace-nowrap text-[#111] transition-colors hover:bg-white/90"
                                     >
                                         View on Amazon
                                         <AmazonLogo className="h-4 w-auto" />

@@ -1,25 +1,18 @@
 import Link from "next/link"
 import { LogoIcon } from "@/components/logo"
-import { Code2, ExternalLink, Rss, type LucideIcon } from "lucide-react"
 
-const LINKS: { name: string; href: string; external: boolean; icon: LucideIcon }[] = [
+const LINKS = [
     {
-        name: "rss",
-        href: "/rss",
-        external: false,
-        icon: Rss,
+        name: "books",
+        href: "/books",
     },
     {
-        name: "github",
-        href: "https://github.com/gibsonmurray",
-        external: true,
-        icon: ExternalLink,
+        name: "apps",
+        href: "/apps",
     },
     {
-        name: "view source",
-        href: "https://github.com/gibsonmurray/site",
-        external: true,
-        icon: Code2,
+        name: "essays",
+        href: "/writings",
     },
 ]
 
@@ -32,28 +25,16 @@ export const Footer = () => {
                         Gibson Murray
                     </p>
                     <ul className="flex flex-wrap items-center gap-3">
-                        {LINKS.map((link) => {
-                            const Icon = link.icon
-                            return (
-                                <li key={link.name}>
-                                    <a
-                                        className="hover:text-foreground inline-flex items-center gap-1 transition-colors"
-                                        rel={
-                                            link.external
-                                                ? "noopener noreferrer"
-                                                : undefined
-                                        }
-                                        target={
-                                            link.external ? "_blank" : undefined
-                                        }
-                                        href={link.href}
-                                    >
-                                        <Icon className="size-3" />
-                                        {link.name}
-                                    </a>
-                                </li>
-                            )
-                        })}
+                        {LINKS.map((link) => (
+                            <li key={link.name}>
+                                <Link
+                                    className="hover:text-foreground transition-colors"
+                                    href={link.href}
+                                >
+                                    {link.name}
+                                </Link>
+                            </li>
+                        ))}
                     </ul>
                 </div>
                 <div className="text-muted-foreground/90 mt-3 flex items-center justify-between text-[11px]">

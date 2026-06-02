@@ -23,9 +23,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const description = reviewHeadline
         ? `${book.shortDescription} Reader praise: “${reviewHeadline}”`
         : book.shortDescription
+    const ogSubtitle = book.shortDescription
     const ogImage = makeOgImage({
         title: `${book.title} by ${AUTHOR_NAME}`,
-        subtitle: reviewHeadline,
+        subtitle: ogSubtitle,
         image: book.images?.[0] ?? book.coverImageSrc,
     })
     const title = `${book.title} by ${AUTHOR_NAME}`

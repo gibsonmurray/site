@@ -3,7 +3,7 @@ import Stripe from "stripe"
 import { Resend } from "resend"
 import { books, type BookFormat } from "@/lib/books"
 import { orderNotificationEmail } from "@/lib/contact"
-import { getStripe } from "@/lib/stripe-server"
+import { getCheckoutStripe } from "@/lib/stripe-server"
 
 type OrderItem = {
     bookId: string
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
         )
     }
 
-    const stripe = getStripe()
+    const stripe = getCheckoutStripe()
     const body = await req.text()
     const sig = req.headers.get("stripe-signature")
     if (!sig) {
@@ -163,35 +163,38 @@ export async function POST(req: NextRequest) {
         )?.text?.value
 
         const resend = new Resend(resendApiKey)
-        const { error } = await resend.emails.send({
-            from: "Gibson Murray <orders@gibsonmurray.com>",
-            to: orderNotificationEmail,
-            subject: `New order — ${orderItems.map((item) => item.bookId).join(", ")}`,
-            text: [
-                `New paid order received!`,
-                `Fulfillment ID: ${fulfillmentId}`,
-                ``,
-                `Items`,
-                ...itemLines,
-                ``,
-                `Customer`,
-                `  Name:  ${customer.name ?? "—"}`,
-                `  Email: ${customer.email ?? "—"}`,
-                `  Phone: ${customer.phone ?? "—"}`,
-                ``,
-                ...shippingLines,
-                giftMessage ? `Gift message` : null,
-                giftMessage ? `  ${giftMessage}` : null,
-                giftMessage ? `` : null,
-                ``,
-                `Stripe session: ${session.id}`,
-                paymentIntentId
-                    ? `Stripe payment intent: ${paymentIntentId}`
-                    : null,
-            ]
-                .filter((l) => l !== null)
-                .join("\n"),
-        })
+        const { error } = await resend.emails.send(
+            {
+                from: "Gibson Murray <orders@gibsonmurray.com>",
+                to: orderNotificationEmail,
+                subject: `New order — ${orderItems.map((item) => item.bookId).join(", ")}`,
+                text: [
+                    `New paid order received!`,
+                    `Fulfillment ID: ${fulfillmentId}`,
+                    ``,
+                    `Items`,
+                    ...itemLines,
+                    ``,
+                    `Customer`,
+                    `  Name:  ${customer.name ?? "—"}`,
+                    `  Email: ${customer.email ?? "—"}`,
+                    `  Phone: ${customer.phone ?? "—"}`,
+                    ``,
+                    ...shippingLines,
+                    giftMessage ? `Gift message` : null,
+                    giftMessage ? `  ${giftMessage}` : null,
+                    giftMessage ? `` : null,
+                    ``,
+                    `Stripe session: ${session.id}`,
+                    paymentIntentId
+                        ? `Stripe payment intent: ${paymentIntentId}`
+                        : null,
+                ]
+                    .filter((l) => l !== null)
+                    .join("\n"),
+            },
+            { idempotencyKey: `stripe-order-${session.id}` },
+        )
 
         if (error) {
             console.error("Unable to send order notification", {

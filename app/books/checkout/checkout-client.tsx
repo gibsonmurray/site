@@ -1,18 +1,8 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
-import {
-    EmbeddedCheckout,
-    EmbeddedCheckoutProvider,
-} from "@stripe/react-stripe-js"
-import { loadStripe } from "@stripe/stripe-js"
 import { type CartItem, useCartStore } from "@/lib/cart-store"
-
-const publishableKey =
-    process.env.NEXT_PUBLIC_STRIPE_CHECKOUT_PUBLISHABLE_KEY ??
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-const stripePromise = publishableKey ? loadStripe(publishableKey) : null
 
 export const CheckoutClient = ({
     directItems,
@@ -23,14 +13,12 @@ export const CheckoutClient = ({
     const items = directItems ?? cartItems
     const checkoutMode = directItems === undefined ? "cart" : "direct"
     const checkoutKey = JSON.stringify(items)
-    const [clientSecret, setClientSecret] = useState<string | null>(null)
     const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
     useEffect(() => {
         if (items.length === 0) return
 
         let isCurrent = true
-        setClientSecret(null)
         setCheckoutError(null)
 
         void (async () => {
@@ -40,25 +28,17 @@ export const CheckoutClient = ({
                 body: JSON.stringify({ items, checkoutMode }),
             })
             const data = await readJson(res)
-            const nextClientSecret =
-                typeof data.clientSecret === "string" ? data.clientSecret : null
+            const checkoutUrl = typeof data.url === "string" ? data.url : null
             const error = typeof data.error === "string" ? data.error : null
 
             if (!isCurrent) return
 
-            if (!res.ok || !nextClientSecret) {
+            if (!res.ok || !checkoutUrl) {
                 setCheckoutError(error ?? "Unable to start checkout.")
                 return
             }
 
-            if (hasStripeModeMismatch(nextClientSecret, publishableKey)) {
-                setCheckoutError(
-                    "Stripe checkout keys are mismatched. Use a publishable key from the same Stripe mode as the checkout secret key.",
-                )
-                return
-            }
-
-            setClientSecret(nextClientSecret)
+            window.location.assign(checkoutUrl)
         })().catch((error) => {
             if (!isCurrent) return
             setCheckoutError(
@@ -72,47 +52,6 @@ export const CheckoutClient = ({
             isCurrent = false
         }
     }, [checkoutKey, checkoutMode, items])
-
-    const options = useMemo(
-        () => ({
-            clientSecret,
-            onShippingDetailsChange: async (event: {
-                checkoutSessionId: string
-                shippingDetails: unknown
-            }) => {
-                const res = await fetch("/api/checkout/shipping-options", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        checkout_session_id: event.checkoutSessionId,
-                        shipping_details: event.shippingDetails,
-                    }),
-                })
-                const data = await readJson(res)
-                const error = typeof data.error === "string" ? data.error : null
-
-                if (!res.ok) {
-                    return {
-                        type: "reject" as const,
-                        errorMessage:
-                            error ?? "Unable to calculate shipping options.",
-                    }
-                }
-
-                return { type: "accept" as const }
-            },
-        }),
-        [clientSecret],
-    )
-
-    if (!publishableKey || !stripePromise) {
-        return (
-            <CheckoutMessage
-                title="Checkout is not configured."
-                body="Add NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY to enable embedded Checkout."
-            />
-        )
-    }
 
     if (items.length === 0) {
         return (
@@ -132,25 +71,11 @@ export const CheckoutClient = ({
         )
     }
 
-    if (!clientSecret) {
-        return (
-            <CheckoutMessage
-                title="Starting checkout..."
-                body="Preparing your secure Stripe checkout."
-            />
-        )
-    }
-
     return (
-        <div className="mx-auto max-w-4xl">
-            <EmbeddedCheckoutProvider
-                key={checkoutKey}
-                stripe={stripePromise}
-                options={options}
-            >
-                <EmbeddedCheckout className="min-h-[42rem]" />
-            </EmbeddedCheckoutProvider>
-        </div>
+        <CheckoutMessage
+            title="Opening checkout..."
+            body="Taking you to Stripe's secure checkout."
+        />
     )
 }
 
@@ -163,18 +88,6 @@ const readJson = async (res: Response) => {
     } catch {
         return { error: text }
     }
-}
-
-const hasStripeModeMismatch = (
-    clientSecret: string,
-    key: string | undefined,
-) => {
-    if (!key) return false
-
-    return (
-        (clientSecret.startsWith("cs_live_") && key.startsWith("pk_test_")) ||
-        (clientSecret.startsWith("cs_test_") && key.startsWith("pk_live_"))
-    )
 }
 
 const CheckoutMessage = ({ title, body }: { title: string; body: string }) => {

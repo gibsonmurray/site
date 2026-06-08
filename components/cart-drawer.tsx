@@ -170,7 +170,7 @@ export const CartDrawer = () => {
                                     </span>
                                 </div>
                                 <p className="text-muted-foreground/60 mt-1 text-xs">
-                                    Shipping and tax calculated at checkout.
+                                    Flat-rate shipping and tax shown at checkout.
                                 </p>
                             </div>
                         </div>

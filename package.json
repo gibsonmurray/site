@@ -17,8 +17,6 @@
         "@base-ui/react": "^1.5.0",
         "@lucide/lab": "^0.1.2",
         "@next/mdx": "^16.2.6",
-        "@stripe/react-stripe-js": "^6.4.0",
-        "@stripe/stripe-js": "^9.6.0",
         "@tailwindcss/postcss": "^4.3.0",
         "@tanstack/react-query": "^5.100.14",
         "@types/lodash": "^4.17.24",

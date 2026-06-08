@@ -3,7 +3,7 @@ import type Stripe from "stripe"
 import { books } from "@/lib/books"
 import { type CartItem } from "@/lib/cart-store"
 import {
-    getPendingShippingOptions,
+    getBookShippingOptions,
     getPhysicalQuantity,
     isPhysicalBookFormat,
 } from "@/lib/book-shipping"
@@ -124,7 +124,6 @@ export async function POST(req: NextRequest) {
 
         const session = await stripe.checkout.sessions.create({
             mode: "payment",
-            ui_mode: "embedded_page",
             line_items: lineItems,
             allow_promotion_codes: true,
             automatic_tax: { enabled: true },
@@ -144,14 +143,12 @@ export async function POST(req: NextRequest) {
                       shipping_address_collection: {
                           allowed_countries: getAllowedShippingCountries(),
                       },
-                      permissions: {
-                          update_shipping_details: "server_only" as const,
-                      },
-                      shipping_options: getPendingShippingOptions(),
+                      shipping_options: getBookShippingOptions(),
                   }
                 : {}),
             phone_number_collection: { enabled: true },
-            return_url: `${baseUrl}/books/success?session_id={CHECKOUT_SESSION_ID}&checkout=${checkoutMode}`,
+            success_url: `${baseUrl}/books/success?session_id={CHECKOUT_SESSION_ID}&checkout=${checkoutMode}`,
+            cancel_url: `${baseUrl}/books`,
             metadata: {
                 items: JSON.stringify(checkoutItems),
                 checkout_mode: checkoutMode,
@@ -159,14 +156,14 @@ export async function POST(req: NextRequest) {
             },
         })
 
-        if (!session.client_secret) {
+        if (!session.url) {
             return NextResponse.json(
                 { error: "Unable to create checkout session" },
                 { status: 500 },
             )
         }
 
-        return NextResponse.json({ clientSecret: session.client_secret })
+        return NextResponse.json({ url: session.url })
     } catch (error) {
         console.error(error)
         return NextResponse.json(

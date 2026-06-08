@@ -11,15 +11,15 @@ export const BookReviews = ({ reviews }: { reviews: BookReview[] }) => {
                 <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
                     Featured reviews
                 </p>
-                <h2 className="text-foreground mt-4 text-4xl font-semibold tracking-tight">
+                <h2 className="editorial-subheading">
                     What readers are saying.
                 </h2>
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="editorial-review-grid">
                 {reviews.map((review, i) => (
                     <blockquote
                         key={i}
-                        className="app-panel-muted justify-between gap-6"
+                        className="editorial-review justify-between gap-6"
                     >
                         <div>
                             <div className="mb-7 flex items-center justify-between gap-4">
@@ -45,7 +45,7 @@ export const BookReviews = ({ reviews }: { reviews: BookReview[] }) => {
                                     </div>
                                 )}
                             </div>
-                            <h3 className="text-foreground max-w-xl text-2xl leading-8 font-semibold tracking-tight">
+                            <h3 className="editorial-review-title">
                                 {review.headline ?? review.quote}
                             </h3>
                             <details className="group mt-5">

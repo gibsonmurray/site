@@ -4,7 +4,7 @@ import { BookOpen, Home } from "lucide-react"
 
 const NotFound = () => {
     return (
-        <section className="mx-auto flex min-h-[calc(100svh-7rem)] max-w-4xl flex-col justify-center px-6 py-16 text-center sm:px-8">
+        <section className="editorial-page editorial-transaction mx-auto flex min-h-[calc(100svh-7rem)] max-w-4xl flex-col justify-center px-4 py-16 text-center sm:px-6">
             <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
                 404
             </p>
@@ -18,7 +18,7 @@ const NotFound = () => {
 
             <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
                 <Button
-                    className="h-11 rounded-full px-5"
+                    className="h-11 rounded-none px-5"
                     render={<Link href="/" />}
                 >
                     <Home className="size-4" />
@@ -26,7 +26,7 @@ const NotFound = () => {
                 </Button>
                 <Button
                     variant="outline"
-                    className="h-11 rounded-full px-5"
+                    className="h-11 rounded-none px-5"
                     render={<Link href="/books" />}
                 >
                     <BookOpen className="size-4" />

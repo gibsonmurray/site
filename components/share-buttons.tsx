@@ -52,7 +52,7 @@ export const ShareButtons = ({ title, slug }: ShareButtonsProps) => {
                         variant="ghost"
                         size="icon"
                         onClick={() => openExternal(shareData.x)}
-                        className="bg-muted/50 hover:bg-muted rounded-full"
+                        className="bg-muted/50 hover:bg-muted rounded-none"
                         aria-label="Share on X"
                         title="Share on X"
                     >
@@ -62,7 +62,7 @@ export const ShareButtons = ({ title, slug }: ShareButtonsProps) => {
                         variant="ghost"
                         size="icon"
                         onClick={() => openExternal(shareData.linkedin)}
-                        className="bg-muted/50 hover:bg-muted rounded-full"
+                        className="bg-muted/50 hover:bg-muted rounded-none"
                         aria-label="Share on LinkedIn"
                         title="Share on LinkedIn"
                     >
@@ -74,7 +74,7 @@ export const ShareButtons = ({ title, slug }: ShareButtonsProps) => {
                         variant="ghost"
                         size="icon"
                         onClick={handleCopyLink}
-                        className="bg-muted/50 hover:bg-muted rounded-full"
+                        className="bg-muted/50 hover:bg-muted rounded-none"
                         aria-label={copied ? "Link copied" : "Copy link"}
                         title={copied ? "Copied" : "Copy link"}
                     >
@@ -89,7 +89,7 @@ export const ShareButtons = ({ title, slug }: ShareButtonsProps) => {
 
             <DropdownMenu>
                 <DropdownMenuTrigger
-                    className="bg-background ring-border/65 hover:bg-muted hidden items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium no-underline ring-1 transition-all duration-200 sm:inline-flex"
+                    className="bg-background ring-border/65 hover:bg-muted hidden items-center gap-2 rounded-none px-3 py-1.5 text-sm font-medium no-underline ring-1 transition-all duration-200 sm:inline-flex"
                     title="Share this post"
                 >
                     <Share2 className="size-4" />

@@ -220,13 +220,11 @@ const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
                         disableTransitionOnChange
                     >
                         <TooltipProvider delay={500}>
-                            <main className="flex min-w-0 flex-1 flex-col">
-                                <Navbar />
-                                <div>{children}</div>
-                                <div
-                                    className="min-h-10 flex-1"
-                                    aria-hidden="true"
-                                />
+                            <main className="site-reveal-layout">
+                                <div className="site-reveal-surface">
+                                    <Navbar />
+                                    <div>{children}</div>
+                                </div>
                                 <Footer />
                                 <Analytics />
                                 <SpeedInsights />

@@ -32,3 +32,6 @@ export const formatListDate = (dateStr: string): string =>
         day: "numeric",
         year: "numeric",
     })
+
+export const formatDisplayTitle = (title: string): string =>
+    title.replace(/\s+[\p{Extended_Pictographic}\u200d\ufe0f]+$/gu, "").trim()

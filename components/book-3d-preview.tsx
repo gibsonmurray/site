@@ -14,7 +14,6 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { glowRgb, type GlowColor } from "@/lib/book-glow"
 import { type BookModelAssets } from "@/lib/books"
 import { cn } from "@/lib/utils"
 
@@ -37,20 +36,9 @@ type DragState = {
 type Book3DPreviewProps = {
     assets: BookModelAssets
     alt: string
-    glowColor: GlowColor
-    glowColorSoft: GlowColor
-    hasGlowColor: boolean
-    onFrontImageLoad?: (imageElement: HTMLImageElement) => void
 }
 
-export function Book3DPreview({
-    assets,
-    alt,
-    glowColor,
-    glowColorSoft,
-    hasGlowColor,
-    onFrontImageLoad,
-}: Book3DPreviewProps) {
+export function Book3DPreview({ assets, alt }: Book3DPreviewProps) {
     const frameRef = useRef<HTMLDivElement>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const animationRef = useRef<number | null>(null)
@@ -91,24 +79,24 @@ export function Book3DPreview({
             })
             renderer.outputColorSpace = THREE.SRGBColorSpace
             renderer.toneMapping = THREE.ACESFilmicToneMapping
-            renderer.toneMappingExposure = 0.82
+            renderer.toneMappingExposure = 1.08
             renderer.setClearColor(0x000000, 0)
 
             const scene = new THREE.Scene()
             const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100)
-            camera.position.set(0, 0.04, 10.15)
+            camera.position.set(0, 0.04, 9.8)
 
             const group = new THREE.Group()
             scene.add(group)
 
-            const ambient = new THREE.AmbientLight(0xffffff, 1.12)
+            const ambient = new THREE.AmbientLight(0xffffff, 1.5)
             scene.add(ambient)
 
-            const keyLight = new THREE.DirectionalLight(0xfff1db, 1.95)
+            const keyLight = new THREE.DirectionalLight(0xffffff, 2.1)
             keyLight.position.set(3.2, 4.8, 5.8)
             scene.add(keyLight)
 
-            const fillLight = new THREE.DirectionalLight(0x9fc7ff, 0.68)
+            const fillLight = new THREE.DirectionalLight(0xffffff, 0.82)
             fillLight.position.set(-4.5, -1.8, 4)
             scene.add(fillLight)
 
@@ -150,20 +138,22 @@ export function Book3DPreview({
                 src: string,
                 crop?: BookModelAssets["frontImageCrop"],
             ) =>
-                new Promise<InstanceType<typeof THREE.Texture>>((resolve, reject) => {
-                    loader.load(
-                        src,
-                        (texture) => {
-                            if (isDisposed) {
-                                texture.dispose()
-                                return
-                            }
-                            resolve(configureTexture(texture, crop))
-                        },
-                        undefined,
-                        reject,
-                    )
-                })
+                new Promise<InstanceType<typeof THREE.Texture>>(
+                    (resolve, reject) => {
+                        loader.load(
+                            src,
+                            (texture) => {
+                                if (isDisposed) {
+                                    texture.dispose()
+                                    return
+                                }
+                                resolve(configureTexture(texture, crop))
+                            },
+                            undefined,
+                            reject,
+                        )
+                    },
+                )
 
             void Promise.all([
                 loadTexture(assets.frontImageSrc, assets.frontImageCrop),
@@ -173,16 +163,11 @@ export function Book3DPreview({
                 .then(([frontTexture, backTexture, spineTexture]) => {
                     if (isDisposed) return
 
-                    const frontImage = frontTexture.image
-                    if (frontImage instanceof HTMLImageElement) {
-                        onFrontImageLoad?.(frontImage)
-                    }
-
                     const frontAspect = assets.frontImageCrop
                         ? assets.frontImageCrop.width /
                           assets.frontImageCrop.height
                         : 0.65
-                    const width = 2.9
+                    const width = 3.15
                     const height = width / frontAspect
                     const depth = width * (assets.thicknessRatio ?? 0.17)
 
@@ -307,7 +292,7 @@ export function Book3DPreview({
             }
             cleanupFn?.()
         }
-    }, [assets, onFrontImageLoad])
+    }, [assets])
 
     const resetView = () => {
         targetRotationRef.current = { ...BASE_ROTATION }
@@ -384,25 +369,8 @@ export function Book3DPreview({
     }
 
     return (
-        <div className="relative h-full min-h-[24rem] overflow-hidden rounded-[2rem] bg-white/[0.06] p-4 sm:p-6">
-            <div
-                className="pointer-events-none absolute inset-x-8 bottom-12 h-24 rounded-full blur-3xl transition-opacity duration-700"
-                style={{
-                    background: `rgba(${glowRgb(glowColor)}, 0.54)`,
-                    opacity: hasGlowColor ? 1 : 0.45,
-                }}
-            />
-            <div
-                className="pointer-events-none absolute inset-[-20%] blur-3xl"
-                style={{
-                    background: `radial-gradient(circle at center, rgba(${glowRgb(glowColorSoft)}, 0.18), transparent 48%)`,
-                }}
-            />
-
-            <div
-                ref={frameRef}
-                className="relative z-10 h-full w-full overflow-hidden rounded-[1.5rem]"
-            >
+        <div className="book-media-stage">
+            <div ref={frameRef} className="absolute inset-4 overflow-hidden">
                 <canvas
                     ref={canvasRef}
                     tabIndex={0}
@@ -413,18 +381,18 @@ export function Book3DPreview({
                     onPointerCancel={finishDrag}
                     onKeyDown={handleKeyDown}
                     className={cn(
-                        "size-full touch-none transition-opacity duration-500 outline-none focus-visible:ring-2 focus-visible:ring-white/50",
+                        "focus-visible:ring-primary/40 size-full touch-none transition-opacity duration-500 outline-none focus-visible:ring-2",
                         isReady ? "opacity-100" : "opacity-0",
                         isDragging ? "cursor-grabbing" : "cursor-grab",
                     )}
                 />
                 <div
                     className={cn(
-                        "pointer-events-none absolute inset-0 grid place-items-center bg-white/[0.025] transition-opacity duration-500",
+                        "bg-muted/20 pointer-events-none absolute inset-0 grid place-items-center transition-opacity duration-500",
                         isReady ? "opacity-0" : "opacity-100",
                     )}
                 >
-                    <div className="size-10 animate-pulse rounded-full bg-white/22 blur-md" />
+                    <div className="bg-primary/20 size-10 animate-pulse rounded-full blur-md" />
                 </div>
 
                 <Tooltip>
@@ -435,7 +403,7 @@ export function Book3DPreview({
                                 variant="ghost"
                                 size="icon-lg"
                                 onClick={resetView}
-                                className="absolute top-4 right-4 z-20 rounded-full bg-black/30 text-white backdrop-blur-md hover:bg-black/42 hover:text-white"
+                                className="bg-background/90 text-foreground hover:bg-background hover:text-foreground absolute top-4 right-4 z-20 rounded-none border shadow-sm"
                                 aria-label="Reset book view"
                             >
                                 <RotateCcw className="size-4" />

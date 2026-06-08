@@ -152,12 +152,12 @@ const AppsPage = () => {
     }
 
     return (
-        <section className="overflow-hidden">
+        <section className="editorial-page overflow-hidden">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <header className="mx-auto grid min-h-[calc(100svh-3.5rem)] max-w-6xl items-center gap-12 px-6 py-16 sm:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:py-20">
+            <header className="site-page-container editorial-product-hero grid min-h-[calc(100svh-3.5rem)] items-center gap-12 py-16 lg:grid-cols-[0.82fr_1.18fr] lg:py-20">
                 <div>
                     <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
                         Apps
@@ -174,7 +174,7 @@ const AppsPage = () => {
                     <div className="mt-8 flex flex-wrap items-center gap-3">
                         <Link
                             href={featuredApp.href}
-                            className="bg-foreground text-background hover:bg-foreground/85 inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-medium transition-colors"
+                            className="bg-foreground text-background hover:bg-foreground/85 inline-flex h-11 items-center justify-center gap-2 rounded-none px-5 text-sm font-medium transition-colors"
                         >
                             Explore {featuredApp.name}
                             <ArrowRight className="size-4" />
@@ -183,7 +183,7 @@ const AppsPage = () => {
                             href={featuredApp.externalUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="border-border bg-background text-foreground hover:bg-muted inline-flex h-11 items-center justify-center gap-2 rounded-full border px-5 text-sm font-medium transition-colors"
+                            className="border-border bg-background text-foreground hover:bg-muted inline-flex h-11 items-center justify-center gap-2 rounded-none border px-5 text-sm font-medium transition-colors"
                         >
                             Open app
                             <ExternalLink className="size-4" />
@@ -199,7 +199,7 @@ const AppsPage = () => {
                         width={2880}
                         height={1920}
                         sizes="(min-width: 1024px) 54vw, 92vw"
-                        className="ring-border/70 shadow-foreground/15 relative hidden rounded-[2.25rem] shadow-2xl ring-1 md:block"
+                        className="ring-border/70 shadow-foreground/15 relative hidden rounded-[0.25rem] shadow-2xl ring-1 md:block"
                         priority
                         unoptimized
                     />
@@ -209,7 +209,7 @@ const AppsPage = () => {
                         width={1170}
                         height={2532}
                         sizes="min(92vw, 24rem)"
-                        className="ring-border/70 shadow-foreground/15 relative mx-auto w-full max-w-[24rem] rounded-[2rem] shadow-2xl ring-1 md:hidden"
+                        className="ring-border/70 shadow-foreground/15 relative mx-auto w-full max-w-[24rem] rounded-[0.25rem] shadow-2xl ring-1 md:hidden"
                         priority
                         unoptimized
                     />
@@ -217,7 +217,7 @@ const AppsPage = () => {
             </header>
 
             <section className="bg-[#111] text-white">
-                <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 sm:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:py-28">
+                <div className="site-page-container grid items-center gap-10 py-20 lg:grid-cols-[0.78fr_1.22fr] lg:py-28">
                     <div>
                         <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
                             Featured app
@@ -235,14 +235,14 @@ const AppsPage = () => {
 
                     <Link
                         href={featuredApp.href}
-                        className="group grid overflow-hidden rounded-[2rem] bg-white/[0.06] p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.08] hover:shadow-2xl hover:shadow-black/25 sm:p-6"
+                        className="editorial-dark-feature group grid overflow-hidden bg-white/[0.06] p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.08] hover:shadow-2xl hover:shadow-black/25 sm:p-6"
                     >
                         <div className="flex items-center justify-between gap-4">
                             <div className="flex min-w-0 items-center gap-3">
                                 <img
                                     src={featuredApp.logoSrc}
                                     alt=""
-                                    className="size-11 shrink-0 rounded-[0.9rem] shadow-lg shadow-black/15"
+                                    className="size-11 shrink-0 rounded-[0.25rem] shadow-lg shadow-black/15"
                                     aria-hidden="true"
                                 />
                                 <div className="min-w-0">
@@ -254,7 +254,7 @@ const AppsPage = () => {
                                     </p>
                                 </div>
                             </div>
-                            <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-[#111] transition-transform group-hover:translate-x-0.5">
+                            <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-none bg-white text-[#111] transition-transform group-hover:translate-x-0.5">
                                 <ArrowRight className="size-4" />
                             </span>
                         </div>
@@ -266,7 +266,7 @@ const AppsPage = () => {
                                 width={2880}
                                 height={1920}
                                 sizes="(min-width: 1024px) 48vw, 88vw"
-                                className="relative rounded-[1.5rem] ring-1 ring-white/10"
+                                className="relative rounded-[0.25rem] ring-1 ring-white/10"
                                 unoptimized
                             />
                         </div>
@@ -275,19 +275,19 @@ const AppsPage = () => {
             </section>
 
             <section className="border-border/60 border-b bg-[#f6f7f4]">
-                <div className="mx-auto max-w-6xl px-6 py-20 sm:px-8 lg:py-28">
+                <div className="site-page-container py-20 lg:py-28">
                     <div className="mx-auto max-w-3xl text-center">
                         <p className="app-eyebrow">Design notes</p>
                         <h2 className="text-foreground mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
                             Useful, exact, and calm.
                         </h2>
                     </div>
-                    <div className="mt-14 grid gap-5 lg:grid-cols-3">
+                    <div className="editorial-principle-grid">
                         {principles.map(({ icon: Icon, title, copy }) => (
-                            <div key={title} className="app-panel-compact">
+                            <div key={title} className="editorial-principle">
                                 <Icon className="text-primary mb-6 size-5" />
-                                <h3 className="app-panel-title-sm">{title}</h3>
-                                <p className="app-panel-copy-sm">{copy}</p>
+                                <h3>{title}</h3>
+                                <p>{copy}</p>
                             </div>
                         ))}
                     </div>

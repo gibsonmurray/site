@@ -6,7 +6,11 @@ import Link from "next/link"
 import { Search, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { formatListDate, type SearchablePost } from "@/app/blog/format"
+import {
+    formatDisplayTitle,
+    formatListDate,
+    type SearchablePost,
+} from "@/app/blog/format"
 
 export type { SearchablePost }
 
@@ -36,15 +40,15 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
     const showResults = query.trim().length > 0
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="editorial-archive-search">
             <div className="relative">
-                <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+                <Search className="absolute top-1/2 left-0 size-4 -translate-y-1/2" />
                 <Input
                     type="search"
-                    placeholder="Search posts…"
+                    placeholder="Search the archive"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="bg-background h-12 rounded-full pr-9 pl-10"
+                    className="h-12 rounded-none border-0 border-b bg-transparent pr-9 pl-7 shadow-none focus-visible:ring-0"
                 />
                 {query && (
                     <Button
@@ -60,14 +64,12 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
             </div>
 
             {showResults && (
-                <div className="border-border/65 bg-background rounded-[1.5rem] border p-4">
+                <div className="editorial-archive-search-results">
                     {results.length === 0 ? (
-                        <p className="text-muted-foreground text-sm">
-                            No posts found for &ldquo;{query}&rdquo;.
-                        </p>
+                        <p>No posts found for &ldquo;{query}&rdquo;.</p>
                     ) : (
-                        <div className="flex flex-col gap-1">
-                            <p className="text-primary mb-3 text-xs font-semibold tracking-[0.22em] uppercase">
+                        <div>
+                            <p className="editorial-archive-search-count">
                                 {results.length} result
                                 {results.length !== 1 ? "s" : ""}
                             </p>
@@ -75,19 +77,10 @@ export const BlogSearch = ({ posts }: { posts: SearchablePost[] }) => {
                                 <Link
                                     key={post.slug}
                                     href={`/writings/${post.slug}`}
-                                    className="group hover:bg-muted/45 flex flex-col gap-2 rounded-[1.25rem] px-4 py-3 transition-colors"
+                                    className="editorial-archive-search-result group"
                                 >
-                                    <p className="text-muted-foreground group-hover:text-primary/60 text-xs tabular-nums transition-colors">
-                                        {formatListDate(post.publishedAt)}
-                                    </p>
-                                    <p className="text-foreground group-hover:text-primary tracking-tight transition-colors">
-                                        {post.title}
-                                    </p>
-                                    {post.summary && (
-                                        <p className="text-muted-foreground mt-0.5 line-clamp-2 text-xs leading-relaxed">
-                                            {post.summary}
-                                        </p>
-                                    )}
+                                    <p>{formatListDate(post.publishedAt)}</p>
+                                    <p>{formatDisplayTitle(post.title)}</p>
                                 </Link>
                             ))}
                         </div>

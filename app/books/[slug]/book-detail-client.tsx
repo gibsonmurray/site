@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef, useState, type SyntheticEvent } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -53,14 +53,6 @@ import {
     BookFormatOption,
     getFeaturedReviewHeadline,
 } from "@/lib/books"
-import {
-    DEFAULT_GLOW,
-    mixWithBlack,
-    mixWithWhite,
-    glowRgb,
-    sampleGlowColor,
-    type GlowColor,
-} from "@/lib/book-glow"
 import { useCartStore } from "@/lib/cart-store"
 import { usePricesStore } from "@/lib/prices-store"
 import { cn } from "@/lib/utils"
@@ -84,20 +76,9 @@ const PREORDER_CONFIRMATION_MIN_MS = 850
 type CarouselProps = {
     images: string[]
     alt: string
-    glowColor: GlowColor
-    glowColorSoft: GlowColor
-    hasGlowColor: boolean
-    onFirstLoad: (e: SyntheticEvent<HTMLImageElement>) => void
 }
 
-const BookImageCarousel = ({
-    images,
-    alt,
-    glowColor,
-    glowColorSoft,
-    hasGlowColor,
-    onFirstLoad,
-}: CarouselProps) => {
+const BookImageCarousel = ({ images, alt }: CarouselProps) => {
     const [current, setCurrent] = useState(0)
     const showControls = images.length > 1
 
@@ -105,22 +86,8 @@ const BookImageCarousel = ({
         setCurrent(Math.max(0, Math.min(images.length - 1, index)))
 
     return (
-        <div className="relative overflow-hidden rounded-[2rem] bg-white/[0.06] p-4 sm:p-6">
-            <div
-                className="pointer-events-none absolute inset-x-8 bottom-14 h-24 rounded-full blur-3xl transition-opacity duration-700"
-                style={{
-                    background: `rgba(${glowRgb(glowColor)}, 0.5)`,
-                    opacity: hasGlowColor ? 1 : 0.45,
-                }}
-            />
-            <div
-                className="pointer-events-none absolute inset-[-20%] blur-3xl"
-                style={{
-                    background: `radial-gradient(circle at center, rgba(${glowRgb(glowColorSoft)}, 0.18), transparent 48%)`,
-                }}
-            />
-
-            <div className="relative z-10 aspect-[4/3] w-full overflow-hidden rounded-[1.5rem]">
+        <div className="book-media-stage">
+            <div className="relative aspect-[4/3] w-full overflow-hidden">
                 <div
                     className="flex h-full transition-transform duration-500 ease-out"
                     style={{ transform: `translateX(-${current * 100}%)` }}
@@ -137,8 +104,7 @@ const BookImageCarousel = ({
                                     fill
                                     sizes="(min-width: 1024px) 48vw, 88vw"
                                     priority={i === 0}
-                                    onLoad={i === 0 ? onFirstLoad : undefined}
-                                    className="object-contain drop-shadow-2xl"
+                                    className="object-contain drop-shadow-xl"
                                 />
                             </div>
                         </div>
@@ -152,7 +118,7 @@ const BookImageCarousel = ({
                             size="icon-lg"
                             onClick={() => goTo(current - 1)}
                             disabled={current === 0}
-                            className="absolute top-1/2 left-3 z-20 !-translate-y-1/2 rounded-full bg-black/28 text-white backdrop-blur-md hover:bg-black/40 hover:text-white active:!-translate-y-1/2 disabled:pointer-events-none disabled:opacity-0 sm:left-4"
+                            className="bg-background/90 text-foreground hover:bg-background hover:text-foreground absolute top-1/2 left-3 z-20 !-translate-y-1/2 rounded-none shadow-sm active:!-translate-y-1/2 disabled:pointer-events-none disabled:opacity-0 sm:left-4"
                             aria-label="Previous image"
                         >
                             <ChevronLeft className="size-5" />
@@ -162,7 +128,7 @@ const BookImageCarousel = ({
                             size="icon-lg"
                             onClick={() => goTo(current + 1)}
                             disabled={current === images.length - 1}
-                            className="absolute top-1/2 right-3 z-20 !-translate-y-1/2 rounded-full bg-black/28 text-white backdrop-blur-md hover:bg-black/40 hover:text-white active:!-translate-y-1/2 disabled:pointer-events-none disabled:opacity-0 sm:right-4"
+                            className="bg-background/90 text-foreground hover:bg-background hover:text-foreground absolute top-1/2 right-3 z-20 !-translate-y-1/2 rounded-none shadow-sm active:!-translate-y-1/2 disabled:pointer-events-none disabled:opacity-0 sm:right-4"
                             aria-label="Next image"
                         >
                             <ChevronRight className="size-5" />
@@ -172,7 +138,7 @@ const BookImageCarousel = ({
             </div>
 
             {showControls && (
-                <div className="relative z-10 mt-4 flex items-center justify-center gap-1.5">
+                <div className="mt-4 flex items-center justify-center gap-1.5">
                     {images.map((_, i) => (
                         <button
                             key={i}
@@ -180,7 +146,7 @@ const BookImageCarousel = ({
                             onClick={() => goTo(i)}
                             aria-label={`Go to image ${i + 1}`}
                             className={cn(
-                                "rounded-full bg-white transition-all",
+                                "bg-foreground rounded-none transition-all",
                                 i === current
                                     ? "h-1.5 w-5 opacity-85"
                                     : "size-1.5 opacity-28 hover:opacity-55",
@@ -261,9 +227,9 @@ const PreOrderNotifyForm = ({
     return (
         <form
             onSubmit={handleSubmit}
-            className="rounded-[2rem] bg-transparent text-[#111] shadow-2xl shadow-black/25"
+            className="rounded-none bg-transparent text-[#111] shadow-2xl shadow-black/25"
         >
-            <div className="rounded-[1.45rem] bg-[#f5f5f7] p-5 sm:p-6">
+            <div className="rounded-none bg-[#f5f5f7] p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                     <div>
                         <p className="text-xs font-semibold tracking-[0.18em] text-black/42 uppercase">
@@ -278,10 +244,10 @@ const PreOrderNotifyForm = ({
                     </div>
                 </div>
 
-                <div className="mt-5 overflow-hidden rounded-[1.2rem] bg-white shadow-sm ring-1 ring-black/5">
+                <div className="mt-5 overflow-hidden rounded-none bg-white shadow-sm ring-1 ring-black/5">
                     <div className="flex items-center justify-between gap-4 border-b border-black/6 p-4">
                         <div className="flex min-w-0 items-center gap-3">
-                            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#111] to-[#4a4a4d] text-white">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-none bg-linear-to-br from-[#111] to-[#4a4a4d] text-white">
                                 <CreditCard className="size-4" />
                             </div>
                             <div className="min-w-0">
@@ -293,7 +259,7 @@ const PreOrderNotifyForm = ({
                                 </p>
                             </div>
                         </div>
-                        <span className="rounded-full bg-[#e9f8f2] px-2.5 py-1 text-xs font-semibold text-[#0f7b58]">
+                        <span className="rounded-none bg-[#e9f8f2] px-2.5 py-1 text-xs font-semibold text-[#0f7b58]">
                             Free
                         </span>
                     </div>
@@ -354,7 +320,7 @@ const PreOrderNotifyForm = ({
                         mass: 0.75,
                     }}
                     className={cn(
-                        "relative inline-flex h-13 w-full items-center justify-center overflow-hidden rounded-full border border-transparent px-5 text-base font-medium whitespace-nowrap text-white transition-shadow outline-none select-none focus-visible:ring-3 focus-visible:ring-black/20 disabled:opacity-100",
+                        "relative inline-flex h-13 w-full items-center justify-center overflow-hidden rounded-none border border-transparent px-5 text-base font-medium whitespace-nowrap text-white transition-shadow outline-none select-none focus-visible:ring-3 focus-visible:ring-black/20 disabled:opacity-100",
                         mutation.isPending && "shadow-inner",
                         submitted && "shadow-lg shadow-[#34c759]/24",
                     )}
@@ -468,8 +434,6 @@ const statusCopy = (book: Book, isPurchasable: boolean) => {
 
 export const BookDetailClient = ({ book }: { book: Book }) => {
     const router = useRouter()
-    const [glowColor, setGlowColor] = useState<GlowColor>(DEFAULT_GLOW)
-    const [hasGlowColor, setHasGlowColor] = useState(false)
     const [added, setAdded] = useState(false)
     const [isOpeningCheckout, setIsOpeningCheckout] = useState(false)
 
@@ -496,7 +460,9 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
     const releaseDate =
         book.status.type === "pre-order" ? book.status.releaseDate : null
     const reviewHeadline = getFeaturedReviewHeadline(book)
-    const selectedPrice = getPrice(book.slug, selectedFormat)
+    const selectedPrice =
+        getPrice(book.slug, selectedFormat) ??
+        book.formats[selectedFormat]?.priceCents
     const selectedFormatOption = book.formats[selectedFormat]
     const canBuy =
         isPurchasable &&
@@ -521,90 +487,42 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
         setTimeout(() => setAdded(false), 2000)
     }
 
-    const handleFirstImageLoad = (event: SyntheticEvent<HTMLImageElement>) => {
-        void (async () => {
-            const nextGlowColor = await sampleGlowColor(event.currentTarget)
-            setGlowColor(nextGlowColor)
-            setHasGlowColor(true)
-        })()
-    }
-
-    const handleModelFrontImageLoad = useCallback(
-        (imageElement: HTMLImageElement) => {
-            void (async () => {
-                const nextGlowColor = await sampleGlowColor(imageElement)
-                setGlowColor(nextGlowColor)
-                setHasGlowColor(true)
-            })()
-        },
-        [],
-    )
-
-    const glowColorSoft = mixWithWhite(glowColor, 0.35)
-    const glowColorDeep = mixWithBlack(glowColor, 0.18)
-
     return (
-        <div>
-            <section
-                className="relative overflow-hidden bg-[#111] text-white"
-                style={{
-                    backgroundImage: `radial-gradient(circle at 75% 16%, rgba(${glowRgb(glowColorSoft)}, 0.2), transparent 32%), radial-gradient(circle at 20% 86%, rgba(${glowRgb(glowColorDeep)}, 0.34), transparent 34%)`,
-                }}
-            >
-                <div className="mx-auto max-w-6xl px-6 pt-8 sm:px-8">
-                    <Link
-                        href="/books"
-                        className="inline-flex items-center gap-1 text-sm text-white/50 transition-colors hover:text-white/90"
-                    >
+        <div className="editorial-page book-detail-page">
+            <section className="book-detail-hero">
+                <div className="book-detail-back">
+                    <Link href="/books" className="editorial-back-link">
                         <ChevronLeft className="size-4" />
                         Books
                     </Link>
                 </div>
-                <div className="mx-auto grid max-w-6xl gap-8 px-6 py-10 sm:px-8 lg:grid-cols-2 lg:py-16">
+                <div className="book-detail-grid">
                     {book.modelAssets ? (
                         <Book3DPreview
                             assets={book.modelAssets}
                             alt={book.coverImageAlt}
-                            glowColor={glowColor}
-                            glowColorSoft={glowColorSoft}
-                            hasGlowColor={hasGlowColor}
-                            onFrontImageLoad={handleModelFrontImageLoad}
                         />
                     ) : (
                         <BookImageCarousel
                             images={allImages}
                             alt={book.coverImageAlt}
-                            glowColor={glowColor}
-                            glowColorSoft={glowColorSoft}
-                            hasGlowColor={hasGlowColor}
-                            onFirstLoad={handleFirstImageLoad}
                         />
                     )}
 
-                    <div className="flex flex-col justify-center">
-                        <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-white/65">
-                            <span className="rounded-full bg-white/10 px-3 py-1 text-white">
-                                {statusCopy(book, isPurchasable)}
-                            </span>
-                            {releaseDate && (
-                                <span className="rounded-full bg-white/10 px-3 py-1">
-                                    {releaseDate}
-                                </span>
-                            )}
-                            <span className="rounded-full bg-white/10 px-3 py-1">
-                                {book.genre}
-                            </span>
+                    <div className="book-detail-copy">
+                        <div className="book-detail-meta">
+                            <span>{statusCopy(book, isPurchasable)}</span>
+                            {releaseDate && <span>{releaseDate}</span>}
+                            <span>{book.genre}</span>
                         </div>
 
-                        <h1 className="mt-6 text-6xl font-semibold tracking-tight text-balance sm:text-7xl">
-                            {book.title}
-                        </h1>
-                        <p className="mt-6 max-w-none text-xl leading-8 text-white/72 lg:max-w-xl">
+                        <h1>{book.title}</h1>
+                        <p className="book-detail-description">
                             {book.shortDescription}
                         </p>
                         {reviewHeadline ? (
-                            <div className="mt-6 max-w-none rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5 lg:max-w-xl">
-                                <div className="mb-2 flex items-center gap-1.5 text-emerald-100">
+                            <blockquote className="book-detail-quote">
+                                <div>
                                     {Array.from({ length: 5 }).map(
                                         (_, index) => (
                                             <Star
@@ -613,26 +531,22 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                             />
                                         ),
                                     )}
-                                    <span className="ml-2 text-xs font-semibold tracking-[0.16em] text-white/44 uppercase">
-                                        Reader praise
-                                    </span>
+                                    <span>Reader praise</span>
                                 </div>
-                                <p className="text-sm leading-6 font-medium text-white/82">
-                                    “{reviewHeadline}”
-                                </p>
-                            </div>
+                                <p>“{reviewHeadline}”</p>
+                            </blockquote>
                         ) : (
-                            <p className="mt-5 max-w-none text-sm leading-7 text-white/52 lg:max-w-xl">
+                            <p className="book-detail-quote">
                                 A fortified city. A dangerous mercy. A promise
                                 on the move.
                             </p>
                         )}
                         {(book.slug === "walls" || book.amazonUrl) && (
-                            <div className="mt-7 grid gap-3">
+                            <div className="book-detail-aux-actions">
                                 {book.slug === "walls" && (
                                     <Link
                                         href="/books/walls/read/chapter-1#chapter"
-                                        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium whitespace-nowrap text-white transition-colors hover:bg-white/16"
+                                        className="book-detail-aux-link"
                                     >
                                         <BookOpen className="size-4" />
                                         Read the first 3 chapters
@@ -644,7 +558,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                         href={book.amazonUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-medium whitespace-nowrap text-[#111] transition-colors hover:bg-white/90"
+                                        className="book-detail-aux-link"
                                     >
                                         View on Amazon
                                         <AmazonLogo className="h-4 w-auto" />
@@ -653,15 +567,18 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                             </div>
                         )}
 
-                        <div className="mt-8">
+                        <div className="book-detail-purchase">
                             {!isPurchasable && isPreOrder ? (
                                 <PreOrderNotifyForm
                                     book={book}
                                     releaseDate={releaseDate}
                                 />
                             ) : (
-                                <div className="app-panel-dark">
-                                    <div className="grid auto-rows-fr gap-2 sm:grid-cols-2">
+                                <div className="book-purchase-panel">
+                                    <p className="book-purchase-label">
+                                        Choose a format
+                                    </p>
+                                    <div className="book-format-list">
                                         {(
                                             Object.entries(book.formats) as [
                                                 BookFormat,
@@ -673,10 +590,9 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                 opt.available
                                             const Icon =
                                                 FORMAT_CONFIG[format].icon
-                                            const price = getPrice(
-                                                book.slug,
-                                                format,
-                                            )
+                                            const price =
+                                                getPrice(book.slug, format) ??
+                                                opt.priceCents
                                             const hasSale =
                                                 opt.compareAtPriceCents !==
                                                     undefined &&
@@ -693,32 +609,41 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                         )
                                                     }
                                                     className={cn(
-                                                        "h-full min-h-24 w-full min-w-0 flex-col items-start justify-center gap-3 overflow-hidden rounded-2xl border px-4 py-3 text-left whitespace-normal text-white hover:bg-white/10 hover:text-white",
+                                                        "book-format-option",
                                                         isSelected
-                                                            ? "border-white/45 bg-white/14"
+                                                            ? "is-selected"
                                                             : opt.available
-                                                              ? "border-white/12 bg-white/5"
-                                                              : "border-white/8 bg-white/[0.03] text-white/32",
+                                                              ? ""
+                                                              : "is-unavailable",
                                                     )}
+                                                    aria-pressed={isSelected}
                                                 >
-                                                    <span className="flex max-w-full items-center gap-2">
-                                                        <Icon className="size-4 shrink-0" />
-                                                        <span className="truncate text-sm leading-5 font-semibold">
-                                                            {
-                                                                FORMAT_CONFIG[
-                                                                    format
-                                                                ].label
-                                                            }
+                                                    <span className="book-format-header">
+                                                        <span className="book-format-name">
+                                                            <Icon className="size-4 shrink-0" />
+                                                            <span className="truncate text-sm leading-5 font-semibold">
+                                                                {
+                                                                    FORMAT_CONFIG[
+                                                                        format
+                                                                    ].label
+                                                                }
+                                                            </span>
                                                         </span>
+                                                        {isSelected && (
+                                                            <span className="book-format-selected">
+                                                                <Check className="size-3" />
+                                                                Selected
+                                                            </span>
+                                                        )}
                                                     </span>
-                                                    <span className="flex min-h-6 max-w-full flex-wrap items-center gap-2 text-xs font-normal whitespace-normal text-white/55">
+                                                    <span className="book-format-price">
                                                         {price !== undefined ? (
                                                             <>
                                                                 <span>
                                                                     {fmt(price)}
                                                                 </span>
                                                                 {hasSale && (
-                                                                    <span className="text-white/32 line-through">
+                                                                    <span className="line-through">
                                                                         {fmt(
                                                                             opt.compareAtPriceCents!,
                                                                         )}
@@ -731,7 +656,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                             </span>
                                                         )}
                                                         {opt.priceNote && (
-                                                            <span className="rounded-full bg-emerald-400/14 px-2 py-0.5 text-[0.68rem] font-semibold text-emerald-100 ring-1 ring-emerald-300/18">
+                                                            <span className="book-format-note">
                                                                 {opt.priceNote}
                                                             </span>
                                                         )}
@@ -763,46 +688,58 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                         })}
                                     </div>
 
-                                    <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
+                                    <div className="book-purchase-summary">
                                         <div className="min-w-0">
-                                            <p className="text-xs font-medium text-white/45">
-                                                Price
+                                            <p className="book-purchase-label">
+                                                Your selection
                                             </p>
-                                            <p className="text-lg font-semibold tabular-nums">
-                                                {selectedPrice !== undefined ? (
-                                                    <span className="flex flex-wrap items-baseline gap-2">
-                                                        <span>
-                                                            {fmt(selectedPrice)}
-                                                        </span>
-                                                        {selectedFormatOption?.compareAtPriceCents !==
-                                                            undefined && (
-                                                            <span className="text-sm font-medium text-white/35 line-through">
+                                            <div className="book-purchase-selection">
+                                                <p>
+                                                    {
+                                                        FORMAT_CONFIG[
+                                                            selectedFormat
+                                                        ].label
+                                                    }
+                                                </p>
+                                                <p className="book-purchase-total">
+                                                    {selectedPrice !==
+                                                    undefined ? (
+                                                        <span className="flex flex-wrap items-baseline gap-2">
+                                                            <span>
                                                                 {fmt(
-                                                                    selectedFormatOption.compareAtPriceCents,
+                                                                    selectedPrice,
                                                                 )}
                                                             </span>
-                                                        )}
-                                                        {selectedFormatOption?.priceNote && (
-                                                            <span className="text-xs font-semibold text-emerald-100">
-                                                                {
-                                                                    selectedFormatOption.priceNote
-                                                                }
-                                                            </span>
-                                                        )}
-                                                    </span>
-                                                ) : (
-                                                    "Coming soon"
-                                                )}
-                                            </p>
+                                                            {selectedFormatOption?.compareAtPriceCents !==
+                                                                undefined && (
+                                                                <span className="line-through">
+                                                                    {fmt(
+                                                                        selectedFormatOption.compareAtPriceCents,
+                                                                    )}
+                                                                </span>
+                                                            )}
+                                                            {selectedFormatOption?.priceNote && (
+                                                                <span className="book-format-note">
+                                                                    {
+                                                                        selectedFormatOption.priceNote
+                                                                    }
+                                                                </span>
+                                                            )}
+                                                        </span>
+                                                    ) : (
+                                                        "Coming soon"
+                                                    )}
+                                                </p>
+                                            </div>
                                             {selectedFormatOption?.description && (
-                                                <p className="mt-1 max-w-md text-xs leading-5 text-white/45">
+                                                <p className="book-purchase-description">
                                                     {
                                                         selectedFormatOption.description
                                                     }
                                                 </p>
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-1 rounded-full bg-white/8 p-1">
+                                        <div className="book-quantity">
                                             <Button
                                                 variant="ghost"
                                                 size="icon-sm"
@@ -812,7 +749,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                     )
                                                 }
                                                 disabled={quantity <= 1}
-                                                className="rounded-full text-white/70 hover:bg-white/10 hover:text-white"
+                                                className="rounded-none"
                                                 aria-label="Decrease quantity"
                                             >
                                                 <Minus className="size-3.5" />
@@ -829,7 +766,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                     )
                                                 }
                                                 disabled={quantity >= 99}
-                                                className="rounded-full text-white/70 hover:bg-white/10 hover:text-white"
+                                                className="rounded-none"
                                                 aria-label="Increase quantity"
                                             >
                                                 <Plus className="size-3.5" />
@@ -838,12 +775,12 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                     </div>
 
                                     {canBuy ? (
-                                        <div className="mt-4 grid gap-2">
+                                        <div className="book-purchase-actions">
                                             <Button
                                                 size="lg"
                                                 onClick={handleBuyNow}
                                                 disabled={isOpeningCheckout}
-                                                className="h-12 justify-between rounded-xl bg-white px-4 text-[#111] hover:bg-white/90"
+                                                className="book-buy-now"
                                             >
                                                 <span>
                                                     {isOpeningCheckout
@@ -859,7 +796,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                 variant="ghost"
                                                 onClick={handleAddToCart}
                                                 disabled={added}
-                                                className="h-12 justify-between rounded-xl bg-white/10 px-4 text-white hover:bg-white/16 hover:text-white"
+                                                className="book-add-cart"
                                             >
                                                 {added ? (
                                                     <>
@@ -875,7 +812,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                             </Button>
                                         </div>
                                     ) : (
-                                        <p className="mt-4 rounded-[1.25rem] bg-white/7 p-4 text-center text-sm font-medium text-white/65">
+                                        <p className="book-purchase-unavailable">
                                             {isComingSoon
                                                 ? book.status.label
                                                 : "Purchase options are not open yet."}
@@ -888,9 +825,9 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                 </div>
             </section>
 
-            <section className="bg-background">
-                <div className="mx-auto grid max-w-6xl gap-8 px-6 py-18 sm:px-8 lg:grid-cols-3 lg:py-24">
-                    <div className="app-panel-compact">
+            <section className="book-detail-principles">
+                <div className="book-detail-principle-grid">
+                    <div className="book-detail-principle">
                         <BookMarked className="text-primary mb-8 size-5" />
                         <h2 className="app-panel-title-sm">
                             Imagination in the Biblical world.
@@ -900,7 +837,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                             text and curiosity about the people inside it.
                         </p>
                     </div>
-                    <div className="app-panel-compact">
+                    <div className="book-detail-principle">
                         <Sparkles className="text-primary mb-8 size-5" />
                         <h2 className="app-panel-title-sm">Cinematic pace.</h2>
                         <p className="app-panel-copy-sm">
@@ -908,7 +845,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                             stakes, and chapters built to keep moving.
                         </p>
                     </div>
-                    <div className="app-panel-compact">
+                    <div className="book-detail-principle">
                         <ShieldCheck className="text-primary mb-8 size-5" />
                         <h2 className="app-panel-title-sm">
                             Faith under fire.
@@ -921,8 +858,64 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                 </div>
             </section>
 
-            <section className="bg-muted/35">
-                <div className="mx-auto grid max-w-6xl gap-12 px-6 py-18 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:py-24">
+            {book.slug === "walls" && (
+                <section className="book-detail-field-notes">
+                    <div className="book-detail-field-notes-inner">
+                        <div className="book-detail-field-notes-copy">
+                            <p>Field notes</p>
+                            <h2>Take the story somewhere beautiful.</h2>
+                            <span>
+                                Walls, read in the shadow of the Swiss Alps.
+                            </span>
+                        </div>
+                        <div className="book-detail-field-notes-grid">
+                            <figure className="book-detail-field-note is-tall">
+                                <Image
+                                    src="/books/walls-reading-window-web.jpeg"
+                                    alt="Reading Walls beside a mountain view"
+                                    fill
+                                    sizes="(min-width: 900px) 38vw, 92vw"
+                                    className="object-cover"
+                                    unoptimized
+                                />
+                            </figure>
+                            <figure className="book-detail-field-note">
+                                <Image
+                                    src="/books/walls-reading-mountains-web.jpeg"
+                                    alt="Reading Walls outdoors in the Swiss Alps"
+                                    fill
+                                    sizes="(min-width: 900px) 26vw, 92vw"
+                                    className="object-cover"
+                                    unoptimized
+                                />
+                            </figure>
+                            <figure className="book-detail-field-note">
+                                <Image
+                                    src="/books/walls-coffee-mountains-web.jpeg"
+                                    alt="Walls and iced coffee with a mountain view"
+                                    fill
+                                    sizes="(min-width: 900px) 26vw, 92vw"
+                                    className="object-cover"
+                                    unoptimized
+                                />
+                            </figure>
+                            <figure className="book-detail-field-note is-wide">
+                                <Image
+                                    src="/books/walls-mountain-table.jpeg"
+                                    alt="Walls on a table overlooking the Swiss Alps"
+                                    fill
+                                    sizes="(min-width: 900px) 52vw, 92vw"
+                                    className="object-cover"
+                                    unoptimized
+                                />
+                            </figure>
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            <section className="book-detail-about">
+                <div>
                     <div>
                         <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
                             About the book
@@ -944,9 +937,9 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                 </div>
             </section>
 
-            <section className="bg-background">
-                <div className="mx-auto grid max-w-6xl gap-8 px-6 py-18 sm:px-8 lg:grid-cols-[1fr_1fr] lg:py-24">
-                    <div className="app-panel-dark-solid">
+            <section className="book-detail-promise">
+                <div>
+                    <div className="book-detail-promise-quote">
                         <Feather className="text-primary mb-10 size-5" />
                         <p className="text-3xl leading-tight font-semibold tracking-tight text-balance">
                             Written for readers who want biblical fiction to

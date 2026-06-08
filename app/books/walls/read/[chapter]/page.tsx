@@ -211,8 +211,8 @@ const ChapterLinks = ({
                 }
                 className={
                     chapter.id === activeChapterId
-                        ? "bg-muted text-foreground rounded-xl px-3 py-2 transition-colors"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground rounded-xl px-3 py-2 transition-colors"
+                        ? "bg-muted text-foreground rounded-none px-3 py-2 transition-colors"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground rounded-none px-3 py-2 transition-colors"
                 }
             >
                 {chapter.title}
@@ -238,55 +238,43 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
     const jsonLd = getJsonLd(chapter, chapterIndex, readingMinutes)
 
     return (
-        <section className="bg-background">
+        <section className="editorial-page editorial-reader bg-background">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <div className="relative overflow-hidden bg-[#111] text-white">
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_74%_12%,rgba(163,107,60,0.32),transparent_32%),radial-gradient(circle_at_18%_82%,rgba(23,109,84,0.24),transparent_30%)]" />
-                <div className="relative mx-auto max-w-6xl px-6 pt-8 sm:px-8">
-                    <Link
-                        href="/books/walls"
-                        className="inline-flex items-center gap-1 text-sm text-white/55 transition-colors hover:text-white/90"
-                    >
+            <div className="book-sample-hero">
+                <div className="site-page-container pt-8">
+                    <Link href="/books/walls" className="editorial-back-link">
                         <ChevronLeft className="size-4" />
                         Walls
                     </Link>
                 </div>
-                <div className="relative mx-auto grid max-w-6xl gap-10 px-6 py-12 sm:px-8 lg:grid-cols-[1fr_0.55fr] lg:py-18">
+                <div className="book-sample-hero-grid">
                     <div className="flex flex-col justify-center">
-                        <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-white/65">
-                            <span className="rounded-full bg-white/10 px-3 py-1 text-white">
-                                Free sample
-                            </span>
-                            <span className="rounded-full bg-white/10 px-3 py-1">
-                                {chapter.title}
-                            </span>
-                            <span className="rounded-full bg-white/10 px-3 py-1">
-                                {readingMinutes} min read
-                            </span>
+                        <div className="book-sample-meta">
+                            <span>Free sample</span>
+                            <span>{chapter.title}</span>
+                            <span>{readingMinutes} min read</span>
                         </div>
-                        <h1 className="mt-6 max-w-3xl text-5xl font-semibold tracking-tight text-balance sm:text-7xl">
-                            Read the first three chapters of {book.title}.
-                        </h1>
-                        <p className="mt-6 max-w-2xl text-xl leading-8 text-white/72">
+                        <h1>Read the first three chapters of {book.title}.</h1>
+                        <p className="book-sample-intro">
                             Begin in the camp of Israel as Joshua, Salmon, and
                             Phinehas stand at the edge of the promise and the
                             fight ahead.
                         </p>
-                        <div className="mt-8 flex flex-wrap items-center gap-3">
+                        <div className="book-sample-actions">
                             <Link
-                                href="#chapter"
-                                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
+                                href={getChapterPath(chapter.id)}
+                                className="book-sample-primary"
                             >
                                 <BookOpen className="size-4" />
                                 Start reading
                             </Link>
                             <Link
                                 href="/books/walls"
-                                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white/10 px-5 text-sm font-medium text-white transition-colors hover:bg-white/16"
+                                className="book-sample-secondary"
                             >
                                 <ShoppingCart className="size-4" />
                                 Pre-order Walls
@@ -294,7 +282,7 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
                         </div>
                     </div>
 
-                    <div className="relative mx-auto aspect-[5/8] w-full max-w-72 overflow-hidden rounded-[1.4rem] bg-white/[0.06] shadow-2xl ring-1 shadow-black/40 ring-white/12 sm:max-w-80 lg:mx-0 lg:justify-self-end">
+                    <div className="book-sample-cover">
                         <Image
                             src={book.coverImageSrc}
                             alt={book.coverImageAlt}
@@ -307,9 +295,9 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
                 </div>
             </div>
 
-            <div className="border-border/65 bg-background/95 sticky top-12 z-30 border-b px-6 py-3 backdrop-blur-xl sm:px-8 lg:hidden">
+            <div className="border-border/65 bg-background/95 sticky top-12 z-30 border-b px-4 py-3 backdrop-blur-xl sm:px-6 lg:hidden">
                 <details className="group mx-auto max-w-3xl">
-                    <summary className="border-border/70 bg-background hover:bg-muted/45 flex h-10 cursor-pointer list-none items-center justify-between rounded-xl border px-4 text-sm font-medium transition-colors [&::-webkit-details-marker]:hidden">
+                    <summary className="border-border/70 bg-background hover:bg-muted/45 flex h-10 cursor-pointer list-none items-center justify-between rounded-none border px-4 text-sm font-medium transition-colors [&::-webkit-details-marker]:hidden">
                         <span>Chapters</span>
                         <span className="text-muted-foreground inline-flex items-center gap-2 text-xs">
                             {sample.chapters.length} chapters
@@ -317,7 +305,7 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
                         </span>
                     </summary>
                     <nav
-                        className="border-border/70 bg-background mt-2 grid gap-1 rounded-xl border p-3 text-sm"
+                        className="border-border/70 bg-background mt-2 grid gap-1 rounded-none border p-3 text-sm"
                         aria-label="Sample chapters"
                     >
                         <ChapterLinks
@@ -328,10 +316,10 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
                 </details>
             </div>
 
-            <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 sm:px-8 lg:grid-cols-[13rem_minmax(0,1fr)] lg:py-16">
+            <div className="book-sample-reading-layout">
                 <aside className="hidden lg:sticky lg:top-20 lg:block lg:self-start">
                     <nav
-                        className="border-border/65 bg-background rounded-[1.5rem] border p-4 text-sm"
+                        className="book-sample-chapter-nav"
                         aria-label="Sample chapters"
                     >
                         <p className="text-muted-foreground px-2 text-xs font-semibold tracking-[0.18em] uppercase">
@@ -370,13 +358,13 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
                     </article>
 
                     <nav
-                        className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-2"
+                        className="book-sample-pagination"
                         aria-label="Chapter pagination"
                     >
                         {previousChapter ? (
                             <Link
                                 href={getChapterPath(previousChapter.id)}
-                                className="border-border/70 hover:bg-muted/45 flex min-h-24 flex-col justify-center rounded-2xl border p-5 transition-colors"
+                                className="book-sample-pagination-link"
                             >
                                 <span className="text-muted-foreground inline-flex items-center gap-1 text-sm">
                                     <ChevronLeft className="size-4" />
@@ -392,7 +380,7 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
                         {nextChapter ? (
                             <Link
                                 href={getChapterPath(nextChapter.id)}
-                                className="border-border/70 hover:bg-muted/45 flex min-h-24 flex-col justify-center rounded-2xl border p-5 transition-colors sm:text-right"
+                                className="book-sample-pagination-link sm:text-right"
                             >
                                 <span className="text-muted-foreground inline-flex items-center gap-1 text-sm sm:justify-end">
                                     Next
@@ -407,18 +395,16 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
                         )}
                     </nav>
 
-                    <div className="mx-auto max-w-3xl rounded-[2rem] bg-[#111] p-6 text-white sm:p-8">
-                        <p className="text-2xl font-semibold tracking-tight">
-                            Keep reading when {book.title} releases.
-                        </p>
-                        <p className="mt-3 text-sm leading-6 text-white/60">
+                    <div className="book-sample-continue">
+                        <p>Keep reading when {book.title} releases.</p>
+                        <p>
                             Pre-order the paperback, eBook, or complete bundle
                             and step back into Jericho on launch day.
                         </p>
-                        <div className="mt-6">
+                        <div>
                             <Link
                                 href="/books/walls"
-                                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-[#111] transition-colors hover:bg-white/90"
+                                className="book-sample-primary"
                             >
                                 Pre-order Walls
                                 <ArrowRight className="size-4" />

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type SyntheticEvent } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -9,7 +9,6 @@ import {
     CalendarClock,
     Check,
     ShoppingCart,
-    Star,
 } from "lucide-react"
 import { AmazonLogo } from "@/components/amazon-logo"
 import { Button } from "@/components/ui/button"
@@ -20,14 +19,6 @@ import {
     getFeaturedReviewHeadline,
 } from "@/lib/books"
 import { usePricesStore } from "@/lib/prices-store"
-import {
-    DEFAULT_GLOW,
-    mixWithBlack,
-    mixWithWhite,
-    glowRgb,
-    sampleGlowColor,
-    type GlowColor,
-} from "@/lib/book-glow"
 import { useCartStore } from "@/lib/cart-store"
 
 interface BookCardProps {
@@ -42,21 +33,10 @@ const fmt = (cents: number) =>
         maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
     }).format(cents / 100)
 
-const ctaClass =
-    "group/book-cta inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-white/8 px-4 text-sm font-medium whitespace-nowrap text-white ring-1 ring-white/10 transition-colors hover:bg-white/12 hover:text-white"
-const ctaContentClass =
-    "inline-grid grid-cols-[auto_1.75rem] items-center justify-center gap-2.5"
-const ctaLabelClass = "text-center"
-const ctaIconClass =
-    "flex size-7 shrink-0 items-center justify-center"
-
 export const BookCard = ({ book, priority = false }: BookCardProps) => {
-    const [glowColor, setGlowColor] = useState<GlowColor>(DEFAULT_GLOW)
-    const [hasGlowColor, setHasGlowColor] = useState(false)
     const [added, setAdded] = useState(false)
-
     const { addItem, openCart } = useCartStore()
-    const getPrice = usePricesStore((s) => s.getPrice)
+    const getPrice = usePricesStore((state) => state.getPrice)
     const isPreOrder = book.status.type === "pre-order"
     const isComingSoon = book.status.type === "coming-soon"
     const isPurchasable = book.purchasable !== false
@@ -65,16 +45,19 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
 
     const defaultFormat = (
         Object.entries(book.formats) as [BookFormat, BookFormatOption][]
-    ).find(([, opt]) => opt.available)?.[0]
+    ).find(([, option]) => option.available)?.[0]
     const defaultFormatOption = defaultFormat
         ? book.formats[defaultFormat]
         : undefined
     const defaultPrice = defaultFormat
-        ? getPrice(book.slug, defaultFormat)
+        ? (getPrice(book.slug, defaultFormat) ??
+          book.formats[defaultFormat]?.priceCents)
         : undefined
     const bundleOption = book.formats.bundle
-    const bundlePrice = getPrice(book.slug, "bundle")
+    const bundlePrice =
+        getPrice(book.slug, "bundle") ?? book.formats.bundle?.priceCents
     const reviewHeadline = getFeaturedReviewHeadline(book)
+    const heroImage = book.images?.[0] ?? book.coverImageSrc
 
     const statusCopy =
         isPreOrder && !isPurchasable
@@ -93,274 +76,145 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
         setTimeout(() => setAdded(false), 2000)
     }
 
-    const handleCoverLoad = (event: SyntheticEvent<HTMLImageElement>) => {
-        void (async () => {
-            const nextGlowColor = await sampleGlowColor(event.currentTarget)
-            setGlowColor(nextGlowColor)
-            setHasGlowColor(true)
-        })()
-    }
-
-    const glowColorSoft = mixWithWhite(glowColor, 0.35)
-    const glowColorDeep = mixWithBlack(glowColor, 0.22)
-    const heroImage = book.images?.[0] ?? book.coverImageSrc
-
     return (
-        <article
-            className="shadow-foreground/10 relative overflow-hidden rounded-[2rem] bg-[#111] text-white shadow-2xl"
-            style={{
-                backgroundImage: `radial-gradient(circle at 24% 20%, rgba(${glowRgb(glowColorSoft)}, 0.24), transparent 32%), linear-gradient(145deg, rgba(255,255,255,0.08), transparent 42%)`,
-            }}
-        >
-            <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-80"
-                style={{
-                    background: `linear-gradient(90deg, transparent, rgba(${glowRgb(glowColor)}, 0.8), transparent)`,
-                }}
-            />
-            <div className="grid min-h-[34rem] gap-8 p-6 sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:p-12">
-                <div className="relative isolate min-h-80 overflow-hidden rounded-[1.5rem] bg-white/[0.04]">
-                    <div
-                        className="pointer-events-none absolute inset-x-10 bottom-10 h-20 rounded-full blur-3xl transition-opacity duration-700"
-                        style={{
-                            background: `rgba(${glowRgb(glowColor)}, 0.45)`,
-                            opacity: hasGlowColor ? 1 : 0.5,
-                        }}
-                    />
-                    <Image
-                        src={heroImage}
-                        alt={book.coverImageAlt}
-                        fill
-                        sizes="(min-width: 1024px) 48vw, 90vw"
-                        priority={priority}
-                        onLoad={handleCoverLoad}
-                        className="relative z-10 rounded-[inherit] object-cover"
-                    />
+        <article className="book-index-entry">
+            <Link
+                href={`/books/${book.slug}`}
+                className="book-index-media group"
+            >
+                <Image
+                    src={heroImage}
+                    alt={book.coverImageAlt}
+                    fill
+                    sizes="(min-width: 1024px) 52vw, 100vw"
+                    loading={priority ? "eager" : "lazy"}
+                    unoptimized
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.015]"
+                />
+            </Link>
+
+            <div className="book-index-copy">
+                <div className="book-index-meta">
+                    <span>{statusCopy}</span>
+                    {releaseDate && (
+                        <span>
+                            <CalendarClock aria-hidden="true" />
+                            {releaseDate}
+                        </span>
+                    )}
+                    <span>{book.genre}</span>
                 </div>
 
-                <div className="flex flex-col justify-center py-2">
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold tracking-[0.16em] text-white/48 uppercase">
-                        <span>{statusCopy}</span>
-                        {releaseDate && (
-                            <span className="inline-flex items-center gap-1.5">
-                                <CalendarClock className="size-3.5" />
-                                {releaseDate}
-                            </span>
-                        )}
-                        <span>{book.genre}</span>
-                    </div>
+                <Link href={`/books/${book.slug}`}>
+                    <h2>{book.title}</h2>
+                </Link>
+                <p className="book-index-description">
+                    {book.shortDescription}
+                </p>
 
-                    <h2 className="mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
-                        {book.title}
-                    </h2>
-                    <p className="mt-5 max-w-xl text-xl leading-8 text-white/76">
-                        {book.shortDescription}
-                    </p>
-                    {reviewHeadline ? (
-                        <div className="mt-5 max-w-xl rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5">
-                            <div className="mb-2 flex items-center gap-1.5 text-emerald-100">
-                                {Array.from({ length: 5 }).map((_, index) => (
-                                    <Star
-                                        key={index}
-                                        className="size-3.5 fill-current"
-                                    />
-                                ))}
-                                <span className="ml-2 text-xs font-semibold tracking-[0.16em] text-white/44 uppercase">
-                                    Reader praise
-                                </span>
+                {reviewHeadline && (
+                    <blockquote className="book-index-quote">
+                        <p>“{reviewHeadline}”</p>
+                        <span>Reader praise</span>
+                    </blockquote>
+                )}
+
+                <div className="book-index-offers">
+                    {defaultPrice !== undefined && defaultFormatOption && (
+                        <div className="book-index-offer">
+                            <div>
+                                <span>Paperback preorder</span>
+                                {defaultFormatOption.priceNote && (
+                                    <small>
+                                        {defaultFormatOption.priceNote}
+                                    </small>
+                                )}
                             </div>
-                            <p className="text-sm leading-6 font-medium text-white/82">
-                                “{reviewHeadline}”
+                            <p>
+                                {fmt(defaultPrice)}
+                                {defaultFormatOption.compareAtPriceCents !==
+                                    undefined && (
+                                    <del>
+                                        {fmt(
+                                            defaultFormatOption.compareAtPriceCents,
+                                        )}
+                                    </del>
+                                )}
                             </p>
                         </div>
-                    ) : (
-                        <p className="mt-4 max-w-xl text-sm leading-7 text-white/48">
-                            A biblical epic designed to feel vivid, human, and
-                            impossible to put down.
-                        </p>
                     )}
 
-                    <div className="mt-8 max-w-xl overflow-hidden rounded-2xl bg-white/[0.06] ring-1 ring-white/10">
-                        <div className="p-4 sm:p-5">
-                            {defaultPrice !== undefined &&
-                                defaultFormatOption && (
-                                    <div className="flex items-start justify-between gap-5">
-                                        <div>
-                                            <p className="text-xs font-semibold tracking-[0.16em] text-white/42 uppercase">
-                                                Paperback preorder
-                                            </p>
-                                            {defaultFormatOption.priceNote && (
-                                                <p className="mt-1 text-sm font-medium text-emerald-100">
-                                                    {
-                                                        defaultFormatOption.priceNote
-                                                    }
-                                                </p>
-                                            )}
-                                        </div>
-                                        <div className="flex items-baseline gap-2 text-right">
-                                            <span className="text-3xl font-semibold tabular-nums">
-                                                {fmt(defaultPrice)}
-                                            </span>
-                                            {defaultFormatOption.compareAtPriceCents !==
-                                                undefined && (
-                                                <span className="text-sm font-medium text-white/38 tabular-nums line-through">
-                                                    {fmt(
-                                                        defaultFormatOption.compareAtPriceCents,
-                                                    )}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
+                    {bundleOption?.available && bundlePrice !== undefined && (
+                        <div className="book-index-offer">
+                            <div>
+                                <span>Complete preorder bundle</span>
+                                {bundleOption.description && (
+                                    <small>{bundleOption.description}</small>
                                 )}
-
-                            {bundleOption?.available &&
-                                bundlePrice !== undefined && (
-                                    <div className="mt-5 border-t border-white/10 pt-4">
-                                        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                                            <span className="text-sm font-semibold text-white">
-                                                Complete preorder bundle
-                                            </span>
-                                            <span className="text-sm font-semibold text-emerald-100 tabular-nums">
-                                                {fmt(bundlePrice)}
-                                            </span>
-                                            {bundleOption.compareAtPriceCents !==
-                                                undefined && (
-                                                <span className="text-xs font-medium text-white/36 tabular-nums line-through">
-                                                    {fmt(
-                                                        bundleOption.compareAtPriceCents,
-                                                    )}
-                                                </span>
-                                            )}
-                                            {bundleOption.priceNote && (
-                                                <span className="text-xs font-semibold text-emerald-100/86">
-                                                    {bundleOption.priceNote}
-                                                </span>
-                                            )}
-                                        </div>
-                                        {bundleOption.description && (
-                                            <p className="mt-1.5 text-xs leading-5 text-white/48">
-                                                {bundleOption.description}
-                                            </p>
-                                        )}
-                                    </div>
-                                )}
-                        </div>
-
-                        <div className="border-t border-white/10 bg-black/12 p-4 sm:p-5">
-                            {book.slug === "walls" && (
-                                <Link
-                                    href="/books/walls/read/chapter-1#chapter"
-                                    className="group flex items-center justify-between gap-4 rounded-2xl bg-white px-5 py-4 text-[#111] transition-colors hover:bg-white/90"
-                                >
-                                    <span className="flex items-center gap-3">
-                                        <span className="flex size-9 items-center justify-center rounded-lg bg-[#111]/6">
-                                            <BookOpen className="size-4" />
-                                        </span>
-                                        <span>
-                                            <span className="block text-sm font-semibold">
-                                                Read the sample
-                                            </span>
-                                            <span className="mt-0.5 block text-xs text-[#111]/58">
-                                                First three chapters
-                                            </span>
-                                        </span>
-                                    </span>
-                                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-                                </Link>
-                            )}
-                            <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                                {isPurchasable &&
-                                    !isComingSoon &&
-                                    defaultFormat && (
-                                        <Button
-                                            size="lg"
-                                            variant="ghost"
-                                            onClick={handleAddToCart}
-                                            disabled={added}
-                                            className={ctaClass}
-                                        >
-                                            {added ? (
-                                                <span className={ctaContentClass}>
-                                                    <span
-                                                        className={
-                                                            ctaLabelClass
-                                                        }
-                                                    >
-                                                        Added
-                                                    </span>
-                                                    <span
-                                                        className={
-                                                            ctaIconClass
-                                                        }
-                                                    >
-                                                        <Check className="size-4" />
-                                                    </span>
-                                                </span>
-                                            ) : (
-                                                <span className={ctaContentClass}>
-                                                    <span
-                                                        className={
-                                                            ctaLabelClass
-                                                        }
-                                                    >
-                                                        {isPreOrder
-                                                            ? "Pre-order"
-                                                            : "Buy"}
-                                                    </span>
-                                                    <span
-                                                        className={
-                                                            ctaIconClass
-                                                        }
-                                                    >
-                                                        <ShoppingCart className="size-4" />
-                                                    </span>
-                                                </span>
-                                            )}
-                                        </Button>
-                                    )}
-                                {book.amazonUrl && (
-                                    <Link
-                                        href={book.amazonUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={ctaClass}
-                                    >
-                                        <span className={ctaContentClass}>
-                                            <span className={ctaLabelClass}>
-                                                Amazon
-                                            </span>
-                                            <span className={ctaIconClass}>
-                                                <span className="flex size-7 items-center justify-center rounded-full bg-white">
-                                                    <AmazonLogo className="size-4" />
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </Link>
-                                )}
-                                <Link
-                                    href={`/books/${book.slug}`}
-                                    className={ctaClass}
-                                >
-                                    <span className={ctaContentClass}>
-                                        <span className={ctaLabelClass}>
-                                            Details
-                                        </span>
-                                        <span className={ctaIconClass}>
-                                            <ArrowRight className="size-4 transition-transform group-hover/book-cta:translate-x-0.5" />
-                                        </span>
-                                    </span>
-                                </Link>
                             </div>
+                            <p>
+                                {fmt(bundlePrice)}
+                                {bundleOption.compareAtPriceCents !==
+                                    undefined && (
+                                    <del>
+                                        {fmt(bundleOption.compareAtPriceCents)}
+                                    </del>
+                                )}
+                            </p>
                         </div>
-                    </div>
+                    )}
+                </div>
+
+                <div className="book-index-actions">
+                    {isPurchasable && !isComingSoon && defaultFormat && (
+                        <Button
+                            size="lg"
+                            onClick={handleAddToCart}
+                            disabled={added}
+                            className="book-index-primary-action"
+                        >
+                            {added ? (
+                                <>
+                                    Added
+                                    <Check className="size-4" />
+                                </>
+                            ) : (
+                                <>
+                                    {isPreOrder ? "Pre-order" : "Buy"}
+                                    <ShoppingCart className="size-4" />
+                                </>
+                            )}
+                        </Button>
+                    )}
+                    {book.slug === "walls" && (
+                        <Link
+                            href="/books/walls/read/chapter-1#chapter"
+                            className="book-index-link"
+                        >
+                            <BookOpen aria-hidden="true" />
+                            Read sample
+                        </Link>
+                    )}
+                    {book.amazonUrl && (
+                        <Link
+                            href={book.amazonUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="book-index-link"
+                        >
+                            <AmazonLogo className="size-4" />
+                            Amazon
+                        </Link>
+                    )}
+                    <Link
+                        href={`/books/${book.slug}`}
+                        className="book-index-link"
+                    >
+                        Details
+                        <ArrowRight aria-hidden="true" />
+                    </Link>
                 </div>
             </div>
-            <div
-                className="pointer-events-none absolute right-0 bottom-0 h-40 w-1/2 opacity-25 blur-3xl"
-                style={{
-                    background: `rgba(${glowRgb(glowColorDeep)}, 0.75)`,
-                }}
-            />
         </article>
     )
 }

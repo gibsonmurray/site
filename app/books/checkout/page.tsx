@@ -29,7 +29,7 @@ const CheckoutPage = async ({ searchParams }: CheckoutPageProps) => {
             : undefined
 
     return (
-        <section className="mx-auto min-h-[calc(100svh-7rem)] max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+        <section className="editorial-page editorial-transaction mx-auto min-h-[calc(100svh-7rem)] max-w-5xl px-4 py-8 sm:px-6">
             <CheckoutClient directItems={directItems} />
         </section>
     )

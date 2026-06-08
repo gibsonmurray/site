@@ -43,7 +43,7 @@ export const CartLineItem = ({
 
     return (
         <li className="flex gap-3 py-5">
-            <div className="bg-muted relative aspect-5/8 w-14 shrink-0 overflow-hidden rounded-xl shadow-sm">
+            <div className="bg-muted relative aspect-5/8 w-14 shrink-0 overflow-hidden rounded-[0.25rem] shadow-sm">
                 <Image
                     src={book.coverImageSrc}
                     alt={book.coverImageAlt}
@@ -77,19 +77,19 @@ export const CartLineItem = ({
                         variant="ghost"
                         size="icon-xs"
                         onClick={onRemove}
-                        className="text-muted-foreground hover:text-destructive mt-0.5 shrink-0 rounded-full"
+                        className="text-muted-foreground hover:text-destructive mt-0.5 shrink-0 rounded-none"
                         aria-label="Remove item"
                     >
                         <Trash2 className="size-3.5" />
                     </Button>
                 </div>
                 <div className="flex items-center justify-between">
-                    <div className="bg-muted/60 flex items-center gap-1 rounded-full p-1">
+                    <div className="border-border/65 flex items-center gap-1 rounded-none border bg-transparent p-1">
                         <Button
                             variant="ghost"
                             size="icon-xs"
                             onClick={() => onQuantityChange(item.quantity - 1)}
-                            className="rounded-full"
+                            className="rounded-none"
                             aria-label="Decrease quantity"
                         >
                             <Minus className="size-3" />
@@ -101,7 +101,7 @@ export const CartLineItem = ({
                             variant="ghost"
                             size="icon-xs"
                             onClick={() => onQuantityChange(item.quantity + 1)}
-                            className="rounded-full"
+                            className="rounded-none"
                             aria-label="Increase quantity"
                         >
                             <Plus className="size-3" />

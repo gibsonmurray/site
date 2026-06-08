@@ -189,18 +189,15 @@ export default async function BlogPage({
     }
 
     return (
-        <section className="bg-background relative overflow-hidden">
+        <section className="editorial-page editorial-article bg-background relative overflow-hidden">
             <ScrollProgressBar />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <header className="border-border/60 bg-muted/35 border-b">
-                <div className="mx-auto max-w-4xl px-6 py-12 sm:px-8 lg:py-18">
-                    <Link
-                        href="/writings"
-                        className="text-muted-foreground hover:text-foreground mb-8 inline-flex items-center gap-1 text-sm transition-colors"
-                    >
+            <header className="editorial-article-header border-border/60 bg-muted/35 border-b">
+                <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:py-18">
+                    <Link href="/writings" className="editorial-back-link mb-8">
                         <ChevronLeft className="size-4" />
                         Writing
                     </Link>
@@ -234,7 +231,7 @@ export default async function BlogPage({
                                     <Badge
                                         key={tag}
                                         variant="secondary"
-                                        className="rounded-full"
+                                        className="rounded-none"
                                     >
                                         {tag}
                                     </Badge>
@@ -244,7 +241,7 @@ export default async function BlogPage({
                     </div>
                 </div>
             </header>
-            <div className="mx-auto max-w-3xl px-6 py-12 sm:px-8 lg:py-16">
+            <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
                 <article className="prose prose-lg dark:prose-invert prose-headings:tracking-tight prose-a:text-primary prose-a:decoration-primary/35 prose-a:underline-offset-4 max-w-none">
                     <CustomMDX source={post.content} />
                 </article>

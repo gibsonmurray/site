@@ -118,13 +118,13 @@ const BooksPage = () => {
     }
 
     return (
-        <section className="overflow-hidden">
+        <section className="editorial-page overflow-hidden">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             <BooksHeader />
-            <div className="mx-auto grid max-w-6xl gap-6 px-6 pb-20 sm:px-8 lg:pb-28">
+            <div className="books-index">
                 {books.map((book, index) => (
                     <BookCard
                         key={book.slug}

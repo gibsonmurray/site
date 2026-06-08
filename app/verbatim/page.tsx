@@ -182,8 +182,8 @@ const ProductScreenshot = ({ variant }: { variant: "desktop" | "mobile" }) => {
             sizes={isMobile ? "390px" : "(min-width: 1024px) 80vw, 92vw"}
             className={
                 isMobile
-                    ? "ring-border/70 shadow-foreground/15 mx-auto w-full max-w-[24rem] rounded-[2rem] shadow-2xl ring-1"
-                    : "ring-border/70 shadow-foreground/15 relative rounded-[2.25rem] shadow-2xl ring-1"
+                    ? "ring-border/70 shadow-foreground/15 mx-auto w-full max-w-[24rem] rounded-[0.25rem] shadow-2xl ring-1"
+                    : "ring-border/70 shadow-foreground/15 relative rounded-[0.25rem] shadow-2xl ring-1"
             }
             priority={!isMobile}
             unoptimized
@@ -204,18 +204,18 @@ const ResponsiveProductScreenshot = () => (
 
 const VerbatimPage = () => {
     return (
-        <section className="bg-background overflow-hidden">
+        <section className="editorial-page bg-background overflow-hidden">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify(verbatimJsonLd),
                 }}
             />
-            <header className="mx-auto flex min-h-[calc(100svh-3.5rem)] max-w-6xl flex-col items-center justify-center px-6 py-16 text-center sm:px-8 lg:py-20">
+            <header className="site-page-container editorial-verbatim-hero flex min-h-[calc(100svh-3.5rem)] flex-col items-center justify-center py-16 text-center lg:py-20">
                 <img
                     src="/verbatim-logo.svg"
                     alt=""
-                    className="mx-auto size-14 rounded-[1.2rem] shadow-xl shadow-black/10"
+                    className="mx-auto size-14 rounded-[0.25rem] shadow-xl shadow-black/10"
                     aria-hidden="true"
                 />
                 <h1 className="text-foreground mt-7 text-6xl font-semibold tracking-tight text-balance sm:text-7xl lg:text-8xl">
@@ -236,14 +236,14 @@ const VerbatimPage = () => {
                         href={verbatimUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-primary text-primary-foreground hover:bg-primary/85 inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-medium transition-colors"
+                        className="bg-primary text-primary-foreground hover:bg-primary/85 inline-flex h-12 items-center justify-center gap-2 rounded-none px-6 text-base font-medium transition-colors"
                     >
                         Try Verbatim
                         <ArrowRight className="size-4" />
                     </Link>
                     <Link
                         href="#how-it-works"
-                        className="border-border bg-background text-foreground hover:bg-muted inline-flex h-12 items-center justify-center gap-2 rounded-full border px-6 text-base font-medium transition-colors"
+                        className="border-border bg-background text-foreground hover:bg-muted inline-flex h-12 items-center justify-center gap-2 rounded-none border px-6 text-base font-medium transition-colors"
                     >
                         See how it works
                     </Link>
@@ -255,7 +255,7 @@ const VerbatimPage = () => {
             </header>
 
             <section className="bg-[#111] text-white">
-                <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
+                <div className="site-page-container grid items-center gap-12 py-20 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
                     <div>
                         <p className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
                             Built for Scripture
@@ -270,11 +270,11 @@ const VerbatimPage = () => {
                             lining up.
                         </p>
                     </div>
-                    <div className="grid gap-4">
+                    <div className="editorial-dark-list">
                         {features.map(({ icon: Icon, title, copy }) => (
                             <div
                                 key={title}
-                                className="rounded-[1.5rem] bg-white/8 p-6 ring-1 ring-white/10"
+                                className="editorial-dark-list-item"
                             >
                                 <Icon className="text-primary size-5" />
                                 <h3 className="mt-5 text-2xl font-semibold tracking-tight">
@@ -290,14 +290,14 @@ const VerbatimPage = () => {
             </section>
 
             <section id="how-it-works" className="bg-background scroll-mt-14">
-                <div className="mx-auto max-w-6xl px-6 py-20 sm:px-8 lg:py-28">
+                <div className="site-page-container py-20 lg:py-28">
                     <div className="mx-auto max-w-4xl text-center">
                         <p className="app-eyebrow">How it works</p>
                         <h2 className="text-foreground mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
                             Read. Hide. Type. Know.
                         </h2>
                     </div>
-                    <div className="mt-14 grid gap-5 lg:grid-cols-3">
+                    <div className="editorial-step-grid">
                         <Step
                             icon={ListChecks}
                             title="Add the passage."
@@ -317,8 +317,8 @@ const VerbatimPage = () => {
                 </div>
             </section>
 
-            <section className="border-border/60 border-y bg-[#f6f7f4]">
-                <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:py-28">
+            <section className="editorial-usecase-section border-border/60 border-y bg-[#f6f7f4]">
+                <div className="site-page-container grid items-center gap-10 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:py-28">
                     <div className="order-2 lg:order-1">
                         <ProductScreenshot variant="mobile" />
                     </div>
@@ -337,7 +337,7 @@ const VerbatimPage = () => {
                             {useCases.map((useCase) => (
                                 <span
                                     key={useCase}
-                                    className="border-border/70 bg-background rounded-full border px-4 py-2 text-sm font-medium"
+                                    className="border-border/70 bg-background rounded-none border px-4 py-2 text-sm font-medium"
                                 >
                                     {useCase}
                                 </span>
@@ -347,8 +347,8 @@ const VerbatimPage = () => {
                 </div>
             </section>
 
-            <section className="bg-background">
-                <div className="mx-auto flex max-w-4xl flex-col items-center px-6 py-20 text-center sm:px-8 lg:py-28">
+            <section className="editorial-final-cta bg-background">
+                <div className="mx-auto flex max-w-4xl flex-col items-center px-4 py-20 text-center sm:px-6 lg:py-28">
                     <div className="bg-primary/10 text-primary flex size-12 items-center justify-center rounded-full">
                         <RotateCcw className="size-5" />
                     </div>
@@ -363,7 +363,7 @@ const VerbatimPage = () => {
                         href={verbatimUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-foreground text-background hover:bg-foreground/85 mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-medium transition-colors"
+                        className="bg-foreground text-background hover:bg-foreground/85 mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-none px-6 text-base font-medium transition-colors"
                     >
                         Open Verbatim
                         <ArrowRight className="size-4" />
@@ -383,7 +383,7 @@ const Step = ({
     title: string
     copy: string
 }) => (
-    <div className="border-border/65 bg-background rounded-[2rem] border p-8">
+    <div className="editorial-step">
         <Icon className="text-primary size-5" />
         <h3 className="text-foreground mt-8 text-3xl font-semibold tracking-tight">
             {title}

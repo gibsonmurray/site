@@ -1,10 +1,9 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { latestBook } from "@/lib/books"
 import { SuccessConfetti } from "./success-confetti"
 import { ClearCart } from "./clear-cart"
-import { Check, LibraryBig } from "lucide-react"
+import { Check, ChevronLeft } from "lucide-react"
 
 export const metadata: Metadata = {
     title: "Order Confirmed",
@@ -30,31 +29,31 @@ const SuccessPage = async ({ searchParams }: SuccessPageProps) => {
             : "the announced release window"
 
     return (
-        <section className="mx-auto flex min-h-[calc(100svh-7rem)] max-w-4xl flex-col items-center justify-center px-6 py-16 text-center sm:px-8">
+        <section className="editorial-page editorial-transaction mx-auto flex min-h-[calc(100svh-7rem)] max-w-4xl flex-col items-center justify-center px-4 py-16 text-center sm:px-6">
             <ClearCart enabled={checkoutMode !== "direct"} />
             <SuccessConfetti />
-            <div className="bg-primary/10 text-primary flex size-14 items-center justify-center rounded-full">
-                <Check className="size-7" />
+            <div className="editorial-transaction-state border-border/65 flex w-full flex-col items-center border-y px-4 py-16">
+                <div className="bg-primary/10 text-primary flex size-14 items-center justify-center rounded-[0.25rem]">
+                    <Check className="size-7" />
+                </div>
+                <div className="text-primary mt-6 flex items-center gap-3 text-[0.68rem] font-bold tracking-[0.19em] uppercase">
+                    <span className="bg-primary h-px w-10" />
+                    <p>Order confirmed</p>
+                    <span className="bg-primary h-px w-10" />
+                </div>
+                <h1 className="text-foreground mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
+                    Your copy is reserved.
+                </h1>
+                <p className="text-muted-foreground mx-auto mt-6 max-w-xl text-lg leading-8">
+                    Thank you for supporting the work. Your copy is scheduled
+                    for <strong>{releaseDate}</strong>, and delivery details
+                    will arrive by email when it is time.
+                </p>
+                <Link href="/books" className="editorial-back-link mt-9">
+                    <ChevronLeft />
+                    Back to books
+                </Link>
             </div>
-            <p className="text-primary mt-6 text-xs font-semibold tracking-[0.22em] uppercase">
-                Order confirmed
-            </p>
-            <h1 className="text-foreground mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
-                Your copy is reserved.
-            </h1>
-            <p className="text-muted-foreground mx-auto mt-6 max-w-xl text-lg leading-8">
-                Thank you for supporting the work. Your copy is scheduled for{" "}
-                <strong>{releaseDate}</strong>, and delivery details will arrive
-                by email when it is time.
-            </p>
-            <Button
-                variant="outline"
-                className="mt-9 h-11 rounded-full px-5"
-                render={<Link href="/books" />}
-            >
-                <LibraryBig className="size-4" />
-                Back to books
-            </Button>
         </section>
     )
 }

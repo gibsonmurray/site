@@ -25,7 +25,6 @@ import {
     AppWindow,
     BookOpen,
     Feather,
-    House,
     LayoutGrid,
     Menu,
     Newspaper,
@@ -59,11 +58,6 @@ const navItems: {
         items: NavMenuItem[]
     }
 }[] = [
-    {
-        href: "/",
-        label: "Home",
-        icon: House,
-    },
     {
         href: "/books",
         label: "Books",
@@ -143,34 +137,29 @@ export const Navbar = () => {
         router.push(href)
     }
 
-    const isNavItemActive = (item: (typeof navItems)[number]) => {
-        if (item.href === "/") {
-            return pathname === item.href
-        }
-
-        return (
-            pathname.startsWith(item.href) ||
-            item.aliases?.some((alias) => pathname.startsWith(alias)) ||
-            item.menu?.items.some((menuItem) =>
-                pathname.startsWith(menuItem.href),
-            ) ||
-            false
-        )
-    }
+    const isNavItemActive = (item: (typeof navItems)[number]) =>
+        pathname.startsWith(item.href) ||
+        item.aliases?.some((alias) => pathname.startsWith(alias)) ||
+        item.menu?.items.some((menuItem) =>
+            pathname.startsWith(menuItem.href),
+        ) ||
+        false
 
     return (
-        <aside className="border-border/55 bg-background/82 supports-[backdrop-filter]:bg-background/68 sticky top-0 z-40 border-b px-4 tracking-tight backdrop-blur-xl">
+        <aside className="site-nav border-foreground/10 bg-background/94 supports-[backdrop-filter]:bg-background/86 sticky top-0 z-40 border-b px-4 tracking-tight backdrop-blur-xl sm:px-6">
             <div className="mx-auto max-w-6xl">
                 <nav
-                    className="fade relative flex min-h-12 scroll-pr-6 flex-row items-center justify-between gap-2 md:relative md:overflow-visible"
+                    className="fade relative flex min-h-14 scroll-pr-6 flex-row items-center justify-between gap-2 md:relative md:overflow-visible"
                     id="nav"
                 >
                     <Link
                         href="/"
-                        className="text-foreground/88 hover:text-foreground inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-1 text-sm font-semibold transition-colors md:hidden"
+                        className="site-nav-brand text-foreground/88 hover:text-foreground inline-flex h-10 shrink-0 items-center gap-2 px-1 text-sm font-semibold transition-colors md:hidden"
                         aria-label="Gibson Murray home"
+                        aria-current={pathname === "/" ? "page" : undefined}
                     >
                         <LogoIcon className="size-3.5" />
+                        <span>Gibson Murray</span>
                     </Link>
 
                     <div className="ml-auto flex shrink-0 items-center gap-1 md:hidden">
@@ -178,7 +167,7 @@ export const Navbar = () => {
                             variant="outline"
                             size="icon-lg"
                             onClick={openCart}
-                            className="text-muted-foreground hover:text-foreground relative rounded-full border-transparent bg-transparent shadow-none hover:!bg-transparent focus-visible:!bg-transparent"
+                            className="text-muted-foreground hover:text-foreground relative rounded-none border-transparent bg-transparent shadow-none hover:!bg-transparent focus-visible:!bg-transparent"
                             aria-label="Open cart"
                         >
                             <span className="relative inline-flex">
@@ -213,7 +202,7 @@ export const Navbar = () => {
                         </SheetTrigger>
                         <SheetContent
                             side="top"
-                            className="max-h-[calc(100svh-1rem)] overflow-y-auto rounded-b-[1.5rem] border-b px-4 pb-5 shadow-2xl md:hidden"
+                            className="max-h-[calc(100svh-1rem)] overflow-y-auto rounded-none border-b px-4 pb-5 shadow-xl md:hidden"
                         >
                             <SheetHeader className="px-0 pt-5 pb-2">
                                 <SheetTitle className="sr-only">
@@ -248,9 +237,9 @@ export const Navbar = () => {
                                                 </div>
                                                 <Link
                                                     href={item.href}
-                                                    className="hover:bg-muted/70 flex min-h-14 items-center gap-3 rounded-[1rem] px-3 py-2.5 transition-colors"
+                                                    className="hover:bg-muted/70 flex min-h-14 items-center gap-3 rounded-none px-3 py-2.5 transition-colors"
                                                 >
-                                                    <span className="bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-full">
+                                                    <span className="bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-none">
                                                         <NavIcon
                                                             icon={AllIcon}
                                                             className="size-4"
@@ -275,7 +264,7 @@ export const Navbar = () => {
                                                         <Link
                                                             key={menuItem.href}
                                                             href={menuItem.href}
-                                                            className="hover:bg-muted/70 flex min-h-14 items-center gap-3 rounded-[1rem] px-3 py-2.5 transition-colors"
+                                                            className="hover:bg-muted/70 flex min-h-14 items-center gap-3 rounded-none px-3 py-2.5 transition-colors"
                                                         >
                                                             {menuItem.imageSrc ? (
                                                                 <img
@@ -286,7 +275,7 @@ export const Navbar = () => {
                                                                         menuItem.imageAlt ??
                                                                         ""
                                                                     }
-                                                                    className="border-border/60 size-9 shrink-0 rounded-[0.65rem] border object-cover shadow-sm"
+                                                                    className="border-border/60 size-9 shrink-0 rounded-[0.25rem] border object-cover"
                                                                     aria-hidden={
                                                                         menuItem.imageAlt
                                                                             ? undefined
@@ -295,7 +284,7 @@ export const Navbar = () => {
                                                                 />
                                                             ) : (
                                                                 MenuIcon && (
-                                                                    <span className="bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-full">
+                                                                    <span className="bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-none">
                                                                         <NavIcon
                                                                             icon={
                                                                                 MenuIcon
@@ -329,8 +318,9 @@ export const Navbar = () => {
 
                     <Link
                         href="/"
-                        className="text-foreground/88 hover:text-foreground hidden h-9 shrink-0 items-center gap-2 rounded-full px-1 text-sm font-semibold transition-colors md:inline-flex md:px-2"
+                        className="site-nav-brand text-foreground/88 hover:text-foreground hidden h-10 shrink-0 items-center gap-2 px-1 text-sm font-semibold transition-colors md:inline-flex"
                         aria-label="Gibson Murray home"
+                        aria-current={pathname === "/" ? "page" : undefined}
                     >
                         <LogoIcon className="size-3.5" />
                         <span>Gibson Murray</span>
@@ -341,9 +331,9 @@ export const Navbar = () => {
                         onValueChange={setOpenMenu}
                         className="hidden max-w-none min-w-0 flex-1 justify-center md:flex"
                     >
-                        <NavigationMenuList className="gap-0.5 rounded-full">
+                        <NavigationMenuList className="gap-5">
                             {navItems.map((item) => {
-                                const { href, label, icon: Icon, menu } = item
+                                const { href, label, menu } = item
                                 const isActive = isNavItemActive(item)
 
                                 if (menu) {
@@ -365,21 +355,13 @@ export const Navbar = () => {
                                                         : undefined
                                                 }
                                                 className={cn(
-                                                    "data-active:text-foreground text-muted-foreground hover:text-foreground h-8 rounded-full bg-transparent px-2 text-xs font-medium hover:!bg-transparent focus-visible:!bg-transparent data-active:!bg-transparent sm:px-3 sm:text-sm",
+                                                    "site-nav-link data-active:text-foreground text-muted-foreground hover:text-foreground h-14 rounded-none bg-transparent px-0 text-xs font-medium hover:!bg-transparent focus-visible:!bg-transparent data-active:!bg-transparent sm:text-sm",
                                                     isActive &&
                                                         "text-foreground",
                                                 )}
                                             >
-                                                <span className="inline-flex items-center gap-2">
-                                                    {Icon && (
-                                                        <NavIcon
-                                                            icon={Icon}
-                                                            className="size-3.5 opacity-80"
-                                                        />
-                                                    )}
-                                                    <span className="sr-only md:not-sr-only">
-                                                        {label}
-                                                    </span>
+                                                <span className="sr-only md:not-sr-only">
+                                                    {label}
                                                 </span>
                                             </NavigationMenuTrigger>
                                             <NavigationMenuContent className="w-[min(calc(100vw-2rem),22rem)] p-2">
@@ -394,9 +376,9 @@ export const Navbar = () => {
                                                         data-active={
                                                             pathname === href
                                                         }
-                                                        className="group min-h-16 items-start gap-3 rounded-[1rem] p-3"
+                                                        className="group min-h-16 items-start gap-3 rounded-none p-3"
                                                     >
-                                                        <span className="bg-primary/10 text-primary mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full">
+                                                        <span className="bg-primary/10 text-primary mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-none">
                                                             <NavIcon
                                                                 icon={AllIcon}
                                                                 className="size-4"
@@ -438,7 +420,7 @@ export const Navbar = () => {
                                                                     data-active={pathname.startsWith(
                                                                         menuItem.href,
                                                                     )}
-                                                                    className="group min-h-16 items-start gap-3 rounded-[1rem] p-3"
+                                                                    className="group min-h-16 items-start gap-3 rounded-none p-3"
                                                                 >
                                                                     {menuItem.imageSrc ? (
                                                                         <img
@@ -449,7 +431,7 @@ export const Navbar = () => {
                                                                                 menuItem.imageAlt ??
                                                                                 ""
                                                                             }
-                                                                            className="border-border/60 mt-0.5 size-9 shrink-0 rounded-[0.65rem] border object-cover shadow-sm"
+                                                                            className="border-border/60 mt-0.5 size-9 shrink-0 rounded-[0.25rem] border object-cover"
                                                                             aria-hidden={
                                                                                 menuItem.imageAlt
                                                                                     ? undefined
@@ -458,7 +440,7 @@ export const Navbar = () => {
                                                                         />
                                                                     ) : (
                                                                         MenuIcon && (
-                                                                            <span className="bg-primary/10 text-primary mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full">
+                                                                            <span className="bg-primary/10 text-primary mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-none">
                                                                                 <NavIcon
                                                                                     icon={
                                                                                         MenuIcon
@@ -499,16 +481,10 @@ export const Navbar = () => {
                                                 isActive ? "page" : undefined
                                             }
                                             className={cn(
-                                                "data-active:text-foreground text-muted-foreground hover:text-foreground h-8 rounded-full bg-transparent px-2 text-xs font-medium hover:!bg-transparent focus-visible:!bg-transparent data-active:!bg-transparent sm:px-3 sm:text-sm",
+                                                "site-nav-link data-active:text-foreground text-muted-foreground hover:text-foreground h-14 rounded-none bg-transparent px-0 text-xs font-medium hover:!bg-transparent focus-visible:!bg-transparent data-active:!bg-transparent sm:text-sm",
                                                 isActive && "text-foreground",
                                             )}
                                         >
-                                            {Icon && (
-                                                <NavIcon
-                                                    icon={Icon}
-                                                    className="size-3.5 opacity-80"
-                                                />
-                                            )}
                                             <span className="sr-only md:not-sr-only">
                                                 {label}
                                             </span>
@@ -524,7 +500,7 @@ export const Navbar = () => {
                             variant="outline"
                             size="lg"
                             onClick={openCart}
-                            className="text-muted-foreground hover:text-foreground relative h-8 rounded-full border-transparent bg-transparent px-2 text-xs shadow-none hover:!bg-transparent focus-visible:!bg-transparent sm:px-3 sm:text-sm"
+                            className="site-nav-link text-muted-foreground hover:text-foreground relative h-14 rounded-none border-transparent bg-transparent px-0 text-xs shadow-none hover:!bg-transparent focus-visible:!bg-transparent sm:text-sm"
                             aria-label="Open cart"
                         >
                             <span className="relative inline-flex">

@@ -203,14 +203,14 @@ const BookPage = async ({ params }: Props) => {
     }
 
     return (
-        <section className="overflow-hidden">
+        <section className="editorial-page overflow-hidden">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             <BookDetailClient book={book} />
             {book.reviews && book.reviews.length > 0 && (
-                <div className="mx-auto max-w-6xl px-6 pb-20 sm:px-8">
+                <div className="site-page-container pb-20">
                     <BookReviews reviews={book.reviews} />
                 </div>
             )}

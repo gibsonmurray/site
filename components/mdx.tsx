@@ -70,7 +70,9 @@ const RoundedImage: FC<RoundedImageProps> = ({
     height,
     ...props
 }) => {
-    const mergedClassName = ["rounded-3xl", className].filter(Boolean).join(" ")
+    const mergedClassName = ["rounded-[0.25rem]", className]
+        .filter(Boolean)
+        .join(" ")
 
     if (typeof width === "number" && typeof height === "number") {
         return (
@@ -85,7 +87,7 @@ const RoundedImage: FC<RoundedImageProps> = ({
     }
 
     return (
-        <span className="relative block aspect-4/3 w-full overflow-hidden rounded-3xl">
+        <span className="relative block aspect-4/3 w-full overflow-hidden rounded-[0.25rem]">
             <Image
                 alt={alt}
                 fill

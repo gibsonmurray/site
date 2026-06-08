@@ -26,7 +26,7 @@ export const Pre: FC<{ children: React.ReactNode }> = ({ children }) => {
     }
 
     return (
-        <pre className="bg-muted/40 border-border/50 group relative overflow-x-auto rounded-lg border p-4">
+        <pre className="bg-muted/40 border-border/50 group relative overflow-x-auto rounded-[0.25rem] border p-4">
             <Button
                 variant="ghost"
                 size="xs"

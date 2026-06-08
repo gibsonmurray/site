@@ -6,7 +6,11 @@ import { Check, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-export const NewsletterSignup = () => {
+export const NewsletterSignup = ({
+    variant = "panel",
+}: {
+    variant?: "panel" | "minimal"
+}) => {
     const [submitted, setSubmitted] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -30,7 +34,11 @@ export const NewsletterSignup = () => {
     }
 
     return (
-        <div className="app-panel">
+        <div
+            className={
+                variant === "minimal" ? "home-newsletter-signup" : "app-panel"
+            }
+        >
             {submitted ? (
                 <div className="flex flex-1 flex-col justify-center gap-4">
                     <div className="bg-primary/10 text-primary flex size-12 items-center justify-center rounded-full">
@@ -48,30 +56,38 @@ export const NewsletterSignup = () => {
                 </div>
             ) : (
                 <div className="flex flex-1 flex-col">
-                    <div className="flex flex-col gap-2">
-                        <h2 className="app-eyebrow">Newsletter</h2>
-                        <p className="app-panel-title">Notes from the desk.</p>
-                        <p className="app-panel-copy">
-                            Book updates, biblical reflections, essays, and
-                            occasional dispatches. No spam, ever.
-                        </p>
-                    </div>
+                    {variant === "panel" && (
+                        <div className="flex flex-col gap-2">
+                            <h2 className="app-eyebrow">Newsletter</h2>
+                            <p className="app-panel-title">
+                                Notes from the desk.
+                            </p>
+                            <p className="app-panel-copy">
+                                Book updates, biblical reflections, essays, and
+                                occasional dispatches. No spam, ever.
+                            </p>
+                        </div>
+                    )}
                     <form
                         onSubmit={handleSubmit}
-                        className="mt-auto flex flex-col gap-4 pt-10 sm:flex-row sm:gap-3 sm:pt-8"
+                        className={
+                            variant === "minimal"
+                                ? "flex flex-col gap-4 sm:flex-row sm:gap-3"
+                                : "mt-auto flex flex-col gap-4 pt-10 sm:flex-row sm:gap-3 sm:pt-8"
+                        }
                     >
                         <Input
                             ref={inputRef}
                             type="email"
                             required
                             placeholder="your@email.com"
-                            className="min-h-12 flex-1 rounded-full px-5 text-base"
+                            className="min-h-12 flex-1 rounded-none px-5 text-base"
                         />
                         <Button
                             type="submit"
                             size="lg"
                             disabled={mutation.isPending}
-                            className="h-12 gap-2 rounded-full px-5 text-base sm:shrink-0"
+                            className="h-12 gap-2 rounded-none px-5 text-base sm:shrink-0"
                         >
                             <Mail className="size-4" />
                             {mutation.isPending ? "..." : "Subscribe"}

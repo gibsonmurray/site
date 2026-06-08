@@ -62,15 +62,15 @@ export const CartDrawer = () => {
 
             <aside
                 className={cn(
-                    "border-border bg-background fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col border-l shadow-2xl transition-transform duration-300 ease-in-out",
+                    "site-cart-drawer border-foreground/12 bg-background fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l shadow-2xl transition-transform duration-300 ease-in-out",
                     isOpen ? "translate-x-0" : "translate-x-full",
                 )}
                 aria-label="Shopping cart"
             >
-                <div className="border-border flex items-center justify-between border-b px-5 py-5">
+                <div className="site-cart-header border-foreground/12 flex items-center justify-between border-b px-6 py-5">
                     <div className="flex items-center gap-2">
                         <ShoppingCart className="size-4" />
-                        <span className="text-foreground font-semibold tracking-tight">
+                        <span className="site-cart-title text-foreground font-[Georgia] text-2xl font-normal tracking-[-0.045em]">
                             Bag
                         </span>
                         {totalItems > 0 && (
@@ -83,7 +83,7 @@ export const CartDrawer = () => {
                         variant="ghost"
                         size="icon"
                         onClick={closeCart}
-                        className="text-muted-foreground hover:text-foreground rounded-full"
+                        className="text-muted-foreground hover:text-foreground rounded-none"
                         aria-label="Close cart"
                     >
                         <X className="size-5" />
@@ -92,12 +92,13 @@ export const CartDrawer = () => {
 
                 <div className="flex-1 overflow-y-auto">
                     {items.length === 0 ? (
-                        <div className="flex min-h-80 flex-col items-center justify-center gap-4 px-8 text-center">
-                            <div className="bg-muted text-muted-foreground flex size-14 items-center justify-center rounded-full">
+                        <div className="site-cart-empty flex min-h-80 flex-col items-center justify-center gap-4 px-8 text-center">
+                            <div className="bg-primary mb-2 h-px w-10" />
+                            <div className="bg-primary/10 text-primary flex size-14 items-center justify-center rounded-[0.25rem]">
                                 <ShoppingCart className="size-6" />
                             </div>
                             <div>
-                                <p className="text-foreground font-semibold tracking-tight">
+                                <p className="site-cart-empty-title text-foreground font-[Georgia] text-4xl leading-none font-normal tracking-[-0.045em]">
                                     Your bag is empty.
                                 </p>
                                 <p className="text-muted-foreground mt-2 text-sm leading-6">
@@ -128,7 +129,7 @@ export const CartDrawer = () => {
                 </div>
 
                 {items.length > 0 && (
-                    <div className="border-border space-y-5 border-t px-5 py-5">
+                    <div className="border-foreground/12 space-y-5 border-t px-6 py-5">
                         <div className="flex flex-col gap-2">
                             {items.map((item) => {
                                 const book = books.find(
@@ -170,13 +171,14 @@ export const CartDrawer = () => {
                                     </span>
                                 </div>
                                 <p className="text-muted-foreground/60 mt-1 text-xs">
-                                    Flat-rate shipping and tax shown at checkout.
+                                    Flat-rate shipping and tax shown at
+                                    checkout.
                                 </p>
                             </div>
                         </div>
 
                         <Button
-                            className="h-11 w-full rounded-full font-semibold"
+                            className="h-11 w-full rounded-none font-semibold"
                             size="lg"
                             onClick={() => {
                                 closeCart()
@@ -188,7 +190,7 @@ export const CartDrawer = () => {
                         <Button
                             variant="ghost"
                             onClick={clearCart}
-                            className="w-full rounded-full text-xs"
+                            className="mx-auto flex h-auto w-fit rounded-none border-b border-transparent px-0 py-1 text-xs hover:border-current hover:bg-transparent"
                         >
                             Clear bag
                         </Button>

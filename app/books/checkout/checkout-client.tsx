@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { ChevronLeft } from "lucide-react"
 import { type CartItem, useCartStore } from "@/lib/cart-store"
 
 export const CheckoutClient = ({
@@ -56,6 +57,7 @@ export const CheckoutClient = ({
     if (items.length === 0) {
         return (
             <CheckoutMessage
+                label="Book order"
                 title="Your bag is empty."
                 body="Add a book before starting checkout."
             />
@@ -65,6 +67,7 @@ export const CheckoutClient = ({
     if (checkoutError) {
         return (
             <CheckoutMessage
+                label="Checkout"
                 title="Checkout needs attention."
                 body={checkoutError}
             />
@@ -73,6 +76,7 @@ export const CheckoutClient = ({
 
     return (
         <CheckoutMessage
+            label="Secure checkout"
             title="Opening checkout..."
             body="Taking you to Stripe's secure checkout."
         />
@@ -90,17 +94,28 @@ const readJson = async (res: Response) => {
     }
 }
 
-const CheckoutMessage = ({ title, body }: { title: string; body: string }) => {
+const CheckoutMessage = ({
+    label,
+    title,
+    body,
+}: {
+    label: string
+    title: string
+    body: string
+}) => {
     return (
-        <div className="mx-auto flex min-h-[28rem] max-w-lg flex-col items-center justify-center text-center">
+        <div className="editorial-transaction-state border-border/65 mx-auto flex min-h-[28rem] max-w-3xl flex-col items-center justify-center border-y px-4 py-16 text-center">
+            <div className="text-primary mb-6 flex items-center gap-3 text-[0.68rem] font-bold tracking-[0.19em] uppercase">
+                <span className="bg-primary h-px w-10" />
+                <p>{label}</p>
+                <span className="bg-primary h-px w-10" />
+            </div>
             <h1 className="text-foreground text-3xl font-semibold tracking-tight">
                 {title}
             </h1>
             <p className="text-muted-foreground mt-3 leading-7">{body}</p>
-            <Link
-                href="/books"
-                className="border-border bg-background hover:bg-muted text-foreground mt-7 inline-flex h-9 items-center justify-center rounded-full border px-4 text-sm font-medium transition-colors"
-            >
+            <Link href="/books" className="editorial-back-link mt-7">
+                <ChevronLeft />
                 Back to books
             </Link>
         </div>

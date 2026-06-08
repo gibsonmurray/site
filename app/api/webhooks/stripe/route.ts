@@ -2,11 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { Resend } from "resend"
 import { books, type BookFormat } from "@/lib/books"
-import { publicContactEmail } from "@/lib/contact"
+import { orderNotificationEmail } from "@/lib/contact"
 import { getStripe } from "@/lib/stripe-server"
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
-const resend = new Resend(process.env.RESEND_API_KEY!)
 
 type OrderItem = {
     bookId: string
@@ -63,9 +60,28 @@ const parseOrderItems = (session: Stripe.Checkout.Session): OrderItem[] => {
 }
 
 export async function POST(req: NextRequest) {
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+    const resendApiKey = process.env.RESEND_API_KEY
+    if (!webhookSecret || !resendApiKey) {
+        console.error("Order webhook is missing required configuration", {
+            hasWebhookSecret: Boolean(webhookSecret),
+            hasResendApiKey: Boolean(resendApiKey),
+        })
+        return NextResponse.json(
+            { error: "Webhook is not configured" },
+            { status: 500 },
+        )
+    }
+
     const stripe = getStripe()
     const body = await req.text()
-    const sig = req.headers.get("stripe-signature")!
+    const sig = req.headers.get("stripe-signature")
+    if (!sig) {
+        return NextResponse.json(
+            { error: "Missing signature" },
+            { status: 400 },
+        )
+    }
 
     let event: Stripe.Event
     try {
@@ -77,7 +93,10 @@ export async function POST(req: NextRequest) {
         )
     }
 
-    if (event.type === "checkout.session.completed") {
+    if (
+        event.type === "checkout.session.completed" ||
+        event.type === "checkout.session.async_payment_succeeded"
+    ) {
         const session = event.data.object as Stripe.Checkout.Session & {
             shipping_details?: {
                 name?: string | null
@@ -89,6 +108,10 @@ export async function POST(req: NextRequest) {
                     address?: Stripe.Address | null
                 } | null
             } | null
+        }
+
+        if (session.payment_status !== "paid") {
+            return NextResponse.json({ received: true })
         }
 
         const orderItems = parseOrderItems(session)
@@ -139,12 +162,13 @@ export async function POST(req: NextRequest) {
             (field) => field.key === "gift_message",
         )?.text?.value
 
-        await resend.emails.send({
-            from: "orders@send.gibsonmurray.com",
-            to: publicContactEmail,
-            subject: `New pre-order — ${orderItems.map((item) => item.bookId).join(", ")}`,
+        const resend = new Resend(resendApiKey)
+        const { error } = await resend.emails.send({
+            from: "Gibson Murray <orders@gibsonmurray.com>",
+            to: orderNotificationEmail,
+            subject: `New order — ${orderItems.map((item) => item.bookId).join(", ")}`,
             text: [
-                `New pre-order received!`,
+                `New paid order received!`,
                 `Fulfillment ID: ${fulfillmentId}`,
                 ``,
                 `Items`,
@@ -168,6 +192,18 @@ export async function POST(req: NextRequest) {
                 .filter((l) => l !== null)
                 .join("\n"),
         })
+
+        if (error) {
+            console.error("Unable to send order notification", {
+                eventId: event.id,
+                sessionId: session.id,
+                error,
+            })
+            return NextResponse.json(
+                { error: "Unable to send order notification" },
+                { status: 500 },
+            )
+        }
     }
 
     return NextResponse.json({ received: true })

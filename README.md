@@ -16,8 +16,10 @@ Useful environment variables:
 - `NEXT_PUBLIC_STRIPE_CHECKOUT_PUBLISHABLE_KEY` overrides embedded Checkout on
   the client when set
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
-- `STRIPE_WEBHOOK_SECRET`
+- `STRIPE_WEBHOOK_SECRET` is the signing secret for the Stripe webhook endpoint
 - `RESEND_API_KEY`
+- `ORDER_NOTIFICATION_EMAIL` receives paid-order emails and defaults to
+  `gibson@gibsonmurray.com`
 - `BOOK_SHIPPING_BASE_CENTS` defaults to `599` and is kept as the legacy
   fallback for `BOOK_SHIPPING_GROUND_BASE_CENTS`
 - `BOOK_SHIPPING_GROUND_BASE_CENTS` defaults to `599`
@@ -29,7 +31,9 @@ Useful environment variables:
 - `BOOK_SHIPPING_NONCONTIGUOUS_SURCHARGE_CENTS` defaults to `800`
 - `BOOK_SHIPPING_ALLOWED_COUNTRIES` defaults to `US`
 
-New paid orders email `PUBLIC_CONTACT_EMAIL` with a stable fulfillment ID:
+The Stripe webhook at `/api/webhooks/stripe` should subscribe to
+`checkout.session.completed` and `checkout.session.async_payment_succeeded`.
+New paid orders email `ORDER_NOTIFICATION_EMAIL` with a stable fulfillment ID:
 `stripe:<checkout-session-id>`. Use that same ID in notes or your tracking
 sheet so you can tell which Stripe order already has a Pirate Ship label.
 

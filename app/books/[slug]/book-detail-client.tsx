@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState, type SyntheticEvent } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useMutation } from "@tanstack/react-query"
 import { AnimatePresence, motion } from "motion/react"
 import {
@@ -466,9 +467,11 @@ const statusCopy = (book: Book, isPurchasable: boolean) => {
 }
 
 export const BookDetailClient = ({ book }: { book: Book }) => {
+    const router = useRouter()
     const [glowColor, setGlowColor] = useState<GlowColor>(DEFAULT_GLOW)
     const [hasGlowColor, setHasGlowColor] = useState(false)
     const [added, setAdded] = useState(false)
+    const [isOpeningCheckout, setIsOpeningCheckout] = useState(false)
 
     const allImages =
         book.images && book.images.length > 0
@@ -500,22 +503,11 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
         !isComingSoon &&
         (book.formats[selectedFormat]?.available ?? false)
 
-    const buyNowMutation = useMutation({
-        mutationFn: async () => {
-            const res = await fetch("/api/checkout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    items: [
-                        { bookId: book.slug, format: selectedFormat, quantity },
-                    ],
-                }),
-            })
-            const { url, error } = await res.json()
-            if (!res.ok) throw new Error(error)
-            window.location.href = url
-        },
-    })
+    const handleBuyNow = () => {
+        setIsOpeningCheckout(true)
+        addItem(book.slug, selectedFormat, quantity)
+        router.push("/books/checkout")
+    }
 
     const handleAddToCart = () => {
         addItem(book.slug, selectedFormat, quantity)
@@ -844,17 +836,13 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                         <div className="mt-4 grid gap-2">
                                             <Button
                                                 size="lg"
-                                                onClick={() =>
-                                                    buyNowMutation.mutate()
-                                                }
-                                                disabled={
-                                                    buyNowMutation.isPending
-                                                }
+                                                onClick={handleBuyNow}
+                                                disabled={isOpeningCheckout}
                                                 className="h-12 justify-between rounded-xl bg-white px-4 text-[#111] hover:bg-white/90"
                                             >
                                                 <span>
-                                                    {buyNowMutation.isPending
-                                                        ? "Redirecting..."
+                                                    {isOpeningCheckout
+                                                        ? "Opening checkout..."
                                                         : isPreOrder
                                                           ? "Pre-order now"
                                                           : "Buy now"}

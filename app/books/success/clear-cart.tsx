@@ -3,10 +3,10 @@
 import { useEffect } from "react"
 import { useCartStore } from "@/lib/cart-store"
 
-export const ClearCart = () => {
+export const ClearCart = ({ enabled = true }: { enabled?: boolean }) => {
     const clearCart = useCartStore((s) => s.clearCart)
     useEffect(() => {
-        clearCart()
-    }, [clearCart])
+        if (enabled) clearCart()
+    }, [clearCart, enabled])
     return null
 }

@@ -7,15 +7,21 @@ import {
     EmbeddedCheckoutProvider,
 } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
-import { useCartStore } from "@/lib/cart-store"
+import { type CartItem, useCartStore } from "@/lib/cart-store"
 
 const publishableKey =
     process.env.NEXT_PUBLIC_STRIPE_CHECKOUT_PUBLISHABLE_KEY ??
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 const stripePromise = publishableKey ? loadStripe(publishableKey) : null
 
-export const CheckoutClient = () => {
-    const items = useCartStore((state) => state.items)
+export const CheckoutClient = ({
+    directItems,
+}: {
+    directItems?: CartItem[]
+}) => {
+    const cartItems = useCartStore((state) => state.items)
+    const items = directItems ?? cartItems
+    const checkoutMode = directItems === undefined ? "cart" : "direct"
     const checkoutKey = JSON.stringify(items)
     const [clientSecret, setClientSecret] = useState<string | null>(null)
     const [checkoutError, setCheckoutError] = useState<string | null>(null)
@@ -31,7 +37,7 @@ export const CheckoutClient = () => {
             const res = await fetch("/api/checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ items }),
+                body: JSON.stringify({ items, checkoutMode }),
             })
             const data = await readJson(res)
             const nextClientSecret =
@@ -65,7 +71,7 @@ export const CheckoutClient = () => {
         return () => {
             isCurrent = false
         }
-    }, [checkoutKey, items])
+    }, [checkoutKey, checkoutMode, items])
 
     const options = useMemo(
         () => ({

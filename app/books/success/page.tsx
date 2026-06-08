@@ -15,7 +15,15 @@ export const metadata: Metadata = {
     },
 }
 
-const SuccessPage = () => {
+type SuccessPageProps = {
+    searchParams: Promise<{ checkout?: string | string[] }>
+}
+
+const SuccessPage = async ({ searchParams }: SuccessPageProps) => {
+    const params = await searchParams
+    const checkoutMode = Array.isArray(params.checkout)
+        ? params.checkout[0]
+        : params.checkout
     const releaseDate =
         latestBook?.status.type === "pre-order"
             ? latestBook.status.releaseDate
@@ -23,7 +31,7 @@ const SuccessPage = () => {
 
     return (
         <section className="mx-auto flex min-h-[calc(100svh-7rem)] max-w-4xl flex-col items-center justify-center px-6 py-16 text-center sm:px-8">
-            <ClearCart />
+            <ClearCart enabled={checkoutMode !== "direct"} />
             <SuccessConfetti />
             <div className="bg-primary/10 text-primary flex size-14 items-center justify-center rounded-full">
                 <Check className="size-7" />

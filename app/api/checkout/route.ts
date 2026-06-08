@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
         const stripe = getCheckoutStripe()
         const body = await req.json()
         const items: CartItem[] = body.items
+        const checkoutMode = body.checkoutMode === "direct" ? "direct" : "cart"
 
         if (!Array.isArray(items) || items.length === 0) {
             return NextResponse.json(
@@ -150,9 +151,10 @@ export async function POST(req: NextRequest) {
                   }
                 : {}),
             phone_number_collection: { enabled: true },
-            return_url: `${baseUrl}/books/success?session_id={CHECKOUT_SESSION_ID}`,
+            return_url: `${baseUrl}/books/success?session_id={CHECKOUT_SESSION_ID}&checkout=${checkoutMode}`,
             metadata: {
                 items: JSON.stringify(checkoutItems),
+                checkout_mode: checkoutMode,
                 physical_quantity: String(getPhysicalQuantity(checkoutItems)),
             },
         })

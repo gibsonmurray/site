@@ -505,8 +505,13 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
 
     const handleBuyNow = () => {
         setIsOpeningCheckout(true)
-        addItem(book.slug, selectedFormat, quantity)
-        router.push("/books/checkout")
+        const checkoutParams = new URLSearchParams({
+            mode: "direct",
+            bookId: book.slug,
+            format: selectedFormat,
+            quantity: String(quantity),
+        })
+        router.push(`/books/checkout?${checkoutParams.toString()}`)
     }
 
     const handleAddToCart = () => {

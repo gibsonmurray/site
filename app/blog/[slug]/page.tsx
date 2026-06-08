@@ -22,7 +22,7 @@ import {
 } from "@/lib/seo"
 
 export const generateStaticParams = async () => {
-    let posts = getBlogPosts()
+    const posts = getBlogPosts()
 
     return posts.map((post) => ({
         slug: post.slug,
@@ -34,21 +34,21 @@ export const generateMetadata = async ({
 }: {
     params: Promise<{ slug: string }>
 }) => {
-    let { slug } = await params
-    let post = getBlogPosts().find((post) => post.slug === slug)
+    const { slug } = await params
+    const post = getBlogPosts().find((post) => post.slug === slug)
     if (!post) {
         return
     }
 
-    let {
+    const {
         title,
         publishedAt: publishedTime,
         summary: description,
         image,
     } = post.metadata
-    let tags = getPostTags(post.metadata.tags)
-    let ogImage = makeOgImage({ title, image })
-    let canonicalImage = image ? absoluteUrl(image) : ogImage
+    const tags = getPostTags(post.metadata.tags)
+    const ogImage = makeOgImage({ title, image })
+    const canonicalImage = image ? absoluteUrl(image) : ogImage
 
     return {
         title,
@@ -99,8 +99,8 @@ export default async function BlogPage({
 }: {
     params: Promise<{ slug: string }>
 }) {
-    let { slug } = await params
-    let post = getBlogPosts().find((post) => post.slug === slug)
+    const { slug } = await params
+    const post = getBlogPosts().find((post) => post.slug === slug)
 
     if (!post) {
         notFound()
@@ -226,7 +226,6 @@ export default async function BlogPage({
                             <ShareButtons
                                 title={post.metadata.title}
                                 slug={slug}
-                                description={post.metadata.summary}
                             />
                         </div>
                         {tags.length > 0 && (

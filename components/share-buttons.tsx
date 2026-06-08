@@ -13,14 +13,9 @@ import {
 interface ShareButtonsProps {
     title: string
     slug: string
-    description?: string
 }
 
-export const ShareButtons = ({
-    title,
-    slug,
-    description,
-}: ShareButtonsProps) => {
+export const ShareButtons = ({ title, slug }: ShareButtonsProps) => {
     const [copied, setCopied] = useState(false)
     const [url, setUrl] = useState("")
 

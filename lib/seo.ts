@@ -2,9 +2,9 @@ import { baseUrl } from "@/app/sitemap"
 
 export const SITE_NAME = "Gibson Murray"
 export const AUTHOR_NAME = "Gibson Murray"
-export const AUTHOR_URL = baseUrl
-export const SITE_IMAGE = `${baseUrl}/headshot.jpeg`
-export const SITE_LOGO = `${baseUrl}/gm-logo.png`
+const AUTHOR_URL = baseUrl
+const SITE_IMAGE = `${baseUrl}/headshot.jpeg`
+const SITE_LOGO = `${baseUrl}/gm-logo.png`
 
 export const SITE_TITLE =
     "Gibson Murray | Christian Author and Biblical Fiction Writer"
@@ -42,7 +42,7 @@ export const SITE_KEYWORDS = [
     "Christian storyteller",
 ]
 
-export const AUTHOR_SAME_AS = [
+const AUTHOR_SAME_AS = [
     "https://github.com/gibsonmurray",
     "https://x.com/gibsonmurray",
 ]

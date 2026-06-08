@@ -122,11 +122,18 @@ export async function POST(req: NextRequest) {
             }
         }
 
+        const metadata = {
+            items: JSON.stringify(checkoutItems),
+            checkout_mode: checkoutMode,
+            physical_quantity: String(getPhysicalQuantity(checkoutItems)),
+        }
+
         const session = await stripe.checkout.sessions.create({
             mode: "payment",
             line_items: lineItems,
             allow_promotion_codes: true,
             automatic_tax: { enabled: true },
+            payment_intent_data: { metadata },
             custom_fields: [
                 {
                     key: "gift_message",
@@ -149,11 +156,7 @@ export async function POST(req: NextRequest) {
             phone_number_collection: { enabled: true },
             success_url: `${baseUrl}/books/success?session_id={CHECKOUT_SESSION_ID}&checkout=${checkoutMode}`,
             cancel_url: `${baseUrl}/books`,
-            metadata: {
-                items: JSON.stringify(checkoutItems),
-                checkout_mode: checkoutMode,
-                physical_quantity: String(getPhysicalQuantity(checkoutItems)),
-            },
+            metadata,
         })
 
         if (!session.url) {

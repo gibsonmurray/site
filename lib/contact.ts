@@ -1,4 +1,6 @@
 export const publicContactEmail = "gibson@gibsonmurray.com"
 
-export const orderNotificationEmail =
-    process.env.ORDER_NOTIFICATION_EMAIL ?? publicContactEmail
+export const notificationEmail =
+    process.env.NOTIFICATION_EMAIL ??
+    process.env.ORDER_NOTIFICATION_EMAIL ??
+    publicContactEmail

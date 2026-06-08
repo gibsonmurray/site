@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { Resend } from "resend"
 import { books, type BookFormat } from "@/lib/books"
-import { orderNotificationEmail } from "@/lib/contact"
+import { notificationEmail } from "@/lib/contact"
 import { getCheckoutStripe } from "@/lib/stripe-server"
 
 type OrderItem = {
@@ -18,10 +18,10 @@ const formatLabels: Record<BookFormat, string> = {
     bundle: "Complete bundle",
 }
 
-const parseOrderItems = (session: Stripe.Checkout.Session): OrderItem[] => {
-    const metadataItems = session.metadata?.items
+const parseOrderItems = (metadata?: Stripe.Metadata | null): OrderItem[] => {
+    const metadataItems = metadata?.items
     if (!metadataItems) {
-        const bookId = session.metadata?.bookId
+        const bookId = metadata?.bookId
         return bookId ? [{ bookId, format: "paperback", quantity: 1 }] : []
     }
 
@@ -59,6 +59,13 @@ const parseOrderItems = (session: Stripe.Checkout.Session): OrderItem[] => {
     }
 }
 
+const getItemLines = (orderItems: OrderItem[]) =>
+    orderItems.map((item) => {
+        const book = books.find((b) => b.slug === item.bookId)
+        const title = book?.title ?? item.bookId
+        return `  ${title} — ${formatLabels[item.format]} x ${item.quantity}`
+    })
+
 export async function POST(req: NextRequest) {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
     const resendApiKey = process.env.RESEND_API_KEY
@@ -93,6 +100,56 @@ export async function POST(req: NextRequest) {
         )
     }
 
+    if (event.type === "payment_intent.payment_failed") {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent
+        const orderItems = parseOrderItems(paymentIntent.metadata)
+        const paymentError = paymentIntent.last_payment_error
+        const resend = new Resend(resendApiKey)
+        const dashboardUrl = `https://dashboard.stripe.com/${paymentIntent.livemode ? "" : "test/"}payments/${paymentIntent.id}`
+        const { error } = await resend.emails.send(
+            {
+                from: "Gibson Murray <orders@gibsonmurray.com>",
+                to: notificationEmail,
+                subject: `Payment failed${orderItems.length > 0 ? ` — ${orderItems.map((item) => item.bookId).join(", ")}` : ""}`,
+                text: [
+                    `A Stripe payment attempt failed.`,
+                    ``,
+                    `Error`,
+                    `  Message: ${paymentError?.message ?? "Unknown payment error"}`,
+                    `  Code: ${paymentError?.code ?? "—"}`,
+                    `  Decline code: ${paymentError?.decline_code ?? "—"}`,
+                    `  Type: ${paymentError?.type ?? "—"}`,
+                    ``,
+                    orderItems.length > 0 ? `Attempted items` : null,
+                    ...getItemLines(orderItems),
+                    orderItems.length > 0 ? `` : null,
+                    `Amount: ${new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: paymentIntent.currency,
+                    }).format(paymentIntent.amount / 100)}`,
+                    `Customer email: ${paymentIntent.receipt_email ?? "—"}`,
+                    `Stripe payment intent: ${paymentIntent.id}`,
+                    `Stripe dashboard: ${dashboardUrl}`,
+                ]
+                    .filter((line) => line !== null)
+                    .join("\n"),
+            },
+            { idempotencyKey: `stripe-payment-failed-${event.id}` },
+        )
+
+        if (error) {
+            console.error("Unable to send failed payment notification", {
+                eventId: event.id,
+                paymentIntentId: paymentIntent.id,
+                error,
+            })
+            return NextResponse.json(
+                { error: "Unable to send failed payment notification" },
+                { status: 500 },
+            )
+        }
+    }
+
     if (
         event.type === "checkout.session.completed" ||
         event.type === "checkout.session.async_payment_succeeded"
@@ -114,7 +171,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ received: true })
         }
 
-        const orderItems = parseOrderItems(session)
+        const orderItems = parseOrderItems(session.metadata)
         const shipping =
             session.collected_information?.shipping_details ??
             session.shipping_details
@@ -147,11 +204,7 @@ export async function POST(req: NextRequest) {
               ]
             : [`Ship to`, `  Digital delivery / no shipping collected`, ``]
 
-        const itemLines = orderItems.map((item) => {
-            const book = books.find((b) => b.slug === item.bookId)
-            const title = book?.title ?? item.bookId
-            return `  ${title} — ${formatLabels[item.format]} x ${item.quantity}`
-        })
+        const itemLines = getItemLines(orderItems)
         const fulfillmentId = `stripe:${session.id}`
         const paymentIntentId =
             typeof session.payment_intent === "string"
@@ -166,7 +219,7 @@ export async function POST(req: NextRequest) {
         const { error } = await resend.emails.send(
             {
                 from: "Gibson Murray <orders@gibsonmurray.com>",
-                to: orderNotificationEmail,
+                to: notificationEmail,
                 subject: `New order — ${orderItems.map((item) => item.bookId).join(", ")}`,
                 text: [
                     `New paid order received!`,

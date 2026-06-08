@@ -11,7 +11,7 @@ const escapeXml = (value: string) =>
         .replaceAll("'", "&apos;")
 
 export const GET = async () => {
-    let allBlogs = getBlogPosts()
+    const allBlogs = getBlogPosts()
 
     const itemsXml = allBlogs
         .sort((a, b) => {

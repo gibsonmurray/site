@@ -9,10 +9,10 @@ import { Pre } from "@/components/mdx-pre"
 const Table: FC<{ data: { headers: string[]; rows: string[][] } }> = ({
     data,
 }) => {
-    let headers = data.headers.map((header, index) => (
+    const headers = data.headers.map((header, index) => (
         <th key={index}>{header}</th>
     ))
-    let rows = data.rows.map((row, index) => (
+    const rows = data.rows.map((row, index) => (
         <tr key={index}>
             {row.map((cell, cellIndex) => (
                 <td key={cellIndex}>{cell}</td>
@@ -103,7 +103,7 @@ const Code: FC<{ children: React.ReactNode | string }> = ({
     children,
     ...props
 }) => {
-    let codeHTML = highlight((children as string) || "")
+    const codeHTML = highlight((children as string) || "")
     return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
 }
 
@@ -120,7 +120,7 @@ const slugify = (str: string) => {
 
 const createHeading = (level: number) => {
     const Heading = ({ children }) => {
-        let slug = slugify(children)
+        const slug = slugify(children)
         return React.createElement(
             `h${level}`,
             { id: slug },
@@ -140,7 +140,7 @@ const createHeading = (level: number) => {
     return Heading
 }
 
-let components = {
+const components = {
     h1: createHeading(1),
     h2: createHeading(2),
     h3: createHeading(3),

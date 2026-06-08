@@ -12,15 +12,15 @@ type Metadata = {
 }
 
 const parseFrontmatter = (fileContent: string) => {
-    let frontmatterRegex = /---\s*([\s\S]*?)\s*---/
-    let match = frontmatterRegex.exec(fileContent)
-    let frontMatterBlock = match![1]
-    let content = fileContent.replace(frontmatterRegex, "").trim()
-    let frontMatterLines = frontMatterBlock.trim().split("\n")
-    let metadata: Partial<Metadata> = {}
+    const frontmatterRegex = /---\s*([\s\S]*?)\s*---/
+    const match = frontmatterRegex.exec(fileContent)
+    const frontMatterBlock = match![1]
+    const content = fileContent.replace(frontmatterRegex, "").trim()
+    const frontMatterLines = frontMatterBlock.trim().split("\n")
+    const metadata: Partial<Metadata> = {}
 
     frontMatterLines.forEach((line) => {
-        let [key, ...valueArr] = line.split(": ")
+        const [key, ...valueArr] = line.split(": ")
         let value = valueArr.join(": ").trim()
         value = value.replace(/^['"](.*)['"]$/, "$1") // Remove quotes
         metadata[key.trim() as keyof Metadata] = value
@@ -34,15 +34,15 @@ const getMDXFiles = (dir: string) => {
 }
 
 const readMDXFile = (filePath: string) => {
-    let rawContent = fs.readFileSync(filePath, "utf-8")
+    const rawContent = fs.readFileSync(filePath, "utf-8")
     return parseFrontmatter(rawContent)
 }
 
 const getMDXData = (dir: string) => {
-    let mdxFiles = getMDXFiles(dir)
+    const mdxFiles = getMDXFiles(dir)
     return mdxFiles.map((file) => {
-        let { metadata, content } = readMDXFile(path.join(dir, file))
-        let slug = path.basename(file, path.extname(file))
+        const { metadata, content } = readMDXFile(path.join(dir, file))
+        const slug = path.basename(file, path.extname(file))
 
         return {
             metadata,
@@ -53,7 +53,7 @@ const getMDXData = (dir: string) => {
 }
 
 export const getBlogPosts = (recentOnly = false, recentCount = 3) => {
-    let posts = getMDXData(path.join(process.cwd(), "app", "blog", "posts"))
+    const posts = getMDXData(path.join(process.cwd(), "app", "blog", "posts"))
     const sortedPosts = posts.sort((a, b) => {
         return (
             new Date(b.metadata.publishedAt).getTime() -
@@ -86,15 +86,15 @@ export const formatDate = (
                       includeRelativeOrOptions.includeWeekday ?? false,
               }
 
-    let currentDate = new Date()
+    const currentDate = new Date()
     if (!date.includes("T")) {
         date = `${date}T00:00:00`
     }
-    let targetDate = new Date(date)
+    const targetDate = new Date(date)
 
-    let yearsAgo = currentDate.getFullYear() - targetDate.getFullYear()
-    let monthsAgo = currentDate.getMonth() - targetDate.getMonth()
-    let daysAgo = currentDate.getDate() - targetDate.getDate()
+    const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear()
+    const monthsAgo = currentDate.getMonth() - targetDate.getMonth()
+    const daysAgo = currentDate.getDate() - targetDate.getDate()
 
     let formattedDate = ""
 
@@ -108,7 +108,7 @@ export const formatDate = (
         formattedDate = "Today"
     }
 
-    let fullDate = targetDate.toLocaleString("en-us", {
+    const fullDate = targetDate.toLocaleString("en-us", {
         weekday: options.includeWeekday ? "long" : undefined,
         month: "short",
         day: "numeric",

@@ -12,7 +12,7 @@ export type BookFormatOption = {
     available: boolean
 }
 
-export type BookStatus =
+type BookStatus =
     | {
           type: "coming-soon"
           label: string

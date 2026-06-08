@@ -1,14 +1,14 @@
 import { ImageResponse } from "next/og"
 
 export const GET = async (request: Request) => {
-    let url = new URL(request.url)
-    let title = url.searchParams.get("title") || "Gibson Murray"
-    let subtitle =
+    const url = new URL(request.url)
+    const title = url.searchParams.get("title") || "Gibson Murray"
+    const subtitle =
         url.searchParams.get("subtitle") ||
         "Christian author - Biblical fiction - Essays on faith and craft"
-    let image = url.searchParams.get("image")
+    const image = url.searchParams.get("image")
 
-    let imageUrl = image
+    const imageUrl = image
         ? /^https?:\/\//i.test(image)
             ? image
             : `${url.origin}${image.startsWith("/") ? "" : "/"}${image}`

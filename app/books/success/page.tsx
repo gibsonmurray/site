@@ -3,7 +3,7 @@ import Link from "next/link"
 import { latestBook } from "@/lib/books"
 import { SuccessConfetti } from "./success-confetti"
 import { ClearCart } from "./clear-cart"
-import { Check, ChevronLeft } from "lucide-react"
+import { ArrowRight, Check, ChevronLeft, HelpCircle } from "lucide-react"
 
 export const metadata: Metadata = {
     title: "Order Confirmed",
@@ -26,7 +26,7 @@ const SuccessPage = async ({ searchParams }: SuccessPageProps) => {
     const releaseDate =
         latestBook?.status.type === "pre-order"
             ? latestBook.status.releaseDate
-            : "the announced release window"
+            : null
 
     return (
         <section className="editorial-page editorial-transaction mx-auto flex min-h-[calc(100svh-7rem)] max-w-4xl flex-col items-center justify-center px-4 py-16 text-center sm:px-6">
@@ -45,10 +45,24 @@ const SuccessPage = async ({ searchParams }: SuccessPageProps) => {
                     Your copy is reserved.
                 </h1>
                 <p className="text-muted-foreground mx-auto mt-6 max-w-xl text-lg leading-8">
-                    Thank you for supporting the work. Your copy is scheduled
-                    for <strong>{releaseDate}</strong>, and delivery details
-                    will arrive by email when it is time.
+                    Thank you for supporting the work. Your confirmation and any
+                    digital delivery files are headed to the email used at
+                    checkout.
+                    {releaseDate &&
+                        ` Physical preorders are scheduled for ${releaseDate}.`}
                 </p>
+                <Link
+                    href="/books/ebook-help"
+                    className="book-order-help-link"
+                >
+                    <HelpCircle aria-hidden="true" />
+                    <span>
+                        <strong>Ordered an ebook or bundle?</strong>
+                        Follow the illustrated guide to open your EPUB on
+                        Kindle, Apple Books, or another reader.
+                    </span>
+                    <ArrowRight aria-hidden="true" />
+                </Link>
                 <Link href="/books" className="editorial-back-link mt-9">
                     <ChevronLeft />
                     Back to books

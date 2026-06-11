@@ -25,6 +25,7 @@ import {
     AppWindow,
     BookOpen,
     Feather,
+    HelpCircle,
     LayoutGrid,
     Menu,
     Newspaper,
@@ -66,13 +67,21 @@ const navItems: {
             allLabel: "All books",
             allDescription: "Biblical fiction projects and reading options.",
             allIcon: BookOpen,
-            items: books.map((book) => ({
-                href: `/books/${book.slug}`,
-                label: book.title,
-                description: book.shortDescription,
-                imageSrc: book.coverImageSrc,
-                imageAlt: book.coverImageAlt,
-            })),
+            items: [
+                ...books.map((book) => ({
+                    href: `/books/${book.slug}`,
+                    label: book.title,
+                    description: book.shortDescription,
+                    imageSrc: book.coverImageSrc,
+                    imageAlt: book.coverImageAlt,
+                })),
+                {
+                    href: "/books/ebook-help",
+                    label: "Ebook help",
+                    description: "Open your EPUB on Kindle, Apple Books, or another reader.",
+                    icon: HelpCircle,
+                },
+            ],
         },
     },
     {

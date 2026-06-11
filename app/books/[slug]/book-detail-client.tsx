@@ -18,6 +18,7 @@ import {
     CreditCard,
     Feather,
     Headphones,
+    HelpCircle,
     Mail,
     Minus,
     PackageCheck,
@@ -464,6 +465,8 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
         getPrice(book.slug, selectedFormat) ??
         book.formats[selectedFormat]?.priceCents
     const selectedFormatOption = book.formats[selectedFormat]
+    const offersEbook =
+        book.formats.ebook?.available || book.formats.bundle?.available
     const canBuy =
         isPurchasable &&
         !isComingSoon &&
@@ -817,6 +820,27 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                 ? book.status.label
                                                 : "Purchase options are not open yet."}
                                         </p>
+                                    )}
+                                    {offersEbook && (
+                                        <Link
+                                            href="/books/ebook-help"
+                                            className="book-ebook-help-link"
+                                        >
+                                            <span className="book-ebook-help-icon">
+                                                <HelpCircle aria-hidden="true" />
+                                            </span>
+                                            <span className="book-ebook-help-copy">
+                                                <strong>
+                                                    New to EPUB ebooks?
+                                                </strong>
+                                                See how delivery works and how
+                                                to read yours on any device.
+                                            </span>
+                                            <ArrowRight
+                                                className="book-ebook-help-arrow"
+                                                aria-hidden="true"
+                                            />
+                                        </Link>
                                     )}
                                 </div>
                             )}

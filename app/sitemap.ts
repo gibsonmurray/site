@@ -45,6 +45,12 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
             priority: 0.9,
         },
         {
+            url: `${baseUrl}/books/ebook-help`,
+            lastModified: today,
+            changeFrequency: "monthly" as const,
+            priority: 0.6,
+        },
+        {
             url: `${baseUrl}/writings`,
             lastModified: today,
             changeFrequency: "weekly" as const,

@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ShoppingCart, X } from "lucide-react"
+import { HelpCircle, ShoppingCart, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { books } from "@/lib/books"
 import { useCartStore } from "@/lib/cart-store"
@@ -31,6 +32,9 @@ export const CartDrawer = () => {
             book !== undefined && getPrice(book.slug, item.format) !== undefined
         )
     })
+    const includesEbook = items.some(
+        (item) => item.format === "ebook" || item.format === "bundle",
+    )
 
     useEffect(() => {
         document.body.style.overflow = isOpen ? "hidden" : ""
@@ -187,6 +191,16 @@ export const CartDrawer = () => {
                         >
                             Checkout
                         </Button>
+                        {includesEbook && (
+                            <Link
+                                href="/books/ebook-help"
+                                onClick={closeCart}
+                                className="text-muted-foreground hover:text-foreground flex items-center justify-center gap-2 text-xs font-semibold transition-colors"
+                            >
+                                <HelpCircle className="size-3.5" />
+                                How to read your EPUB
+                            </Link>
+                        )}
                         <Button
                             variant="ghost"
                             onClick={clearCart}

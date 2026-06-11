@@ -2,61 +2,16 @@ import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { Resend } from "resend"
 import { books, type BookFormat } from "@/lib/books"
+import { parseOrderItems, type OrderItem } from "@/lib/book-orders"
 import { notificationEmail } from "@/lib/contact"
+import { deliverSessionEbooks } from "@/lib/ebook-delivery"
 import { getCheckoutStripe } from "@/lib/stripe-server"
-
-type OrderItem = {
-    bookId: string
-    format: BookFormat
-    quantity: number
-}
 
 const formatLabels: Record<BookFormat, string> = {
     paperback: "Paperback",
     ebook: "eBook",
     audiobook: "Audiobook",
     bundle: "Complete bundle",
-}
-
-const parseOrderItems = (metadata?: Stripe.Metadata | null): OrderItem[] => {
-    const metadataItems = metadata?.items
-    if (!metadataItems) {
-        const bookId = metadata?.bookId
-        return bookId ? [{ bookId, format: "paperback", quantity: 1 }] : []
-    }
-
-    try {
-        const items = JSON.parse(metadataItems)
-        if (!Array.isArray(items)) return []
-
-        return items.flatMap((item): OrderItem[] => {
-            if (
-                typeof item?.bookId !== "string" ||
-                typeof item?.format !== "string" ||
-                typeof item?.quantity !== "number"
-            ) {
-                return []
-            }
-
-            if (
-                !["paperback", "ebook", "audiobook", "bundle"].includes(
-                    item.format,
-                )
-            ) {
-                return []
-            }
-
-            return [
-                {
-                    bookId: item.bookId,
-                    format: item.format,
-                    quantity: item.quantity,
-                },
-            ]
-        })
-    } catch {
-        return []
-    }
 }
 
 const getItemLines = (orderItems: OrderItem[]) =>
@@ -257,6 +212,20 @@ export async function POST(req: NextRequest) {
             })
             return NextResponse.json(
                 { error: "Unable to send order notification" },
+                { status: 500 },
+            )
+        }
+
+        try {
+            await deliverSessionEbooks({ resend, session, stripe })
+        } catch (deliveryError) {
+            console.error("Unable to deliver ebook order", {
+                eventId: event.id,
+                sessionId: session.id,
+                error: deliveryError,
+            })
+            return NextResponse.json(
+                { error: "Unable to deliver ebook order" },
                 { status: 500 },
             )
         }

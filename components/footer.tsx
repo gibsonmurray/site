@@ -19,6 +19,11 @@ const LINKS = [
         description: "Essays, notes, and reflections",
         href: "/writings",
     },
+    {
+        name: "Ebook help",
+        description: "Read your EPUB on any device",
+        href: "/books/ebook-help",
+    },
 ]
 
 export const Footer = () => {

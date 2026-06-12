@@ -84,7 +84,7 @@ if (shouldSend) {
     await getEbookAsset(bookId)
 }
 
-const stripe = new Stripe(stripeKey, { apiVersion: "2026-04-22.dahlia" })
+const stripe = new Stripe(stripeKey)
 const marker = getEbookDeliveryMarker(bookId)
 const recipients = new Map<string, Recipient>()
 let paidSessions = 0

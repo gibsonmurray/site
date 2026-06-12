@@ -64,9 +64,7 @@ if (!shouldSkipStripe && !stripeKey) {
 }
 
 const resend = new Resend(apiKey)
-const stripe = stripeKey
-    ? new Stripe(stripeKey, { apiVersion: "2026-04-22.dahlia" })
-    : null
+const stripe = stripeKey ? new Stripe(stripeKey) : null
 
 const recipients = new Map<string, Recipient>()
 const contactSettleDelayMs = 1_250

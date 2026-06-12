@@ -1,10 +1,6 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import {
-    BOOK_FORMAT_LABELS,
-    type BookFormat,
-    books,
-} from "@/lib/books"
+import { BOOK_FORMAT_LABELS, type BookFormat, books } from "@/lib/books"
 import { BookDetailClient } from "./book-detail-client"
 import { BookReviews } from "@/components/book-reviews"
 import { baseUrl } from "@/app/sitemap"
@@ -104,7 +100,7 @@ const BookPage = async ({ params }: Props) => {
                 image: Array.from(
                     new Set([book.coverImageSrc, ...(book.images ?? [])]),
                 ).map(absoluteUrl),
-                sameAs: book.amazonUrl,
+                sameAs: [book.amazonUrl, book.ingramSparkUrl].filter(Boolean),
                 identifier: book.amazonAsin
                     ? {
                           "@type": "PropertyValue",

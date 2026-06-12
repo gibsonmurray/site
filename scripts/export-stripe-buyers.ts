@@ -83,7 +83,7 @@ if (!stripeKey) {
     throw new Error("Missing STRIPE_LIVE_KEY")
 }
 
-const stripe = new Stripe(stripeKey, { apiVersion: "2026-04-22.dahlia" })
+const stripe = new Stripe(stripeKey)
 const bookSlug = getArgValue("--book")
 const since = getArgValue("--since")
 const includeAllOrders = args.includes("--all")

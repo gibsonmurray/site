@@ -16,6 +16,7 @@ import {
     ChevronLeft,
     ChevronRight,
     CreditCard,
+    ExternalLink,
     Feather,
     Headphones,
     HelpCircle,
@@ -545,7 +546,9 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                 on the move.
                             </p>
                         )}
-                        {(book.slug === "walls" || book.amazonUrl) && (
+                        {(book.slug === "walls" ||
+                            book.amazonUrl ||
+                            book.ingramSparkUrl) && (
                             <div className="book-detail-aux-actions">
                                 {book.slug === "walls" && (
                                     <Link
@@ -566,6 +569,17 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                     >
                                         View on Amazon
                                         <AmazonLogo className="h-4 w-auto" />
+                                    </Link>
+                                )}
+                                {book.ingramSparkUrl && (
+                                    <Link
+                                        href={book.ingramSparkUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="book-detail-aux-link"
+                                    >
+                                        View on IngramSpark
+                                        <ExternalLink className="size-4" />
                                     </Link>
                                 )}
                             </div>

@@ -8,6 +8,7 @@ import {
     BookOpen,
     CalendarClock,
     Check,
+    ExternalLink,
     ShoppingCart,
 } from "lucide-react"
 import { AmazonLogo } from "@/components/amazon-logo"
@@ -204,6 +205,17 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                         >
                             <AmazonLogo className="size-4" />
                             Amazon
+                        </Link>
+                    )}
+                    {book.ingramSparkUrl && (
+                        <Link
+                            href={book.ingramSparkUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="book-index-link"
+                        >
+                            <ExternalLink className="size-4" />
+                            IngramSpark
                         </Link>
                     )}
                     <Link

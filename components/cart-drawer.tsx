@@ -106,7 +106,7 @@ export const CartDrawer = () => {
                                     Your bag is empty.
                                 </p>
                                 <p className="text-muted-foreground mt-2 text-sm leading-6">
-                                    Books and pre-orders will appear here.
+                                    Books you add will appear here.
                                 </p>
                             </div>
                         </div>

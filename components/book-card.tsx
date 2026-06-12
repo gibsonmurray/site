@@ -123,7 +123,7 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                     {defaultPrice !== undefined && defaultFormatOption && (
                         <div className="book-index-offer">
                             <div>
-                                <span>Paperback preorder</span>
+                                <span>Paperback</span>
                                 {defaultFormatOption.priceNote && (
                                     <small>
                                         {defaultFormatOption.priceNote}
@@ -147,7 +147,7 @@ export const BookCard = ({ book, priority = false }: BookCardProps) => {
                     {bundleOption?.available && bundlePrice !== undefined && (
                         <div className="book-index-offer">
                             <div>
-                                <span>Complete preorder bundle</span>
+                                <span>Complete bundle</span>
                                 {bundleOption.description && (
                                     <small>{bundleOption.description}</small>
                                 )}

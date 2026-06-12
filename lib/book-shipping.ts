@@ -1,7 +1,11 @@
 import { type CartItem } from "@/lib/cart-store"
 
 const SHIPPING_TAX_CODE = "txcd_92010001"
-const PHYSICAL_FORMATS = new Set<CartItem["format"]>(["paperback", "bundle"])
+const PHYSICAL_FORMATS = new Set<CartItem["format"]>([
+    "paperback",
+    "hardback",
+    "bundle",
+])
 const SHIPPING_OPTIONS = [
     {
         amount: 599,

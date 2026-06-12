@@ -29,13 +29,12 @@
             "Only Rahab, a resourceful prostitute with dangerous secrets, can guide them through the city's peril and challenge everything they believe about loyalty, faith, and courage. As Jericho's walls and the spies' own prejudices begin to crumble, the fate of Israel and the promise of God hang in the balance."
         ],
         "status": {
-            "type": "pre-order",
-            "label": "Pre-order",
-            "releaseDate": "June 12th"
+            "type": "available",
+            "label": "Available now"
         },
         "sortOrder": 1,
         "amazonAsin": "B0H236NC6X",
-        "amazonUrl": "https://www.amazon.com/Walls-Gibson-Murray/dp/B0H236NC6X/ref=tmm_pap_swatch_0",
+        "amazonUrl": "https://www.amazon.com/dp/B0H236NC6X",
         "reviews": [
             {
                 "headline": "A must-read that brings Joshua to life.",
@@ -50,7 +49,12 @@
                 "productId": "prod_UJIRemQJC3RNFj",
                 "priceCents": 1500,
                 "compareAtPriceCents": 2000,
-                "priceNote": "Preorder sale",
+                "priceNote": "Launch sale",
+                "available": true
+            },
+            "hardback": {
+                "productId": "prod_UgsaChxwF8ZzPO",
+                "priceCents": 2800,
                 "available": true
             },
             "ebook": {
@@ -60,14 +64,6 @@
             },
             "audiobook": {
                 "available": false
-            },
-            "bundle": {
-                "productId": "prod_UUyKDof3tnKSR2",
-                "priceCents": 3000,
-                "compareAtPriceCents": 4500,
-                "priceNote": "Bundle discount",
-                "description": "Paperback, eBook, and promised audiobook delivery when audio is ready.",
-                "available": true
             }
         }
     }

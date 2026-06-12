@@ -9,6 +9,7 @@ export type OrderItem = {
 
 const bookFormats = new Set<BookFormat>([
     "paperback",
+    "hardback",
     "ebook",
     "audiobook",
     "bundle",

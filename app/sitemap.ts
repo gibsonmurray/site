@@ -9,7 +9,6 @@ export const baseUrl =
         : "http://localhost:3000"
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
-    const today = new Date().toISOString().split("T")[0]
     const blogs = getBlogPosts().map((post) => ({
         url: `${baseUrl}/writings/${post.slug}`,
         lastModified: post.metadata.publishedAt,
@@ -19,14 +18,12 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 
     const bookPages = books.map((book) => ({
         url: `${baseUrl}/books/${book.slug}`,
-        lastModified: today,
         changeFrequency: "weekly" as const,
         priority: 0.9,
     }))
 
     const wallsSamplePages = sample.chapters.map((chapter) => ({
         url: `${baseUrl}/books/walls/read/${chapter.id}`,
-        lastModified: today,
         changeFrequency: "monthly" as const,
         priority: 0.8,
     }))
@@ -34,37 +31,31 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     const routes = [
         {
             url: baseUrl,
-            lastModified: today,
             changeFrequency: "weekly" as const,
             priority: 1,
         },
         {
             url: `${baseUrl}/books`,
-            lastModified: today,
             changeFrequency: "weekly" as const,
             priority: 0.9,
         },
         {
             url: `${baseUrl}/books/ebook-help`,
-            lastModified: today,
             changeFrequency: "monthly" as const,
             priority: 0.6,
         },
         {
             url: `${baseUrl}/writings`,
-            lastModified: today,
             changeFrequency: "weekly" as const,
             priority: 0.8,
         },
         {
             url: `${baseUrl}/apps`,
-            lastModified: today,
             changeFrequency: "weekly" as const,
             priority: 0.9,
         },
         {
             url: `${baseUrl}/verbatim`,
-            lastModified: today,
             changeFrequency: "weekly" as const,
             priority: 0.9,
         },

@@ -7,7 +7,7 @@ import { ArrowRight, Check, ChevronLeft, HelpCircle } from "lucide-react"
 
 export const metadata: Metadata = {
     title: "Order Confirmed",
-    description: "Thank you for your pre-order!",
+    description: "Thank you for your order!",
     robots: {
         index: false,
         follow: false,
@@ -42,7 +42,7 @@ const SuccessPage = async ({ searchParams }: SuccessPageProps) => {
                     <span className="bg-primary h-px w-10" />
                 </div>
                 <h1 className="text-foreground mt-5 text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
-                    Your copy is reserved.
+                    Your order is confirmed.
                 </h1>
                 <p className="text-muted-foreground mx-auto mt-6 max-w-xl text-lg leading-8">
                     Thank you for supporting the work. Your confirmation and any
@@ -57,7 +57,7 @@ const SuccessPage = async ({ searchParams }: SuccessPageProps) => {
                 >
                     <HelpCircle aria-hidden="true" />
                     <span>
-                        <strong>Ordered an ebook or bundle?</strong>
+                        <strong>Ordered an ebook?</strong>
                         Follow the illustrated guide to open your EPUB on
                         Kindle, Apple Books, or another reader.
                     </span>

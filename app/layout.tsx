@@ -32,7 +32,7 @@ import {
     personSchema,
 } from "@/lib/seo"
 import { apps } from "@/lib/apps"
-import { books, getFeaturedReviewHeadline } from "@/lib/books"
+import { books } from "@/lib/books"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -168,9 +168,7 @@ const jsonLd = {
                     "@id": `${baseUrl}/books/${book.slug}#book`,
                     name: book.title,
                     url: `${baseUrl}/books/${book.slug}`,
-                    description:
-                        getFeaturedReviewHeadline(book) ??
-                        book.shortDescription,
+                    description: book.shortDescription,
                 })),
             ],
         },

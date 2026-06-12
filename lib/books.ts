@@ -1,6 +1,19 @@
 import booksData from "@/data/books.json"
 
-export type BookFormat = "paperback" | "ebook" | "audiobook" | "bundle"
+export type BookFormat =
+    | "paperback"
+    | "hardback"
+    | "ebook"
+    | "audiobook"
+    | "bundle"
+
+export const BOOK_FORMAT_LABELS: Record<BookFormat, string> = {
+    paperback: "Paperback",
+    hardback: "Hardback",
+    ebook: "eBook",
+    audiobook: "Audiobook",
+    bundle: "Complete bundle",
+}
 
 export type BookFormatOption = {
     productId?: string // Stripe product ID for this format

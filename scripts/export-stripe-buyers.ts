@@ -46,12 +46,13 @@ const csvHeaders = [
 
 const formatLabels: Record<BookFormat, string> = {
     paperback: "Paperback",
+    hardback: "Hardback",
     ebook: "eBook",
     audiobook: "Audiobook",
     bundle: "Complete bundle",
 }
 
-const physicalFormats = new Set<BookFormat>(["paperback", "bundle"])
+const physicalFormats = new Set<BookFormat>(["paperback", "hardback", "bundle"])
 
 const args = process.argv.slice(2)
 const shouldShowHelp = args.includes("--help") || args.includes("-h")
@@ -197,7 +198,9 @@ function parseOrderItems(session: Stripe.Checkout.Session): OrderItem[] {
 }
 
 function isBookFormat(format: string): format is BookFormat {
-    return ["paperback", "ebook", "audiobook", "bundle"].includes(format)
+    return ["paperback", "hardback", "ebook", "audiobook", "bundle"].includes(
+        format,
+    )
 }
 
 function formatItem(item: OrderItem) {

@@ -9,6 +9,7 @@ import { usePricesStore } from "@/lib/prices-store"
 
 export const FORMAT_LABELS: Record<BookFormat, string> = {
     paperback: "Paperback",
+    hardback: "Hardback",
     ebook: "eBook",
     audiobook: "Audiobook",
     bundle: "Complete bundle",

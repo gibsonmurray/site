@@ -1,6 +1,10 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { books, getFeaturedReviewHeadline } from "@/lib/books"
+import {
+    BOOK_FORMAT_LABELS,
+    type BookFormat,
+    books,
+} from "@/lib/books"
 import { BookDetailClient } from "./book-detail-client"
 import { BookReviews } from "@/components/book-reviews"
 import { baseUrl } from "@/app/sitemap"
@@ -19,10 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params
     const book = books.find((b) => b.slug === slug)
     if (!book) return {}
-    const reviewHeadline = getFeaturedReviewHeadline(book)
-    const description = reviewHeadline
-        ? `${book.shortDescription} Reader praise: “${reviewHeadline}”`
-        : book.shortDescription
+    const description = getBookSeoDescription(book)
     const ogSubtitle = book.shortDescription
     const ogImage = makeOgImage({
         title: `${book.title} by ${AUTHOR_NAME}`,
@@ -86,10 +87,7 @@ const BookPage = async ({ params }: Props) => {
     if (!book) notFound()
 
     const bookUrl = `${baseUrl}/books/${book.slug}`
-    const reviewHeadline = getFeaturedReviewHeadline(book)
-    const description = reviewHeadline
-        ? `${book.shortDescription} Reader praise: “${reviewHeadline}”`
-        : book.shortDescription
+    const description = getBookSeoDescription(book)
     const jsonLd: Record<string, unknown> = {
         "@context": "https://schema.org",
         "@graph": [
@@ -107,6 +105,13 @@ const BookPage = async ({ params }: Props) => {
                     new Set([book.coverImageSrc, ...(book.images ?? [])]),
                 ).map(absoluteUrl),
                 sameAs: book.amazonUrl,
+                identifier: book.amazonAsin
+                    ? {
+                          "@type": "PropertyValue",
+                          propertyID: "ASIN",
+                          value: book.amazonAsin,
+                      }
+                    : undefined,
                 author: {
                     "@id": `${baseUrl}/#person`,
                 },
@@ -152,7 +157,7 @@ const BookPage = async ({ params }: Props) => {
         .filter(([, option]) => option?.available)
         .map(([format, option]) => ({
             "@type": "Offer",
-            name: `${book.title} ${format}`,
+            name: `${book.title} ${BOOK_FORMAT_LABELS[format as BookFormat]}`,
             availability,
             itemCondition: "https://schema.org/NewCondition",
             price: option.priceCents
@@ -216,6 +221,27 @@ const BookPage = async ({ params }: Props) => {
             )}
         </section>
     )
+}
+
+const getBookSeoDescription = (book: (typeof books)[number]) => {
+    if (book.status.type !== "available") return book.shortDescription
+
+    const availableFormats = Object.entries(book.formats)
+        .filter(([, option]) => option?.available)
+        .map(([format]) => {
+            const label = BOOK_FORMAT_LABELS[format as BookFormat]
+            return label === "eBook" ? label : label.toLowerCase()
+        })
+
+    if (availableFormats.length === 0) return book.shortDescription
+
+    return `${book.shortDescription} Available now in ${new Intl.ListFormat(
+        "en-US",
+        {
+            style: "long",
+            type: "conjunction",
+        },
+    ).format(availableFormats)}.`
 }
 
 export default BookPage

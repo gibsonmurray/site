@@ -60,6 +60,7 @@ import { cn } from "@/lib/utils"
 
 const FORMAT_CONFIG: Record<BookFormat, { label: string; icon: LucideIcon }> = {
     paperback: { label: "Paperback", icon: BookOpen },
+    hardback: { label: "Hardback", icon: BookMarked },
     ebook: { label: "eBook", icon: Tablet },
     audiobook: { label: "Audiobook", icon: Headphones },
     bundle: { label: "Complete bundle", icon: PackageCheck },

@@ -277,7 +277,7 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
                                 className="book-sample-secondary"
                             >
                                 <ShoppingCart className="size-4" />
-                                Pre-order Walls
+                                Buy Walls
                             </Link>
                         </div>
                     </div>
@@ -396,17 +396,17 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
                     </nav>
 
                     <div className="book-sample-continue">
-                        <p>Keep reading when {book.title} releases.</p>
+                        <p>Keep reading with your copy of {book.title}.</p>
                         <p>
-                            Pre-order the paperback, eBook, or complete bundle
-                            and step back into Jericho on launch day.
+                            Buy the paperback, hardback, or eBook and step back
+                            into Jericho.
                         </p>
                         <div>
                             <Link
                                 href="/books/walls"
                                 className="book-sample-primary"
                             >
-                                Pre-order Walls
+                                Buy Walls
                                 <ArrowRight className="size-4" />
                             </Link>
                         </div>

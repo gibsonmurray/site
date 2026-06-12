@@ -9,6 +9,7 @@ import { getCheckoutStripe } from "@/lib/stripe-server"
 
 const formatLabels: Record<BookFormat, string> = {
     paperback: "Paperback",
+    hardback: "Hardback",
     ebook: "eBook",
     audiobook: "Audiobook",
     bundle: "Complete bundle",

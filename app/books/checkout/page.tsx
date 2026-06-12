@@ -52,6 +52,7 @@ const singleValue = (value: string | string[] | undefined) =>
 
 const isBookFormat = (value: string | undefined): value is BookFormat =>
     value === "paperback" ||
+    value === "hardback" ||
     value === "ebook" ||
     value === "audiobook" ||
     value === "bundle"

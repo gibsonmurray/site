@@ -467,6 +467,7 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
         getPrice(book.slug, selectedFormat) ??
         book.formats[selectedFormat]?.priceCents
     const selectedFormatOption = book.formats[selectedFormat]
+    const isHardback = selectedFormat === "hardback"
     const offersEbook =
         book.formats.ebook?.available || book.formats.bundle?.available
     const canBuy =
@@ -834,6 +835,12 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                             {isComingSoon
                                                 ? book.status.label
                                                 : "Purchase options are not open yet."}
+                                        </p>
+                                    )}
+                                    {canBuy && isHardback && (
+                                        <p className="book-shipping-caption">
+                                            Due to high demand, hardback copies
+                                            may take longer than usual to ship.
                                         </p>
                                     )}
                                     {offersEbook && (

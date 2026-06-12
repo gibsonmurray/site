@@ -703,6 +703,13 @@
         font-size: 0.75rem;
     }
 
+    .book-shipping-caption {
+        margin-top: 0.75rem;
+        color: var(--muted-foreground);
+        font-size: 0.68rem;
+        line-height: 1.5;
+    }
+
     .book-detail-principles,
     .book-detail-field-notes,
     .book-detail-about,

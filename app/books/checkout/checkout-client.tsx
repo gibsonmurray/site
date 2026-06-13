@@ -3,21 +3,18 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
-import { type CartItem, useCartStore } from "@/lib/cart-store"
 
 export const CheckoutClient = ({
-    directItems,
+    bookId,
+    format,
 }: {
-    directItems?: CartItem[]
+    bookId?: string
+    format?: string
 }) => {
-    const cartItems = useCartStore((state) => state.items)
-    const items = directItems ?? cartItems
-    const checkoutMode = directItems === undefined ? "cart" : "direct"
-    const checkoutKey = JSON.stringify(items)
     const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
     useEffect(() => {
-        if (items.length === 0) return
+        if (!bookId || format !== "ebook") return
 
         let isCurrent = true
         setCheckoutError(null)
@@ -26,7 +23,7 @@ export const CheckoutClient = ({
             const res = await fetch("/api/checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ items, checkoutMode }),
+                body: JSON.stringify({ bookId, format }),
             })
             const data = await readJson(res)
             const checkoutUrl = typeof data.url === "string" ? data.url : null
@@ -52,14 +49,14 @@ export const CheckoutClient = ({
         return () => {
             isCurrent = false
         }
-    }, [checkoutKey, checkoutMode, items])
+    }, [bookId, format])
 
-    if (items.length === 0) {
+    if (!bookId || format !== "ebook") {
         return (
             <CheckoutMessage
-                label="Book order"
-                title="Your bag is empty."
-                body="Add a book before starting checkout."
+                label="Ebook checkout"
+                title="Choose an ebook first."
+                body="Direct checkout is available for ebooks delivered by email."
             />
         )
     }

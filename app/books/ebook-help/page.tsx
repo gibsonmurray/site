@@ -384,7 +384,7 @@ const EbookHelpPage = () => (
                         <p>
                             <strong>Cannot find the delivery email?</strong>
                             Check Spam, Promotions, and the email address used
-                            at checkout.
+                            for your direct ebook order.
                         </p>
                     </div>
                     <div>

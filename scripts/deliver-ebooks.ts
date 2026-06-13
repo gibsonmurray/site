@@ -34,7 +34,7 @@ if (shouldShowHelp) {
             "  bun run ebooks:deliver -- --book walls --since 2026-05-01",
             "",
             "Default mode is a dry run. It finds paid Stripe orders containing the",
-            "ebook or bundle, skips sessions already marked as delivered, and prints",
+            "ebook, skips sessions already marked as delivered, and prints",
             "the recipients that would receive the EPUB.",
             "",
             "Options:",

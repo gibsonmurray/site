@@ -215,14 +215,9 @@ const Home = () => {
                             <EditorialLink href={`/books/${latestBook.slug}`}>
                                 Learn more
                             </EditorialLink>
-                            {latestBook.amazonUrl && (
-                                <EditorialLink
-                                    href={latestBook.amazonUrl}
-                                    external
-                                >
-                                    Find on Amazon
-                                </EditorialLink>
-                            )}
+                            <EditorialLink href={`/books/${latestBook.slug}`}>
+                                Purchase options
+                            </EditorialLink>
                         </div>
                     </div>
                 </div>

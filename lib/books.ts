@@ -1,26 +1,18 @@
 import booksData from "@/data/books.json"
 
-export type BookFormat =
-    | "paperback"
-    | "hardback"
-    | "ebook"
-    | "audiobook"
-    | "bundle"
+export type BookFormat = "paperback" | "hardcover" | "ebook" | "audiobook"
 
 export const BOOK_FORMAT_LABELS: Record<BookFormat, string> = {
     paperback: "Paperback",
-    hardback: "Hardback",
+    hardcover: "Hardcover",
     ebook: "eBook",
     audiobook: "Audiobook",
-    bundle: "Complete bundle",
 }
 
 export type BookFormatOption = {
-    productId?: string // Stripe product ID for this format
-    /** Explicit checkout price in cents. Falls back to Stripe default price when omitted. */
+    /** Stripe product ID used only for direct ebook checkout. */
+    productId?: string
     priceCents?: number
-    compareAtPriceCents?: number
-    priceNote?: string
     description?: string
     available: boolean
 }
@@ -76,10 +68,12 @@ export type Book = {
     status: BookStatus
     sortOrder: number
     formats: Partial<Record<BookFormat, BookFormatOption>>
-    amazonAsin?: string
-    amazonUrl?: string
+    amazonPaperbackUrl?: string
+    amazonHardcoverUrl?: string
+    kindleUrl?: string
+    appleBooksUrl?: string
     ingramSparkUrl?: string
-    /** Set to false to hide all add-to-cart / checkout UI sitewide */
+    /** Set to false to hide purchase options sitewide. */
     purchasable?: boolean
     reviews?: BookReview[]
 }

@@ -242,6 +242,9 @@
 
     .book-index-primary-action,
     .book-buy-now {
+        display: inline-flex;
+        width: fit-content;
+        align-items: center;
         min-height: 3rem;
         justify-content: space-between;
         gap: 2rem;
@@ -451,7 +454,11 @@
     }
 
     .book-ebook-help-link:hover {
-        background: color-mix(in oklab, var(--editorial-green) 9%, var(--background));
+        background: color-mix(
+            in oklab,
+            var(--editorial-green) 9%,
+            var(--background)
+        );
         color: var(--editorial-green);
     }
 
@@ -621,93 +628,139 @@
         font-weight: 700;
     }
 
-    .book-purchase-summary {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+    .book-retailer-panel {
+        display: grid;
         gap: 1rem;
-        margin-top: 0.75rem;
-        background: color-mix(in oklab, var(--muted) 45%, transparent);
-        padding: 1rem;
+        margin-top: 1.25rem;
+        border-top: 1px solid var(--editorial-rule);
+        padding-top: 1.25rem;
     }
 
-    .book-purchase-selection {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-        gap: 0.3rem 0.9rem;
-        margin-top: 0.35rem;
+    .book-retailer-panel > div:first-child > p:last-child {
+        max-width: 28rem;
+        margin-top: 0.45rem;
+        color: var(--muted-foreground);
+        font-size: 0.72rem;
+        line-height: 1.55;
     }
 
-    .book-purchase-selection > p:first-child {
-        color: var(--foreground);
-        font-size: 0.78rem;
+    .book-retailer-actions {
+        display: grid;
+        gap: 0.65rem;
+    }
+
+    .book-retailer-action {
+        display: grid;
+        grid-template-columns: 3.5rem minmax(0, 1fr) 1rem;
+        align-items: center;
+        gap: 1rem;
+        min-height: 5.25rem;
+        background: var(--foreground);
+        padding: 0.75rem 1rem;
+        color: var(--background);
+        transition:
+            background 180ms ease,
+            transform 180ms ease;
+    }
+
+    .book-retailer-action:hover {
+        background: var(--editorial-green);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .book-retailer-action > span:nth-child(2) {
+        display: grid;
+        align-content: center;
+        gap: 0.25rem;
+        min-width: 0;
+        min-height: 2.75rem;
+        border-left: 1px solid
+            color-mix(in oklab, currentColor 22%, transparent);
+        padding-left: 1rem;
+    }
+
+    .book-retailer-action strong {
+        font-size: 0.76rem;
         font-weight: 700;
     }
 
-    .book-purchase-total {
-        color: var(--foreground);
-        font-size: 1rem;
-        font-weight: 650;
+    .book-retailer-action small {
+        color: color-mix(in oklab, currentColor 70%, transparent);
+        font-size: 0.64rem;
+        line-height: 1.45;
     }
 
-    .book-purchase-total .line-through {
-        color: var(--muted-foreground);
-        font-size: 0.75rem;
+    .book-retailer-action > svg {
+        justify-self: end;
+        width: 0.85rem;
+        height: 0.85rem;
+        opacity: 0.7;
     }
 
-    .book-purchase-description {
-        max-width: 28rem;
-        margin-top: 0.4rem;
-        color: var(--muted-foreground);
-        font-size: 0.68rem;
-        line-height: 1.5;
-    }
-
-    .book-quantity {
+    .retailer-logo {
         display: flex;
+        width: 3.5rem;
+        height: 3.5rem;
         align-items: center;
-        border: 1px solid var(--editorial-rule);
+        justify-content: center;
+        color: white;
     }
 
-    .book-purchase-actions {
-        display: grid;
-        gap: 0.65rem;
-        margin-top: 1.25rem;
+    .retailer-logo img {
+        display: block;
+        width: 2.75rem;
+        height: 2.75rem;
+        object-fit: contain;
     }
 
-    .book-buy-now,
-    .book-add-cart {
-        min-height: 3rem;
-        width: 100%;
-        justify-content: space-between;
-        border-radius: 0;
-        padding-inline: 1rem;
+    .retailer-logo-amazon {
+        justify-self: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 0.55rem;
+        background: white;
     }
 
-    .book-add-cart {
-        border: 1px solid var(--editorial-rule);
-        background: transparent;
-        color: var(--foreground);
+    .retailer-logo-amazon img {
+        width: 2rem;
+        height: 2rem;
     }
 
-    .book-add-cart:hover {
-        border-color: var(--foreground);
-        background: transparent;
-        color: var(--foreground);
+    .retailer-logo-kindle img {
+        border-radius: 0.6rem;
+    }
+
+    .retailer-logo-direct {
+        color: var(--background);
+    }
+
+    .retailer-logo-direct svg {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    @media (max-width: 440px) {
+        .book-retailer-action {
+            grid-template-columns: 3rem minmax(0, 1fr) 0.85rem;
+            gap: 0.75rem;
+            padding-right: 0.75rem;
+        }
+
+        .retailer-logo {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .book-retailer-action > span:nth-child(2) {
+            padding-left: 0.75rem;
+        }
     }
 
     .book-purchase-unavailable {
         margin-top: 1rem;
         color: var(--muted-foreground);
         font-size: 0.75rem;
-    }
-
-    .book-shipping-caption {
-        margin-top: 0.75rem;
-        color: var(--muted-foreground);
-        font-size: 0.68rem;
-        line-height: 1.5;
     }
 
     .book-detail-principles,
@@ -1317,7 +1370,6 @@
         }
 
         .book-format-list,
-        .book-purchase-actions,
         .book-sample-pagination {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }

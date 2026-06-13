@@ -398,7 +398,7 @@ const WallsSampleChapterPage = async ({ params }: Props) => {
                     <div className="book-sample-continue">
                         <p>Keep reading with your copy of {book.title}.</p>
                         <p>
-                            Buy the paperback, hardback, or eBook and step back
+                            Buy the paperback, hardcover, or eBook and step back
                             into Jericho.
                         </p>
                         <div>

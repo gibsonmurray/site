@@ -7,14 +7,8 @@ export type OrderItem = {
     quantity: number
 }
 
-const bookFormats = new Set<BookFormat>([
-    "paperback",
-    "hardback",
-    "ebook",
-    "audiobook",
-    "bundle",
-])
-const ebookFormats = new Set<BookFormat>(["ebook", "bundle"])
+const bookFormats = new Set<BookFormat>(["ebook"])
+const ebookFormats = new Set<BookFormat>(["ebook"])
 
 export const parseOrderItems = (
     metadata?: Stripe.Metadata | null,
@@ -22,7 +16,7 @@ export const parseOrderItems = (
     const metadataItems = metadata?.items
     if (!metadataItems) {
         const bookId = metadata?.bookId
-        return bookId ? [{ bookId, format: "paperback", quantity: 1 }] : []
+        return bookId ? [{ bookId, format: "ebook", quantity: 1 }] : []
     }
 
     try {

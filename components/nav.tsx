@@ -29,10 +29,8 @@ import {
     LayoutGrid,
     Menu,
     Newspaper,
-    ShoppingCart,
     type LucideIcon,
 } from "lucide-react"
-import { useCartStore } from "@/lib/cart-store"
 import { apps } from "@/lib/apps"
 import { books } from "@/lib/books"
 import { cn } from "@/lib/utils"
@@ -78,7 +76,8 @@ const navItems: {
                 {
                     href: "/books/ebook-help",
                     label: "Ebook help",
-                    description: "Open your EPUB on Kindle, Apple Books, or another reader.",
+                    description:
+                        "Open your EPUB on Kindle, Apple Books, or another reader.",
                     icon: HelpCircle,
                 },
             ],
@@ -133,8 +132,6 @@ export const Navbar = () => {
     const router = useRouter()
     const [openMenu, setOpenMenu] = useState<string | null>(null)
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const { items, openCart } = useCartStore()
-    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
     useEffect(() => {
         setOpenMenu(null)
@@ -170,28 +167,6 @@ export const Navbar = () => {
                         <LogoIcon className="size-3.5" />
                         <span>Gibson Murray</span>
                     </Link>
-
-                    <div className="ml-auto flex shrink-0 items-center gap-1 md:hidden">
-                        <Button
-                            variant="outline"
-                            size="icon-lg"
-                            onClick={openCart}
-                            className="text-muted-foreground hover:text-foreground relative rounded-none border-transparent bg-transparent shadow-none hover:!bg-transparent focus-visible:!bg-transparent"
-                            aria-label="Open cart"
-                        >
-                            <span className="relative inline-flex">
-                                <NavIcon
-                                    icon={ShoppingCart}
-                                    className="size-4"
-                                />
-                                {totalItems > 0 && (
-                                    <span className="bg-primary text-primary-foreground absolute -top-2 -right-2 flex size-4 items-center justify-center rounded-full text-[9px] leading-none font-bold">
-                                        {totalItems > 9 ? "9+" : totalItems}
-                                    </span>
-                                )}
-                            </span>
-                        </Button>
-                    </div>
 
                     <Sheet
                         open={mobileMenuOpen}
@@ -503,29 +478,6 @@ export const Navbar = () => {
                             })}
                         </NavigationMenuList>
                     </NavigationMenu>
-
-                    <div className="hidden shrink-0 items-center gap-2 md:flex">
-                        <Button
-                            variant="outline"
-                            size="lg"
-                            onClick={openCart}
-                            className="site-nav-link text-muted-foreground hover:text-foreground relative h-14 rounded-none border-transparent bg-transparent px-0 text-xs shadow-none hover:!bg-transparent focus-visible:!bg-transparent sm:text-sm"
-                            aria-label="Open cart"
-                        >
-                            <span className="relative inline-flex">
-                                <NavIcon
-                                    icon={ShoppingCart}
-                                    className="size-3.5"
-                                />
-                                {totalItems > 0 && (
-                                    <span className="bg-primary text-primary-foreground absolute -top-1.5 -right-1.5 flex size-3.5 items-center justify-center rounded-full text-[9px] leading-none font-bold">
-                                        {totalItems > 9 ? "9+" : totalItems}
-                                    </span>
-                                )}
-                            </span>
-                            <span className="hidden md:inline">Cart</span>
-                        </Button>
-                    </div>
                 </nav>
             </div>
         </aside>

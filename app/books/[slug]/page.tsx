@@ -100,14 +100,13 @@ const BookPage = async ({ params }: Props) => {
                 image: Array.from(
                     new Set([book.coverImageSrc, ...(book.images ?? [])]),
                 ).map(absoluteUrl),
-                sameAs: [book.amazonUrl, book.ingramSparkUrl].filter(Boolean),
-                identifier: book.amazonAsin
-                    ? {
-                          "@type": "PropertyValue",
-                          propertyID: "ASIN",
-                          value: book.amazonAsin,
-                      }
-                    : undefined,
+                sameAs: [
+                    book.amazonPaperbackUrl,
+                    book.amazonHardcoverUrl,
+                    book.kindleUrl,
+                    book.appleBooksUrl,
+                    book.ingramSparkUrl,
+                ].filter(Boolean),
                 author: {
                     "@id": `${baseUrl}/#person`,
                 },
@@ -160,10 +159,14 @@ const BookPage = async ({ params }: Props) => {
                 ? (option.priceCents / 100).toFixed(2)
                 : undefined,
             priceCurrency: option.priceCents ? "USD" : undefined,
-            seller: {
-                "@id": `${baseUrl}/#person`,
-            },
-            url: bookUrl,
+            url:
+                format === "paperback"
+                    ? (book.amazonPaperbackUrl ?? book.ingramSparkUrl)
+                    : format === "hardcover"
+                      ? book.amazonHardcoverUrl
+                      : format === "ebook"
+                        ? (book.kindleUrl ?? book.appleBooksUrl ?? bookUrl)
+                        : bookUrl,
         }))
 
     if (offers.length > 0) {

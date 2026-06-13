@@ -3,7 +3,6 @@
 import { useRef, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
 import { useMutation } from "@tanstack/react-query"
 import { AnimatePresence, motion } from "motion/react"
 import {
@@ -21,19 +20,22 @@ import {
     Headphones,
     HelpCircle,
     Mail,
-    Minus,
-    PackageCheck,
-    Plus,
     Send,
     ShieldCheck,
-    ShoppingCart,
     Sparkles,
     Star,
     Tablet,
     type LucideIcon,
 } from "lucide-react"
 import dynamic from "next/dynamic"
-import { AmazonLogo } from "@/components/amazon-logo"
+import {
+    AmazonRetailerLogo,
+    AppleBooksLogo,
+    DirectEbookLogo,
+    IngramSparkLogo,
+    KindleLogo,
+    VenmoLogo,
+} from "@/components/retailer-logos"
 
 const Book3DPreview = dynamic(
     () =>
@@ -55,24 +57,14 @@ import {
     BookFormatOption,
     getFeaturedReviewHeadline,
 } from "@/lib/books"
-import { useCartStore } from "@/lib/cart-store"
-import { usePricesStore } from "@/lib/prices-store"
 import { cn } from "@/lib/utils"
 
 const FORMAT_CONFIG: Record<BookFormat, { label: string; icon: LucideIcon }> = {
     paperback: { label: "Paperback", icon: BookOpen },
-    hardback: { label: "Hardback", icon: BookMarked },
+    hardcover: { label: "Hardcover", icon: BookMarked },
     ebook: { label: "eBook", icon: Tablet },
     audiobook: { label: "Audiobook", icon: Headphones },
-    bundle: { label: "Complete bundle", icon: PackageCheck },
 }
-
-const fmt = (cents: number) =>
-    new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-        maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
-    }).format(cents / 100)
 
 const PREORDER_CONFIRMATION_MIN_MS = 850
 
@@ -435,11 +427,91 @@ const statusCopy = (book: Book, isPurchasable: boolean) => {
     return book.status.label ?? "Available now"
 }
 
-export const BookDetailClient = ({ book }: { book: Book }) => {
-    const router = useRouter()
-    const [added, setAdded] = useState(false)
-    const [isOpeningCheckout, setIsOpeningCheckout] = useState(false)
+const VENMO_URL = "https://venmo.com/code?user_id=2949104187473920779"
 
+const getVenmoDestination = () => ({
+    href: VENMO_URL,
+    label: "Venmo Gibson",
+    detail: "He will deliver it to you directly in person or via email",
+    logo: <VenmoLogo />,
+    external: true,
+})
+
+const getPurchaseDestinations = (book: Book, format: BookFormat) => {
+    if (format === "hardcover" && book.amazonHardcoverUrl) {
+        return [
+            {
+                href: book.amazonHardcoverUrl,
+                label: "Amazon",
+                detail: "Buy the hardcover",
+                logo: <AmazonRetailerLogo />,
+                external: true,
+            },
+            getVenmoDestination(),
+        ]
+    }
+
+    if (format === "paperback") {
+        return [
+            book.amazonPaperbackUrl
+                ? {
+                      href: book.amazonPaperbackUrl,
+                      label: "Amazon",
+                      detail: "Buy the paperback",
+                      logo: <AmazonRetailerLogo />,
+                      external: true,
+                  }
+                : null,
+            book.ingramSparkUrl
+                ? {
+                      href: book.ingramSparkUrl,
+                      label: "IngramSpark",
+                      detail: "Buy the paperback directly from the printer",
+                      logo: <IngramSparkLogo />,
+                      external: true,
+                  }
+                : null,
+            getVenmoDestination(),
+        ].filter(Boolean)
+    }
+
+    if (format === "ebook") {
+        return [
+            book.kindleUrl
+                ? {
+                      href: book.kindleUrl,
+                      label: "Kindle",
+                      detail: "Buy the ebook for your Kindle library",
+                      logo: <KindleLogo />,
+                      external: true,
+                  }
+                : null,
+            book.appleBooksUrl
+                ? {
+                      href: book.appleBooksUrl,
+                      label: "Apple Books",
+                      detail: "Buy the ebook for your Apple Books library",
+                      logo: <AppleBooksLogo />,
+                      external: true,
+                  }
+                : null,
+            book.formats.ebook?.productId
+                ? {
+                      href: `/books/checkout?bookId=${encodeURIComponent(book.slug)}&format=ebook`,
+                      label: "Buy direct",
+                      detail: "Get the EPUB delivered directly by email",
+                      logo: <DirectEbookLogo />,
+                      external: false,
+                  }
+                : null,
+            getVenmoDestination(),
+        ].filter(Boolean)
+    }
+
+    return []
+}
+
+export const BookDetailClient = ({ book }: { book: Book }) => {
     const allImages =
         book.images && book.images.length > 0
             ? book.images
@@ -452,10 +524,6 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
 
     const [selectedFormat, setSelectedFormat] =
         useState<BookFormat>(defaultFormat)
-    const [quantity, setQuantity] = useState(1)
-
-    const { addItem, openCart } = useCartStore()
-    const getPrice = usePricesStore((s) => s.getPrice)
 
     const isPreOrder = book.status.type === "pre-order"
     const isComingSoon = book.status.type === "coming-soon"
@@ -463,35 +531,12 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
     const releaseDate =
         book.status.type === "pre-order" ? book.status.releaseDate : null
     const reviewHeadline = getFeaturedReviewHeadline(book)
-    const selectedPrice =
-        getPrice(book.slug, selectedFormat) ??
-        book.formats[selectedFormat]?.priceCents
-    const selectedFormatOption = book.formats[selectedFormat]
-    const isHardback = selectedFormat === "hardback"
-    const offersEbook =
-        book.formats.ebook?.available || book.formats.bundle?.available
-    const canBuy =
+    const offersEbook = book.formats.ebook?.available
+    const canChooseDestination =
         isPurchasable &&
         !isComingSoon &&
         (book.formats[selectedFormat]?.available ?? false)
-
-    const handleBuyNow = () => {
-        setIsOpeningCheckout(true)
-        const checkoutParams = new URLSearchParams({
-            mode: "direct",
-            bookId: book.slug,
-            format: selectedFormat,
-            quantity: String(quantity),
-        })
-        router.push(`/books/checkout?${checkoutParams.toString()}`)
-    }
-
-    const handleAddToCart = () => {
-        addItem(book.slug, selectedFormat, quantity)
-        openCart()
-        setAdded(true)
-        setTimeout(() => setAdded(false), 2000)
-    }
+    const purchaseDestinations = getPurchaseDestinations(book, selectedFormat)
 
     return (
         <div className="editorial-page book-detail-page">
@@ -547,42 +592,16 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                 on the move.
                             </p>
                         )}
-                        {(book.slug === "walls" ||
-                            book.amazonUrl ||
-                            book.ingramSparkUrl) && (
+                        {book.slug === "walls" && (
                             <div className="book-detail-aux-actions">
-                                {book.slug === "walls" && (
-                                    <Link
-                                        href="/books/walls/read/chapter-1#chapter"
-                                        className="book-detail-aux-link"
-                                    >
-                                        <BookOpen className="size-4" />
-                                        Read the first 3 chapters
-                                        <ArrowRight className="size-4" />
-                                    </Link>
-                                )}
-                                {book.amazonUrl && (
-                                    <Link
-                                        href={book.amazonUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="book-detail-aux-link"
-                                    >
-                                        View on Amazon
-                                        <AmazonLogo className="h-4 w-auto" />
-                                    </Link>
-                                )}
-                                {book.ingramSparkUrl && (
-                                    <Link
-                                        href={book.ingramSparkUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="book-detail-aux-link"
-                                    >
-                                        View on IngramSpark
-                                        <ExternalLink className="size-4" />
-                                    </Link>
-                                )}
+                                <Link
+                                    href="/books/walls/read/chapter-1#chapter"
+                                    className="book-detail-aux-link"
+                                >
+                                    <BookOpen className="size-4" />
+                                    Read the first 3 chapters
+                                    <ArrowRight className="size-4" />
+                                </Link>
                             </div>
                         )}
 
@@ -609,13 +628,6 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                 opt.available
                                             const Icon =
                                                 FORMAT_CONFIG[format].icon
-                                            const price =
-                                                getPrice(book.slug, format) ??
-                                                opt.priceCents
-                                            const hasSale =
-                                                opt.compareAtPriceCents !==
-                                                    undefined &&
-                                                price !== undefined
                                             const btn = (
                                                 <Button
                                                     key={format}
@@ -656,29 +668,9 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                                         )}
                                                     </span>
                                                     <span className="book-format-price">
-                                                        {price !== undefined ? (
-                                                            <>
-                                                                <span>
-                                                                    {fmt(price)}
-                                                                </span>
-                                                                {hasSale && (
-                                                                    <span className="line-through">
-                                                                        {fmt(
-                                                                            opt.compareAtPriceCents!,
-                                                                        )}
-                                                                    </span>
-                                                                )}
-                                                            </>
-                                                        ) : (
-                                                            <span>
-                                                                Coming soon
-                                                            </span>
-                                                        )}
-                                                        {opt.priceNote && (
-                                                            <span className="book-format-note">
-                                                                {opt.priceNote}
-                                                            </span>
-                                                        )}
+                                                        {opt.available
+                                                            ? "Available"
+                                                            : "Coming soon"}
                                                     </span>
                                                 </Button>
                                             )
@@ -707,140 +699,92 @@ export const BookDetailClient = ({ book }: { book: Book }) => {
                                         })}
                                     </div>
 
-                                    <div className="book-purchase-summary">
-                                        <div className="min-w-0">
-                                            <p className="book-purchase-label">
-                                                Your selection
-                                            </p>
-                                            <div className="book-purchase-selection">
-                                                <p>
-                                                    {
-                                                        FORMAT_CONFIG[
-                                                            selectedFormat
-                                                        ].label
-                                                    }
+                                    {canChooseDestination &&
+                                    purchaseDestinations.length > 0 ? (
+                                        <div className="book-retailer-panel">
+                                            <div>
+                                                <p className="book-purchase-label">
+                                                    Choose where to buy
                                                 </p>
-                                                <p className="book-purchase-total">
-                                                    {selectedPrice !==
-                                                    undefined ? (
-                                                        <span className="flex flex-wrap items-baseline gap-2">
-                                                            <span>
-                                                                {fmt(
-                                                                    selectedPrice,
-                                                                )}
-                                                            </span>
-                                                            {selectedFormatOption?.compareAtPriceCents !==
-                                                                undefined && (
-                                                                <span className="line-through">
-                                                                    {fmt(
-                                                                        selectedFormatOption.compareAtPriceCents,
-                                                                    )}
-                                                                </span>
-                                                            )}
-                                                            {selectedFormatOption?.priceNote && (
-                                                                <span className="book-format-note">
-                                                                    {
-                                                                        selectedFormatOption.priceNote
-                                                                    }
-                                                                </span>
-                                                            )}
-                                                        </span>
-                                                    ) : (
-                                                        "Coming soon"
-                                                    )}
+                                                <p>
+                                                    Continue with your preferred
+                                                    bookseller for the{" "}
+                                                    {FORMAT_CONFIG[
+                                                        selectedFormat
+                                                    ].label.toLowerCase()}
+                                                    .
                                                 </p>
                                             </div>
-                                            {selectedFormatOption?.description && (
-                                                <p className="book-purchase-description">
-                                                    {
-                                                        selectedFormatOption.description
-                                                    }
-                                                </p>
-                                            )}
-                                        </div>
-                                        <div className="book-quantity">
-                                            <Button
-                                                variant="ghost"
-                                                size="icon-sm"
-                                                onClick={() =>
-                                                    setQuantity((q) =>
-                                                        Math.max(1, q - 1),
-                                                    )
-                                                }
-                                                disabled={quantity <= 1}
-                                                className="rounded-none"
-                                                aria-label="Decrease quantity"
-                                            >
-                                                <Minus className="size-3.5" />
-                                            </Button>
-                                            <span className="w-8 text-center text-sm font-semibold tabular-nums">
-                                                {quantity}
-                                            </span>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon-sm"
-                                                onClick={() =>
-                                                    setQuantity((q) =>
-                                                        Math.min(99, q + 1),
-                                                    )
-                                                }
-                                                disabled={quantity >= 99}
-                                                className="rounded-none"
-                                                aria-label="Increase quantity"
-                                            >
-                                                <Plus className="size-3.5" />
-                                            </Button>
-                                        </div>
-                                    </div>
-
-                                    {canBuy ? (
-                                        <div className="book-purchase-actions">
-                                            <Button
-                                                size="lg"
-                                                onClick={handleBuyNow}
-                                                disabled={isOpeningCheckout}
-                                                className="book-buy-now"
-                                            >
-                                                <span>
-                                                    {isOpeningCheckout
-                                                        ? "Opening checkout..."
-                                                        : isPreOrder
-                                                          ? "Pre-order now"
-                                                          : "Buy now"}
-                                                </span>
-                                                <CreditCard className="size-4" />
-                                            </Button>
-                                            <Button
-                                                size="lg"
-                                                variant="ghost"
-                                                onClick={handleAddToCart}
-                                                disabled={added}
-                                                className="book-add-cart"
-                                            >
-                                                {added ? (
-                                                    <>
-                                                        <span>Added</span>
-                                                        <Check className="size-4" />
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <span>Add to cart</span>
-                                                        <ShoppingCart className="size-4" />
-                                                    </>
-                                                )}
-                                            </Button>
+                                            <AnimatePresence mode="popLayout">
+                                                <motion.div
+                                                    key={selectedFormat}
+                                                    className="book-retailer-actions"
+                                                    initial={{
+                                                        opacity: 0,
+                                                        y: 8,
+                                                    }}
+                                                    animate={{
+                                                        opacity: 1,
+                                                        y: 0,
+                                                    }}
+                                                    exit={{
+                                                        opacity: 0,
+                                                        y: -6,
+                                                    }}
+                                                    transition={{
+                                                        duration: 0.2,
+                                                    }}
+                                                >
+                                                    {purchaseDestinations.map(
+                                                        (destination) => (
+                                                            <Link
+                                                                key={
+                                                                    destination!
+                                                                        .href
+                                                                }
+                                                                href={
+                                                                    destination!
+                                                                        .href
+                                                                }
+                                                                className="book-retailer-action"
+                                                            >
+                                                                <span>
+                                                                    {
+                                                                        destination!
+                                                                            .logo
+                                                                    }
+                                                                </span>
+                                                                <span>
+                                                                    <strong>
+                                                                        {
+                                                                            destination!
+                                                                                .label
+                                                                        }
+                                                                    </strong>
+                                                                    <small>
+                                                                        {
+                                                                            destination!
+                                                                                .detail
+                                                                        }
+                                                                    </small>
+                                                                </span>
+                                                                {destination!
+                                                                    .external ? (
+                                                                    <ExternalLink aria-hidden="true" />
+                                                                ) : (
+                                                                    <ArrowRight aria-hidden="true" />
+                                                                )}
+                                                            </Link>
+                                                        ),
+                                                    )}
+                                                </motion.div>
+                                            </AnimatePresence>
                                         </div>
                                     ) : (
                                         <p className="book-purchase-unavailable">
                                             {isComingSoon
                                                 ? book.status.label
-                                                : "Purchase options are not open yet."}
-                                        </p>
-                                    )}
-                                    {canBuy && isHardback && (
-                                        <p className="book-shipping-caption">
-                                            Due to high demand, hardback copies
-                                            may take longer than usual to ship.
+                                                : "Purchase options are not available yet."}
                                         </p>
                                     )}
                                     {offersEbook && (

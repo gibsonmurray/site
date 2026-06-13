@@ -33,8 +33,10 @@
             "label": "Available now"
         },
         "sortOrder": 1,
-        "amazonAsin": "B0H236NC6X",
-        "amazonUrl": "https://www.amazon.com/dp/B0H29YDQ61",
+        "amazonPaperbackUrl": "https://www.amazon.com/Walls-Gibson-Murray/dp/B0H29YDQ61/ref=tmm_pap_swatch_0?_encoding=UTF8&dib_tag=se&dib=eyJ2IjoiMSJ9.O3kUYbuI-8MmIt0xVRDcs6gtCutiHo4EZhWx8Z9MAa4.liOzP18qy6hnjsjOUnMFUdwy7JEm5jiH6A-kQBvvViM&qid=1781358709&sr=1-1",
+        "amazonHardcoverUrl": "https://www.amazon.com/Walls-Gibson-Murray/dp/B0H4SXN1G5/ref=sr_1_1?crid=2M015EZZO55FZ&dib=eyJ2IjoiMSJ9.O3kUYbuI-8MmIt0xVRDcs6gtCutiHo4EZhWx8Z9MAa4.liOzP18qy6hnjsjOUnMFUdwy7JEm5jiH6A-kQBvvViM&dib_tag=se&keywords=walls+gibson+murray&qid=1781358709&s=books&sprefix=%2Cstripbooks%2C181&sr=1-1",
+        "kindleUrl": "https://www.amazon.com/Walls-Gibson-Murray-ebook/dp/B0GY9SKPQV/ref=tmm_kin_swatch_0?_encoding=UTF8&dib_tag=se&dib=eyJ2IjoiMSJ9.O3kUYbuI-8MmIt0xVRDcs6gtCutiHo4EZhWx8Z9MAa4.liOzP18qy6hnjsjOUnMFUdwy7JEm5jiH6A-kQBvvViM&qid=1781358709&sr=1-1",
+        "appleBooksUrl": "https://books.apple.com/us/book/walls/id6779263723",
         "ingramSparkUrl": "https://shop.ingramspark.com/b/084?params=4MChyHuR1ng2ZNDibAQbMy0YI8IHVfI2BBQK2TtC8rw",
         "reviews": [
             {
@@ -47,15 +49,9 @@
         ],
         "formats": {
             "paperback": {
-                "productId": "prod_UJIRemQJC3RNFj",
-                "priceCents": 1500,
-                "compareAtPriceCents": 2000,
-                "priceNote": "Launch sale",
                 "available": true
             },
-            "hardback": {
-                "productId": "prod_UgsaChxwF8ZzPO",
-                "priceCents": 2800,
+            "hardcover": {
                 "available": true
             },
             "ebook": {

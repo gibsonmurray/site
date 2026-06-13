@@ -13,9 +13,6 @@ import { ThemeProvider } from "next-themes"
 import { Geist } from "next/font/google"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Providers } from "@/components/providers"
-import { CartDrawer } from "@/components/cart-drawer"
-import { fetchBookPrices } from "@/lib/stripe-server"
-import { PricesProvider } from "@/components/prices-provider"
 import {
     APPS_DESCRIPTION,
     AUTHOR_NAME,
@@ -186,8 +183,7 @@ const jsonLd = {
     ],
 }
 
-const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
-    const prices = await fetchBookPrices()
+const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
         <html
             lang="en"
@@ -210,7 +206,6 @@ const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
                     }}
                 />
                 <Providers>
-                    <PricesProvider prices={prices} />
                     <ThemeProvider
                         attribute="class"
                         defaultTheme="light"
@@ -226,7 +221,6 @@ const RootLayout: FC<{ children: React.ReactNode }> = async ({ children }) => {
                                 <Footer />
                                 <Analytics />
                                 <SpeedInsights />
-                                <CartDrawer />
                             </main>
                         </TooltipProvider>
                     </ThemeProvider>

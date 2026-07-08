@@ -8,8 +8,8 @@ export default defineConfig([
     {
         rules: {
             "@typescript-eslint/no-explicit-any": "off",
-            "react-hooks/set-state-in-effect": "off",
-        },
+            "react-hooks/exhaustive-deps": "off"
+        }
     },
-    globalIgnores([".next/**", "next-env.d.ts"]),
+    globalIgnores([".next/**", "next-env.d.ts"])
 ])

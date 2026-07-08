@@ -1,23 +1,49 @@
 import type { NextConfig } from "next"
-import createMDX from "@next/mdx"
 
 const nextConfig: NextConfig = {
-    turbopack: {
-        rules: { "*.svg": { loaders: ["@svgr/webpack"], as: "*.js" } },
+    async headers() {
+        return [
+            {
+                source: "/",
+                headers: [
+                    {
+                        key: "X-Frame-Options",
+                        value: "ALLOWALL",
+                    },
+                ],
+            },
+        ]
     },
-    reactCompiler: true,
-    images: { remotePatterns: [{ protocol: "https", hostname: "**" }] },
-    poweredByHeader: false,
-    reactStrictMode: true,
-    devIndicators: false,
-    pageExtensions: ["js", "jsx", "mdx", "md", "ts", "tsx"],
+    async redirects() {
+        return [
+            {
+                source: "/blog/:path*",
+                destination: "https://substack.com/@gibsonmurray",
+                permanent: false,
+            },
+            {
+                source: "/writings/:path*",
+                destination: "https://substack.com/@gibsonmurray",
+                permanent: false,
+            },
+            {
+                source: "/books/:path*",
+                destination:
+                    "https://www.amazon.com/Walls-Gibson-Murray/dp/B0H29YDQ61",
+                permanent: false,
+            },
+            {
+                source: "/apps/:path*",
+                destination: "https://verbatim.gibsonmurray.com",
+                permanent: false,
+            },
+            {
+                source: "/verbatim/:path*",
+                destination: "https://verbatim.gibsonmurray.com",
+                permanent: false,
+            },
+        ]
+    },
 }
 
-const withMDX = createMDX({
-    // Add markdown plugins here, as desired
-    options: {
-        remarkPlugins: ["remark-gfm"],
-    },
-})
-
-export default withMDX(nextConfig)
+export default nextConfig

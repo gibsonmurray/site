@@ -1,0 +1,260 @@
+[
+    {
+        "id": "hello",
+        "size": "2x1",
+        "widget": "text",
+        "action": "none",
+        "eyebrow": "Hello, I'm",
+        "title": "Gibson Murray",
+        "summary": "Software engineer, author, and maker of thoughtful tools.",
+        "accent": "blue",
+        "position": {
+            "mobile": { "x": 0, "y": 0 },
+            "desktop": { "x": 0, "y": 0 }
+        },
+        "details": {
+            "body": [
+                "I'm a software engineer focused on expressive interfaces, useful AI, and products that feel considered from the first interaction.",
+                "Away from the screen, I write biblical fiction and essays about faith, work, and the ideas that stay with us."
+            ],
+            "facts": [
+                "Based in Washington, D.C.",
+                "Building for the web",
+                "Writing in public"
+            ],
+            "links": [
+                { "label": "Email me", "href": "mailto:hi@gibsonmurray.com" }
+            ]
+        }
+    },
+    {
+        "id": "github",
+        "size": "2x1",
+        "widget": "social",
+        "action": "open-link",
+        "eyebrow": "Code",
+        "title": "Gibson Murray",
+        "summary": "Projects, experiments, and open-source work.",
+        "accent": "slate",
+        "brand": "github",
+        "href": "https://github.com/gibsonmurray",
+        "username": "gibsonmurray",
+        "external": true,
+        "position": {
+            "mobile": { "x": 0, "y": 1 },
+            "desktop": { "x": 2, "y": 0 }
+        }
+    },
+    {
+        "id": "verbatim",
+        "size": "2x2",
+        "widget": "article",
+        "action": "expand",
+        "eyebrow": "Featured project",
+        "title": "Verbatim",
+        "summary": "A focused writing tool for transforming text without losing your voice.",
+        "accent": "purple",
+        "image": "/media/verbatim-app-desktop.png",
+        "position": {
+            "mobile": { "x": 0, "y": 2 },
+            "desktop": { "x": 0, "y": 1 }
+        },
+        "details": {
+            "body": [
+                "Verbatim is a focused web tool for working with language deliberately. Its interface keeps the source, transformation, and result close together.",
+                "The product explores how AI tools can be useful without becoming noisy, generic, or detached from the writer's intent."
+            ],
+            "facts": ["Next.js", "Product design", "AI-assisted writing"],
+            "links": [
+                {
+                    "label": "Open Verbatim",
+                    "href": "https://verbatim.gibsonmurray.com"
+                }
+            ]
+        }
+    },
+    {
+        "id": "walls",
+        "size": "1x2",
+        "widget": "article",
+        "action": "expand",
+        "eyebrow": "Book",
+        "title": "Walls",
+        "summary": "A story about faith, pressure, and the battles no one else can see.",
+        "accent": "orange",
+        "image": "/media/walls-cover-ebook.png",
+        "position": {
+            "mobile": { "x": 0, "y": 4 },
+            "desktop": { "x": 2, "y": 1 }
+        },
+        "details": {
+            "body": [
+                "Walls is a work of biblical fiction shaped around hidden battles, pressure, and the kind of faith that is tested before it is understood.",
+                "It is available in paperback and Kindle editions."
+            ],
+            "facts": ["Biblical fiction", "Paperback", "Kindle"],
+            "links": [
+                {
+                    "label": "View the book",
+                    "href": "https://www.amazon.com/Walls-Gibson-Murray/dp/B0H29YDQ61"
+                }
+            ]
+        }
+    },
+    {
+        "id": "writing",
+        "size": "1x1",
+        "widget": "social",
+        "action": "open-link",
+        "eyebrow": "Newsletter",
+        "title": "Substack",
+        "summary": "Essays and reflections",
+        "accent": "pink",
+        "brand": "substack",
+        "href": "https://substack.com/@gibsonmurray",
+        "external": true,
+        "position": {
+            "mobile": { "x": 1, "y": 5 },
+            "desktop": { "x": 3, "y": 1 }
+        }
+    },
+    {
+        "id": "x",
+        "size": "1x1",
+        "widget": "social",
+        "action": "open-link",
+        "eyebrow": "Elsewhere",
+        "title": "Gibson Murray",
+        "summary": "Notes in public",
+        "accent": "blue",
+        "brand": "x",
+        "href": "https://x.com/gibsonmurray",
+        "username": "gibsonmurray",
+        "external": true,
+        "position": {
+            "mobile": { "x": 1, "y": 4 },
+            "desktop": { "x": 3, "y": 2 }
+        }
+    },
+    {
+        "id": "location",
+        "size": "2x1",
+        "widget": "map",
+        "action": "none",
+        "eyebrow": "Location",
+        "title": "Washington, D.C.",
+        "summary": "Based here, building everywhere.",
+        "accent": "green",
+        "location": {
+            "label": "Washington, D.C.",
+            "region": "Based here, building everywhere.",
+            "latitude": 38.9072,
+            "longitude": -77.0369,
+            "zoom": 11
+        },
+        "position": {
+            "mobile": { "x": 0, "y": 6 },
+            "desktop": { "x": 0, "y": 3 }
+        }
+    },
+    {
+        "id": "contact",
+        "size": "2x1",
+        "widget": "article",
+        "action": "expand",
+        "eyebrow": "Messages",
+        "title": "Say hello",
+        "summary": "Start a conversation.",
+        "accent": "blue",
+        "presentation": "messages",
+        "position": {
+            "mobile": { "x": 0, "y": 7 },
+            "desktop": { "x": 2, "y": 3 }
+        },
+        "details": {
+            "email": "hi@gibsonmurray.com",
+            "messages": [
+                {
+                    "side": "incoming",
+                    "text": "Hey — glad you're here."
+                },
+                {
+                    "side": "incoming",
+                    "text": "What are you working on?"
+                }
+            ]
+        }
+    },
+    {
+        "id": "spotify",
+        "size": "1x2",
+        "widget": "spotify-media",
+        "action": "none",
+        "eyebrow": "Listening",
+        "title": "HOLD STILL",
+        "summary": "The Kid LAROI",
+        "accent": "green",
+        "brand": "spotify",
+        "href": "https://open.spotify.com/track/5ttvrHYzuAkScjtxJzRvdA?si=38406e9a90894834",
+        "external": true,
+        "position": {
+            "mobile": { "x": 0, "y": 8 },
+            "desktop": { "x": 0, "y": 4 }
+        }
+    },
+    {
+        "id": "quote",
+        "size": "2x2",
+        "widget": "quote",
+        "action": "none",
+        "title": "Think Different",
+        "accent": "slate",
+        "quote": {
+            "paragraphs": [
+                "Here’s to the crazy ones.",
+                "The misfits. The rebels. The troublemakers. The round pegs in the square holes.",
+                "The ones who see things differently."
+            ],
+            "attribution": "Apple, “Think Different”"
+        },
+        "position": {
+            "mobile": { "x": 0, "y": 10 },
+            "desktop": { "x": 1, "y": 4 }
+        }
+    },
+    {
+        "id": "image-walls",
+        "size": "1x1",
+        "widget": "image",
+        "action": "none",
+        "title": "Walls book mockup",
+        "image": "/media/walls-mock-1.png",
+        "accent": "orange",
+        "position": {
+            "mobile": { "x": 0, "y": 12 },
+            "desktop": { "x": 0, "y": 6 }
+        }
+    },
+    {
+        "id": "instagram",
+        "size": "2x1",
+        "widget": "social",
+        "action": "open-link",
+        "title": "Gibson Murray",
+        "brand": "instagram",
+        "href": "https://www.instagram.com/gibson.murray/",
+        "username": "gibson.murray",
+        "summary": "Writing, building, and the moments in between.",
+        "external": true,
+        "gallery": [
+            "/media/walls-mock-1.png",
+            "/media/verbatim-app-desktop.png",
+            "/media/walls-cover-ebook.png",
+            "/gm-logo.png"
+        ],
+        "position": {
+            "mobile": { "x": 0, "y": 13 },
+            "desktop": { "x": 2, "y": 6 }
+        }
+    }
+]

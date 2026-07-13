@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/react"
+import "react-grid-layout/css/styles.css"
+import "react-resizable/css/styles.css"
 import "./global.css"
 
 const siteUrl = "https://gibsonmurray.com"
@@ -11,19 +13,12 @@ export const metadata: Metadata = {
         template: "%s | Gibson Murray",
     },
     description:
-        "Gibson Murray is a software engineer, Christian author, and maker of focused web tools.",
+        "A rearrangeable, widget-based portfolio by Gibson Murray.",
     applicationName: "Gibson Murray",
     authors: [{ name: "Gibson Murray", url: siteUrl }],
     creator: "Gibson Murray",
     publisher: "Gibson Murray",
-    keywords: [
-        "Gibson Murray",
-        "software engineer",
-        "Christian author",
-        "biblical fiction",
-        "Walls book",
-        "Verbatim",
-    ],
+    keywords: ["Gibson Murray", "software engineer", "author", "portfolio"],
     icons: {
         icon: [
             { url: "/gm-logo.svg", type: "image/svg+xml" },
@@ -33,27 +28,16 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: "Gibson Murray",
-        description:
-            "Code, books, and tools for exact words.",
+        description: "A rearrangeable portfolio of code, books, and ideas.",
         url: siteUrl,
         siteName: "Gibson Murray",
-        images: [
-            {
-                url: "/media/walls-mock-1.png",
-                width: 1200,
-                height: 630,
-                alt: "Walls book mockup",
-            },
-        ],
         locale: "en_US",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
         title: "Gibson Murray",
-        description:
-            "Code, books, and tools for exact words.",
-        images: ["/media/walls-mock-1.png"],
+        description: "A rearrangeable portfolio of code, books, and ideas.",
     },
     robots: {
         index: true,
@@ -67,7 +51,7 @@ export default function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html lang="en" className="dark">
+        <html lang="en">
             <body>
                 {children}
                 <Analytics />

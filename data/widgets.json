@@ -176,18 +176,18 @@
             "messages": [
                 {
                     "side": "incoming",
-                    "text": "Hey — glad you're here."
+                    "text": "hey! stoked you're here."
                 },
                 {
                     "side": "incoming",
-                    "text": "What are you working on?"
+                    "text": "what's up?"
                 }
             ]
         }
     },
     {
         "id": "spotify",
-        "size": "1x2",
+        "size": "2x1",
         "widget": "spotify-media",
         "action": "none",
         "eyebrow": "Listening",
@@ -237,21 +237,14 @@
     },
     {
         "id": "instagram",
-        "size": "2x1",
+        "size": "1x1",
         "widget": "social",
         "action": "open-link",
         "title": "Gibson Murray",
         "brand": "instagram",
         "href": "https://www.instagram.com/gibson.murray/",
         "username": "gibson.murray",
-        "summary": "Writing, building, and the moments in between.",
         "external": true,
-        "gallery": [
-            "/media/walls-mock-1.png",
-            "/media/verbatim-app-desktop.png",
-            "/media/walls-cover-ebook.png",
-            "/gm-logo.png"
-        ],
         "position": {
             "mobile": { "x": 0, "y": 13 },
             "desktop": { "x": 2, "y": 6 }

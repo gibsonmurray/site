@@ -16,12 +16,22 @@ type GithubContributionGraphProps = {
 }
 
 const FALLBACK_LEVELS = [
-    0, 1, 0, 2, 0, 0, 1, 0, 0, 3, 1, 0, 0, 2, 1, 0, 4, 2, 0, 1, 0, 0, 2, 3,
-    1, 0, 0, 1, 0, 2, 0, 0, 3, 1, 0, 2, 4, 1, 0, 0, 2, 0, 1, 3, 0, 0, 1, 2,
-    0, 4, 2, 0, 1, 0, 0, 2, 1, 0, 3, 0, 1, 0, 2,
+    0, 1, 0, 2, 0, 0, 1, 0, 0, 3, 1, 0, 0, 2, 1, 0, 4, 2, 0, 1, 0, 0, 2, 3, 1,
+    0, 0, 1, 0, 2, 0, 0, 3, 1, 0, 2, 4, 1, 0, 0, 2, 0, 1, 3, 0, 0, 1, 2, 0, 4,
+    2, 0, 1, 0, 0, 2, 1, 0, 3, 0, 1, 0, 2,
 ]
 
-export function GithubContributionGraph({ username }: GithubContributionGraphProps) {
+const levelClasses = [
+    "bg-[#ebedf0]",
+    "bg-[#9be9a8]",
+    "bg-[#40c463]",
+    "bg-[#30a14e]",
+    "bg-[#216e39]",
+] as const
+
+export function GithubContributionGraph({
+    username,
+}: GithubContributionGraphProps) {
     const [days, setDays] = useState<ContributionDay[]>([])
 
     useEffect(() => {
@@ -50,12 +60,15 @@ export function GithubContributionGraph({ username }: GithubContributionGraphPro
 
     return (
         <span
-            className="github-contribution-graph"
+            className="relative z-[1] grid auto-cols-[0.58rem] grid-flow-col grid-rows-7 gap-[0.24rem] place-self-center"
             role="img"
             aria-label={`Recent GitHub contribution activity for ${username}`}
         >
             {levels.map((level, index) => (
-                <span key={days[index]?.date ?? index} data-level={level} />
+                <span
+                    className={`size-[0.58rem] rounded-[0.14rem] border border-[rgba(27,31,36,0.035)] ${levelClasses[level] ?? levelClasses[0]}`}
+                    key={days[index]?.date ?? index}
+                />
             ))}
         </span>
     )

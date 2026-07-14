@@ -91,12 +91,12 @@ export const GRID_COLUMNS: Record<Breakpoint, number> = {
     desktop: 4,
 }
 
-export const SIZE_MAP: Record<WidgetSize, { width: number; height: number }> = {
+export const SIZE_MAP = {
     "1x1": { width: 1, height: 1 },
     "2x1": { width: 2, height: 1 },
     "1x2": { width: 1, height: 2 },
     "2x2": { width: 2, height: 2 },
-}
+} as const satisfies Record<WidgetSize, { width: number; height: number }>
 
 export function getDefaultOrder(
     widgets: WidgetDefinition[],

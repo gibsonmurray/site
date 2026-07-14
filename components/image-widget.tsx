@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { cn, widgetSurface } from "@/lib/widget-design"
 import type { WidgetDefinition } from "@/lib/widgets"
 
 type ImageWidgetProps = {
@@ -20,14 +21,14 @@ export function ImageWidget({ widget, onOpen }: ImageWidgetProps) {
                     ? "(max-width: 759px) 100vw, 30rem"
                     : "(max-width: 759px) 50vw, 15rem"
             }
-            className="image-widget__image"
+            className="object-cover"
         />
     )
 
     if (widget.action === "open-link" && widget.href) {
         return (
             <a
-                className="widget-card__surface image-widget"
+                className={cn(widgetSurface, "bg-white p-0")}
                 href={widget.href}
                 draggable={false}
                 target={widget.external ? "_blank" : undefined}
@@ -42,7 +43,7 @@ export function ImageWidget({ widget, onOpen }: ImageWidgetProps) {
         return (
             <button
                 type="button"
-                className="widget-card__surface image-widget"
+                className={cn(widgetSurface, "bg-white p-0")}
                 onClick={onOpen}
             >
                 {image}
@@ -50,5 +51,5 @@ export function ImageWidget({ widget, onOpen }: ImageWidgetProps) {
         )
     }
 
-    return <div className="widget-card__surface image-widget">{image}</div>
+    return <div className={cn(widgetSurface, "bg-white p-0")}>{image}</div>
 }

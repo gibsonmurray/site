@@ -12,6 +12,7 @@ import ReactGridLayout, {
 import { WidgetCard, type WidgetCardHandle } from "@/components/widget-card"
 import { MessagesModal } from "@/components/messages-modal"
 import { WidgetModal } from "@/components/widget-modal"
+import { cn } from "@/lib/widget-design"
 import {
     GRID_COLUMNS,
     SIZE_MAP,
@@ -31,6 +32,8 @@ const STALE_LAYOUT_STORAGE_KEYS = [
 ]
 const STALE_THEME_STORAGE_KEY = "gm-bento-theme"
 const DESKTOP_GRID_MEDIA_QUERY = "(min-width: 1004px)"
+const GRID_PLACEHOLDER_CLASSES =
+    "overflow-hidden rounded-[clamp(1.35rem,4vw,1.8rem)] border border-white/10 bg-[#404040] opacity-[0.94] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-14px_30px_rgba(0,0,0,0.14),0_12px_28px_rgba(0,0,0,0.12)] transition-all duration-200 ease-[cubic-bezier(0.16,0.84,0.22,1)] after:absolute after:inset-[0.65rem] after:rounded-[clamp(0.8rem,3vw,1.25rem)] after:border after:border-dashed after:border-white/20 after:content-['']"
 
 type PortfolioGridProps = {
     widgets: WidgetDefinition[]
@@ -352,7 +355,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                         "(prefers-reduced-motion: reduce)",
                     ).matches
                         ? 0
-                        : 340
+                        : 260
 
                     settlingTimerRef.current = window.setTimeout(() => {
                         dragControllersRef.current.get(item.i)?.stopDrag()
@@ -416,17 +419,23 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
 
     return (
         <MotionConfig reducedMotion="user">
-            <main className={ready ? "portfolio is-ready" : "portfolio"}>
-                <div className="portfolio__ambient" aria-hidden="true" />
-                <header className="portfolio__intro">
+            <main
+                className={cn(
+                    "relative min-h-svh overflow-clip px-4 pt-5 pb-10 opacity-0 transition-opacity duration-300 min-[760px]:px-8 min-[760px]:pt-[clamp(1.5rem,3vw,2.5rem)] min-[760px]:pb-12",
+                    ready && "opacity-100",
+                )}
+            >
+                <header className="relative mx-auto flex w-[min(100%,28.625rem)] items-center justify-between gap-4 px-[0.15rem] pt-2 pb-5 text-[0.73rem] font-[560] tracking-[-0.01em] text-[#727272] min-[1004px]:w-[min(100%,58.75rem)]">
                     <span>GM / Portfolio</span>
-                    <p>Drag any widget to rearrange this space.</p>
+                    <p className="m-0 text-right text-[0.65rem] font-[530] tracking-[0.02em]">
+                        Drag any widget to rearrange this space.
+                    </p>
                 </header>
 
                 <LayoutGroup id="portfolio-widgets">
                     <div
                         ref={containerRef}
-                        className="widget-grid-shell"
+                        className="relative mx-auto min-h-px w-[min(100%,28.625rem)] min-[1004px]:w-[min(100%,58.75rem)]"
                         onClickCapture={(event) => {
                             if (
                                 performance.now() >=
@@ -441,7 +450,10 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                             mounted &&
                             settlingSlot?.breakpoint === breakpoint && (
                                 <div
-                                    className="widget-grid__settling-placeholder"
+                                    className={cn(
+                                        GRID_PLACEHOLDER_CLASSES,
+                                        "pointer-events-none absolute top-0 left-0 z-0",
+                                    )}
                                     style={{
                                         width:
                                             settlingSlot.item.w * rowHeight +
@@ -457,7 +469,14 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                         {ready && mounted && (
                             <ReactGridLayout
                                 key={breakpoint}
-                                className="widget-grid"
+                                className={cn(
+                                    "relative z-[1] block w-full transition-[height] duration-500 ease-[cubic-bezier(0.2,0.82,0.24,1)]",
+                                    "[&>.react-grid-item]:cursor-grab [&>.react-grid-item]:touch-none",
+                                    "[&>.react-grid-item.react-draggable-dragging]:z-50! [&>.react-grid-item.react-draggable-dragging]:cursor-grabbing",
+                                    "[&>.react-grid-item:not(.react-draggable-dragging)]:transition-transform! [&>.react-grid-item:not(.react-draggable-dragging)]:duration-[520ms]! [&>.react-grid-item:not(.react-draggable-dragging)]:ease-[cubic-bezier(0.16,0.84,0.22,1)]! [&>.react-grid-item:not(.react-draggable-dragging)]:will-change-transform!",
+                                    "[&>.react-grid-item.react-grid-placeholder]:z-[2]! [&>.react-grid-item.react-grid-placeholder]:overflow-hidden [&>.react-grid-item.react-grid-placeholder]:rounded-[clamp(1.35rem,4vw,1.8rem)] [&>.react-grid-item.react-grid-placeholder]:border [&>.react-grid-item.react-grid-placeholder]:border-white/10 [&>.react-grid-item.react-grid-placeholder]:bg-[#404040]! [&>.react-grid-item.react-grid-placeholder]:opacity-[0.94]! [&>.react-grid-item.react-grid-placeholder]:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-14px_30px_rgba(0,0,0,0.14),0_12px_28px_rgba(0,0,0,0.12)] [&>.react-grid-item.react-grid-placeholder]:duration-200!",
+                                    "[&>.react-grid-item.react-grid-placeholder]:after:absolute [&>.react-grid-item.react-grid-placeholder]:after:inset-[0.65rem] [&>.react-grid-item.react-grid-placeholder]:after:rounded-[clamp(0.8rem,3vw,1.25rem)] [&>.react-grid-item.react-grid-placeholder]:after:border [&>.react-grid-item.react-grid-placeholder]:after:border-dashed [&>.react-grid-item.react-grid-placeholder]:after:border-white/20 [&>.react-grid-item.react-grid-placeholder]:after:content-['']",
+                                )}
                                 width={width}
                                 layout={layouts[breakpoint]}
                                 gridConfig={{
@@ -485,14 +504,14 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                                     return (
                                         <div
                                             key={widget.id}
-                                            className={
+                                            className={cn(
+                                                "[&>article]:size-full",
                                                 settlingSlot?.breakpoint ===
                                                     breakpoint &&
-                                                settlingSlot.item.i ===
-                                                    widget.id
-                                                    ? "widget-grid__item is-settling"
-                                                    : "widget-grid__item"
-                                            }
+                                                    settlingSlot.item.i ===
+                                                        widget.id &&
+                                                    "z-50 duration-[260ms]! ease-[cubic-bezier(0.32,0.08,0.22,1)]! [&>article]:shadow-[0_2px_4px_rgba(18,18,18,0.035),0_10px_26px_rgba(18,18,18,0.025)]",
+                                            )}
                                         >
                                             <WidgetCard
                                                 ref={(controller) => {
@@ -541,10 +560,17 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                     </AnimatePresence>
                 </LayoutGroup>
 
-                <footer className="portfolio__footer">
+                <footer className="relative mx-auto flex w-[min(100%,28.625rem)] items-center justify-between gap-4 px-[0.2rem] pt-5 text-[0.69rem] text-[#727272] min-[1004px]:w-[min(100%,58.75rem)]">
                     <span>Your layout is saved on this device.</span>
-                    <button type="button" onClick={resetLayout}>
-                        <RotateCcw aria-hidden="true" />
+                    <button
+                        type="button"
+                        className="inline-flex cursor-pointer items-center gap-[0.35rem] rounded-full border border-[#e8e8e6] bg-white px-[0.68rem] py-[0.48rem] text-[#727272] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#087cff]/70"
+                        onClick={resetLayout}
+                    >
+                        <RotateCcw
+                            className="size-[0.85rem]"
+                            aria-hidden="true"
+                        />
                         Reset layout
                     </button>
                 </footer>

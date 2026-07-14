@@ -8,6 +8,7 @@ import {
     useSpring,
 } from "motion/react"
 import { customWidgetRegistry } from "@/components/custom-widget-registry"
+import { widgetCard } from "@/lib/widget-design"
 import type { WidgetDefinition } from "@/lib/widgets"
 
 export type WidgetCardHandle = {
@@ -81,7 +82,10 @@ export const WidgetCard = forwardRef<WidgetCardHandle, WidgetCardProps>(
                 data-size={widget.size}
                 data-widget={widget.widget}
                 data-accent={widget.accent ?? "slate"}
-                className={dragging ? "widget-card is-dragging" : "widget-card"}
+                className={widgetCard({
+                    accent: widget.accent ?? "slate",
+                    dragging,
+                })}
                 style={{ rotate, scale, y }}
                 onKeyDown={(event) => {
                     if (!event.altKey) return

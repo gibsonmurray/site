@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/react"
+import { GeistSans } from "geist/font/sans"
 import "react-grid-layout/css/styles.css"
 import "react-resizable/css/styles.css"
 import "./global.css"
@@ -12,8 +13,7 @@ export const metadata: Metadata = {
         default: "Gibson Murray",
         template: "%s | Gibson Murray",
     },
-    description:
-        "A rearrangeable, widget-based portfolio by Gibson Murray.",
+    description: "A rearrangeable, widget-based portfolio by Gibson Murray.",
     applicationName: "Gibson Murray",
     authors: [{ name: "Gibson Murray", url: siteUrl }],
     creator: "Gibson Murray",
@@ -51,8 +51,11 @@ export default function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html lang="en">
-            <body>
+        <html
+            lang="en"
+            className={`${GeistSans.variable} min-w-80 bg-white scheme-light`}
+        >
+            <body className="min-h-svh min-w-80 bg-white font-[family-name:var(--font-geist-sans)] [font-feature-settings:'ss01'_on,'cv01'_on,'cv11'_on] text-[#111] antialiased selection:bg-[#1689e8]/25">
                 {children}
                 <Analytics />
             </body>

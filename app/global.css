@@ -3,3 +3,16 @@
 @source "./**/*.{ts,tsx}";
 @source "../components/**/*.{ts,tsx}";
 @source "../lib/**/*.{ts,tsx}";
+
+@keyframes map-location-pulse {
+    0%,
+    100% {
+        opacity: 0.12;
+        transform: scale(0.92);
+    }
+
+    50% {
+        opacity: 0.24;
+        transform: scale(1.08);
+    }
+}

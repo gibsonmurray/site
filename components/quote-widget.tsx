@@ -31,7 +31,7 @@ export function QuoteWidget({ widget }: QuoteWidgetProps) {
                         <span className="grid gap-[clamp(0.9rem,3vw,1.35rem)]">
                             {paragraphs.map((paragraph) => (
                                 <span
-                                    className="max-w-[26ch] font-serif text-[clamp(1rem,3.8vw,1.32rem)] leading-[1.38] font-[430] tracking-[-0.018em] text-[#111] italic"
+                                    className="w-full font-serif text-[clamp(1.15rem,4.4vw,1.55rem)] leading-[1.3] font-[430] tracking-[-0.022em] text-[#111] italic"
                                     key={paragraph}
                                 >
                                     {paragraph}

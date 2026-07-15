@@ -1,16 +1,18 @@
 "use client"
 
 import Image from "next/image"
-import { useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { ArrowUp, Mail } from "lucide-react"
 import { cn, widgetSurface } from "@/lib/widget-design"
-import type { WidgetDefinition } from "@/lib/widgets"
+import type { WidgetDefinition, WidgetMessage } from "@/lib/widgets"
 
 type MessagesWidgetProps = {
     widget: WidgetDefinition
 }
 
 const CONTACT_EMAIL = "hi@gibsonmurray.com"
+const AUTO_REPLY =
+    "got it — thanks for reaching out! i'll get back to you soon."
 
 function MessageTail({ side }: { side: "incoming" | "outgoing" }) {
     return (
@@ -31,17 +33,33 @@ function MessageTail({ side }: { side: "incoming" | "outgoing" }) {
 
 export function MessagesWidget({ widget }: MessagesWidgetProps) {
     const [draft, setDraft] = useState("")
+    const [conversation, setConversation] = useState<WidgetMessage[]>([])
+    const [isTyping, setIsTyping] = useState(false)
     const [sendState, setSendState] = useState<
         "idle" | "sending" | "sent" | "error"
     >("idle")
-    const incomingMessages = widget.messages?.filter(
-        (message) => message.side === "incoming",
-    ) ?? [{ side: "incoming", text: "hey! stoked you're here." }]
+    const replyTimers = useRef(new Set<number>())
+    const initialMessages = widget.messages ?? [
+        { side: "incoming" as const, text: "hey! stoked you're here." },
+        { side: "incoming" as const, text: "what's up?" },
+    ]
+    const visibleMessages = [...initialMessages, ...conversation].slice(
+        isTyping ? -3 : -4,
+    )
+
+    useEffect(
+        () => () => {
+            for (const timer of replyTimers.current) {
+                window.clearTimeout(timer)
+            }
+        },
+        [],
+    )
 
     const sendMessage = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const message = draft.trim()
-        if (!message || sendState === "sending") return
+        if (!message || sendState === "sending" || isTyping) return
 
         setSendState("sending")
 
@@ -54,8 +72,23 @@ export function MessagesWidget({ widget }: MessagesWidgetProps) {
 
             if (!response.ok) throw new Error("Message delivery failed")
 
+            setConversation((current) => [
+                ...current,
+                { side: "outgoing", text: message },
+            ])
             setDraft("")
             setSendState("sent")
+            setIsTyping(true)
+
+            const replyTimer = window.setTimeout(() => {
+                setIsTyping(false)
+                setConversation((current) => [
+                    ...current,
+                    { side: "incoming", text: AUTO_REPLY },
+                ])
+                replyTimers.current.delete(replyTimer)
+            }, 1600)
+            replyTimers.current.add(replyTimer)
         } catch {
             setSendState("error")
         }
@@ -65,50 +98,115 @@ export function MessagesWidget({ widget }: MessagesWidgetProps) {
         <div
             className={cn(
                 widgetSurface,
-                "cursor-default justify-between gap-2.5 p-[clamp(0.8rem,3vw,1.05rem)]",
+                "cursor-default justify-between gap-2.5 bg-[#f7f7f9] p-[clamp(0.8rem,3vw,1.05rem)]",
             )}
         >
-            <div className="flex min-h-0 flex-1 flex-col justify-center gap-2.5">
-                <div className="flex items-end gap-2">
-                    <div className="relative size-9 shrink-0 overflow-hidden rounded-full ring-1 ring-black/5">
-                        <Image
-                            src={
-                                widget.image ??
-                                "/media/gibson-murray-headshot.jpeg"
-                            }
-                            alt="Gibson Murray"
-                            fill
-                            sizes="36px"
-                            className="object-cover object-[50%_42%]"
-                        />
-                    </div>
+            <div
+                className="flex min-h-0 flex-1 flex-col justify-end gap-[0.15rem]"
+                role="log"
+                aria-label="Conversation with Gibson"
+                aria-live="polite"
+            >
+                {visibleMessages.map((message, index) => {
+                    const startsGroup =
+                        index === 0 ||
+                        visibleMessages[index - 1]?.side !== message.side
+                    const endsGroup =
+                        index === visibleMessages.length - 1 ||
+                        visibleMessages[index + 1]?.side !== message.side
+                    const messageKey = `${message.side}-${message.text}-${index}`
 
-                    <div className="min-w-0 max-w-[78%]">
-                        <p className="mb-1 pl-2 text-[0.62rem] leading-none font-[520] text-[#8e8e93]">
-                            Gibson
-                        </p>
-                        <div className="flex flex-col items-start gap-[0.15rem]">
-                            {incomingMessages.map((message, index) => (
-                                <p
-                                    className="relative rounded-[1.05rem] bg-[#e5e5ea] px-3 py-1.5 text-[clamp(0.72rem,2.4vw,0.88rem)] leading-[1.22] font-[450] tracking-[-0.02em] text-black"
-                                    key={`${message.text}-${index}`}
-                                >
-                                    <span className="relative z-10">
+                    if (message.side === "outgoing") {
+                        return (
+                            <p
+                                className="relative mr-2 ml-auto max-w-[62%] rounded-[1.05rem] bg-[#0a84ff] px-3 py-1.5 text-[clamp(0.72rem,2.4vw,0.88rem)] leading-[1.22] font-[450] tracking-[-0.02em] text-white"
+                                key={messageKey}
+                            >
+                                <span className="relative z-10 line-clamp-2">
+                                    {message.text}
+                                </span>
+                                {endsGroup && <MessageTail side="outgoing" />}
+                            </p>
+                        )
+                    }
+
+                    return (
+                        <div className="flex items-end gap-2" key={messageKey}>
+                            {endsGroup ? (
+                                <div className="relative size-9 shrink-0 overflow-hidden rounded-full">
+                                    <Image
+                                        src={
+                                            widget.image ??
+                                            "/media/gibson-murray-headshot.jpeg"
+                                        }
+                                        alt="Gibson Murray"
+                                        fill
+                                        sizes="36px"
+                                        className="object-cover object-[50%_42%]"
+                                    />
+                                </div>
+                            ) : (
+                                <span className="size-9 shrink-0" />
+                            )}
+
+                            <div className="max-w-[78%] min-w-0">
+                                {startsGroup && (
+                                    <p className="mb-1 pl-2 text-[0.62rem] leading-none font-[520] text-[#8e8e93]">
+                                        Gibson
+                                    </p>
+                                )}
+                                <p className="relative rounded-[1.05rem] bg-[#e5e5ea] px-3 py-1.5 text-[clamp(0.72rem,2.4vw,0.88rem)] leading-[1.22] font-[450] tracking-[-0.02em] text-black">
+                                    <span className="relative z-10 line-clamp-2">
                                         {message.text}
                                     </span>
-                                    {index === incomingMessages.length - 1 && (
+                                    {endsGroup && (
                                         <MessageTail side="incoming" />
                                     )}
                                 </p>
-                            ))}
+                            </div>
+                        </div>
+                    )
+                })}
+                {isTyping && (
+                    <div
+                        className="flex items-end gap-2"
+                        role="status"
+                        aria-label="Gibson is typing"
+                    >
+                        <div className="relative size-9 shrink-0 overflow-hidden rounded-full">
+                            <Image
+                                src={
+                                    widget.image ??
+                                    "/media/gibson-murray-headshot.jpeg"
+                                }
+                                alt="Gibson Murray"
+                                fill
+                                sizes="36px"
+                                className="object-cover object-[50%_42%]"
+                            />
+                        </div>
+                        <div className="min-w-0">
+                            <p className="mb-1 pl-2 text-[0.62rem] leading-none font-[520] text-[#8e8e93]">
+                                Gibson
+                            </p>
+                            <div className="relative flex h-[1.8rem] items-center gap-[0.2rem] rounded-[1.05rem] bg-[#e5e5ea] px-3">
+                                <span
+                                    className="size-[0.32rem] animate-bounce rounded-full bg-[#8e8e93] [animation-delay:-0.3s] [animation-duration:0.9s]"
+                                    aria-hidden="true"
+                                />
+                                <span
+                                    className="size-[0.32rem] animate-bounce rounded-full bg-[#8e8e93] [animation-delay:-0.15s] [animation-duration:0.9s]"
+                                    aria-hidden="true"
+                                />
+                                <span
+                                    className="size-[0.32rem] animate-bounce rounded-full bg-[#8e8e93] [animation-duration:0.9s]"
+                                    aria-hidden="true"
+                                />
+                                <MessageTail side="incoming" />
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <p className="relative ml-auto mr-2 max-w-[52%] rounded-[1.05rem] bg-[#0a84ff] px-3 py-2 text-[clamp(0.72rem,2.4vw,0.88rem)] leading-none font-[450] tracking-[-0.02em] text-white">
-                    <span className="relative z-10">sounds good 🙏</span>
-                    <MessageTail side="outgoing" />
-                </p>
+                )}
             </div>
 
             <div className="flex items-center gap-2.5">
@@ -125,7 +223,7 @@ export function MessagesWidget({ widget }: MessagesWidgetProps) {
                     <span
                         id="contact-email-tooltip"
                         role="tooltip"
-                        className="pointer-events-none absolute bottom-[calc(100%+0.55rem)] left-1/2 z-20 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-[0.48rem] bg-black px-2.5 py-1.5 text-[0.65rem] font-[560] tracking-[-0.01em] text-white opacity-0 shadow-[0_6px_16px_rgba(0,0,0,0.16)] transition-[opacity,transform] duration-150 after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-x-[0.3rem] after:border-t-[0.35rem] after:border-x-transparent after:border-t-black after:content-[''] group-hover/mail:translate-y-0 group-hover/mail:opacity-100 group-focus-visible/mail:translate-y-0 group-focus-visible/mail:opacity-100"
+                        className="pointer-events-none absolute bottom-[calc(100%+0.55rem)] left-0 z-20 translate-y-1 rounded-[0.48rem] bg-black px-2.5 py-1.5 text-[0.65rem] font-[560] tracking-[-0.01em] whitespace-nowrap text-white opacity-0 shadow-[0_6px_16px_rgba(0,0,0,0.16)] transition-[opacity,transform] duration-150 group-hover/mail:translate-y-0 group-hover/mail:opacity-100 group-focus-visible/mail:translate-y-0 group-focus-visible/mail:opacity-100 after:absolute after:top-full after:left-4 after:-translate-x-1/2 after:border-x-[0.3rem] after:border-t-[0.35rem] after:border-x-transparent after:border-t-black after:content-['']"
                     >
                         {CONTACT_EMAIL}
                     </span>
@@ -154,13 +252,17 @@ export function MessagesWidget({ widget }: MessagesWidgetProps) {
                         }
                         maxLength={2000}
                         autoComplete="off"
-                        className="min-w-0 flex-1 bg-transparent text-[0.68rem] text-[#111] outline-none placeholder:text-[#c7c7cc]"
+                        className="min-w-0 flex-1 bg-transparent text-[0.82rem] text-[#111] outline-none placeholder:text-[#c7c7cc]"
                     />
                     <button
                         type="submit"
-                        disabled={!draft.trim() || sendState === "sending"}
+                        disabled={
+                            !draft.trim() ||
+                            sendState === "sending" ||
+                            isTyping
+                        }
                         aria-label="Send message to Gibson Murray"
-                        className="mr-0.5 grid size-6 shrink-0 cursor-pointer place-items-center rounded-full bg-[#0a84ff] text-white transition-[background,opacity,transform] duration-150 active:scale-90 disabled:cursor-default disabled:bg-[#c7c7cc]"
+                        className="mr-1 grid size-6 shrink-0 cursor-pointer place-items-center rounded-full bg-[#0a84ff] text-white transition-[background,opacity,transform] duration-150 active:scale-90 disabled:cursor-default disabled:bg-[#c7c7cc]"
                     >
                         <ArrowUp
                             className="size-4 stroke-[3]"

@@ -25,7 +25,7 @@ export function ImageWidget({ widget }: ImageWidgetProps) {
             />
             {widget.caption && (
                 <span
-                    className="pointer-events-none absolute bottom-[0.9rem] left-[0.9rem] z-4! grid gap-[0.12rem] rounded-[0.8rem] border border-black/10 bg-white/90 px-[0.68rem] py-[0.48rem] text-[0.72rem] leading-none font-[570] text-[#111] shadow-[0_4px_16px_rgba(18,18,18,0.1)] backdrop-blur-xl"
+                    className="pointer-events-none absolute bottom-[0.9rem] left-[0.9rem] z-4! grid gap-[0.12rem] rounded-[0.8rem] border border-black/10 bg-white px-[0.68rem] py-[0.48rem] text-[0.72rem] leading-none font-[570] text-[#111] shadow-[0_4px_16px_rgba(18,18,18,0.1)]"
                     aria-hidden="true"
                 >
                     <strong className="font-[inherit]">{widget.caption}</strong>

@@ -7,6 +7,7 @@ import {
 
 type SpotifyMedia = {
     name?: string
+    explicit?: boolean
     preview_url?: string | null
     audio_preview_url?: string | null
     external_urls?: { spotify?: string }
@@ -122,6 +123,7 @@ export async function GET(request: NextRequest) {
             {
                 title: item.name,
                 subtitle,
+                explicit: item.explicit ?? false,
                 artwork,
                 previewUrl,
                 spotifyUrl: item.external_urls?.spotify ?? source,

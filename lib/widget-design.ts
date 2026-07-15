@@ -93,7 +93,7 @@ export const widgetSurface =
     "relative flex h-full w-full cursor-[inherit] flex-col items-stretch gap-3 overflow-hidden bg-transparent p-[clamp(0.95rem,3.6vw,1.25rem)] text-left focus-visible:-outline-offset-3 focus-visible:outline-3 focus-visible:outline-[#087cff]/70"
 
 export const widgetIcon =
-    "grid size-[2.55rem] shrink-0 place-items-center rounded-[0.76rem] text-white [&>svg]:size-[1.35rem]"
+    "grid size-[3.05rem] shrink-0 place-items-center rounded-[0.9rem] text-white"
 
 export const widgetCopy = "relative z-[2] grid gap-[0.32rem]"
 

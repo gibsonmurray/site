@@ -44,7 +44,7 @@ export function ArticleWidget({ widget }: ArticleWidgetProps) {
                     size.showMedia && widget.image ? (
                         <motion.span
                             layoutId={`widget-${widget.id}-image`}
-                            className="relative block size-full min-h-0 overflow-hidden rounded-2xl border border-black/8 bg-[#f7f7f6]"
+                            className="relative block size-full min-h-0 overflow-hidden rounded-2xl bg-[#f7f7f6]"
                             aria-hidden="true"
                         >
                             <Image

@@ -24,5 +24,16 @@ type BrandLogoProps = {
 
 export function BrandLogo({ brand }: BrandLogoProps) {
     const Logo = brandLogos[brand]
-    return <Logo aria-hidden="true" focusable="false" />
+    return (
+        <span
+            className="grid size-[1.7rem] shrink-0 place-items-center overflow-visible p-[0.1rem]"
+            aria-hidden="true"
+        >
+            <Logo
+                className="block size-full overflow-visible"
+                aria-hidden="true"
+                focusable="false"
+            />
+        </span>
+    )
 }

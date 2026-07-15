@@ -7,6 +7,7 @@ import {
     useReducedMotion,
     useSpring,
 } from "motion/react"
+import { ArrowUpRight } from "lucide-react"
 import { customWidgetRegistry } from "@/components/custom-widget-registry"
 import { widgetCard } from "@/lib/widget-design"
 import type { WidgetDefinition } from "@/lib/widgets"
@@ -46,6 +47,12 @@ export const WidgetCard = forwardRef<WidgetCardHandle, WidgetCardProps>(
             mass: 0.9,
         })
         const CustomWidget = customWidgetRegistry[widget.type]
+        const externalUrl =
+            widget.type !== "spotify" &&
+            widget.url &&
+            /^https?:\/\//i.test(widget.url)
+                ? widget.url
+                : undefined
 
         useImperativeHandle(
             ref,
@@ -102,6 +109,24 @@ export const WidgetCard = forwardRef<WidgetCardHandle, WidgetCardProps>(
                 }}
             >
                 <CustomWidget widget={widget} />
+                {externalUrl && (
+                    <a
+                        className="widget-interactive absolute top-[clamp(0.95rem,3.6vw,1.25rem)] right-[clamp(0.95rem,3.6vw,1.25rem)] z-10 grid size-[2.55rem] place-items-center rounded-full border border-white/60 bg-white/40 text-[#777]/90 shadow-[0_2px_10px_rgba(18,18,18,0.08),inset_0_1px_0_rgba(255,255,255,0.45)] backdrop-blur-xl transition-[color,border-color,background,transform] duration-200 hover:scale-[1.04] hover:border-white/80 hover:bg-white/60 hover:text-[#555] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#087cff]/70"
+                        href={externalUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        draggable={false}
+                        aria-label={`Open ${widget.title} in a new tab`}
+                        onPointerDownCapture={(event) =>
+                            event.stopPropagation()
+                        }
+                    >
+                        <ArrowUpRight
+                            className="size-[1.3rem] stroke-[2.6]"
+                            aria-hidden="true"
+                        />
+                    </a>
+                )}
             </motion.article>
         )
     },

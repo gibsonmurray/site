@@ -22,6 +22,7 @@ type SpotifyWidgetProps = {
 type SpotifyMedia = {
     title: string
     subtitle?: string
+    explicit?: boolean
     artwork?: string | null
     previewUrl?: string | null
     spotifyUrl: string
@@ -75,6 +76,7 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
                             subtitle:
                                 media.subtitle ??
                                 (index === 0 ? widget.description : "Spotify"),
+                            explicit: media.explicit,
                             artwork: media.artwork,
                             previewUrl: media.previewUrl,
                             spotifyUrl: media.spotifyUrl ?? source,
@@ -157,16 +159,16 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
             <span
                 aria-hidden="true"
                 className={cn(
-                    "absolute top-[0.9rem] right-[0.9rem] z-0 size-[2.55rem] rounded-[0.76rem] bg-[#1ed760] shadow-[0_5px_13px_rgba(30,215,96,0.2)] transition-[inset,width,height,border-radius,box-shadow] duration-500 ease-[cubic-bezier(0.16,0.84,0.22,1)]",
+                    "absolute top-[0.9rem] left-[0.9rem] z-0 size-[3.05rem] rounded-[0.9rem] bg-[#1ed760] shadow-[0_5px_13px_rgba(30,215,96,0.2)] transition-[inset,width,height,border-radius,box-shadow] duration-500 ease-[cubic-bezier(0.16,0.84,0.22,1)]",
                     playing &&
                         "inset-0 size-full rounded-none shadow-none duration-700",
                 )}
             />
 
-            <div className="relative z-[2] flex min-h-0 items-start justify-between gap-3">
+            <div className="relative z-[2] flex min-h-0 flex-row-reverse items-start justify-between gap-3">
                 {currentTrack.artwork ? (
                     <a
-                        className="relative block aspect-square h-full max-h-[7.75rem] min-h-0 overflow-hidden rounded-[0.55rem] border border-black/8 bg-[#dcf4e5] shadow-[0_5px_13px_rgba(0,0,0,0.13)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+                        className="relative block aspect-square h-full max-h-[7.75rem] min-h-0 overflow-hidden rounded-[0.55rem] bg-[#dcf4e5] shadow-[0_5px_13px_rgba(0,0,0,0.13)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
                         href={currentTrack.spotifyUrl}
                         draggable={false}
                         target="_blank"
@@ -189,7 +191,7 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
                 )}
 
                 <a
-                    className="grid size-[2.55rem] shrink-0 place-items-center rounded-[0.76rem] text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white [&>svg]:size-[1.35rem]"
+                    className="grid size-[3.05rem] shrink-0 place-items-center rounded-[0.9rem] text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                     href={currentTrack.spotifyUrl}
                     draggable={false}
                     target="_blank"
@@ -202,16 +204,29 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
             </div>
 
             <a
-                className="relative z-[2] grid min-w-0 gap-px focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+                className="relative z-[2] grid w-[min(7.75rem,100%)] min-w-0 gap-px justify-self-end text-center focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
                 href={currentTrack.spotifyUrl}
                 draggable={false}
                 target="_blank"
                 rel="noreferrer"
                 onPointerDownCapture={(event) => event.stopPropagation()}
             >
-                <strong className="truncate text-[1rem] leading-[1.08] font-[650] tracking-[-0.025em]">
-                    {currentTrack.title}
-                </strong>
+                <span className="flex min-w-0 items-center justify-center gap-1">
+                    <strong className="truncate text-[1rem] leading-[1.08] font-[650] tracking-[-0.025em]">
+                        {currentTrack.title}
+                    </strong>
+                    {currentTrack.explicit && (
+                        <small
+                            className={cn(
+                                "grid size-[0.92rem] shrink-0 place-items-center rounded-[0.2rem] bg-[#949498] text-[0.58rem] leading-none font-[720] text-white",
+                                playing && "bg-white text-[#158d40]",
+                            )}
+                            aria-label="Explicit"
+                        >
+                            E
+                        </small>
+                    )}
+                </span>
                 {currentTrack.subtitle && (
                     <span
                         className={cn(
@@ -236,9 +251,8 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
 
             <div
                 className={cn(
-                    "relative z-[3] grid h-10 grid-cols-5 items-center rounded-full border border-[#d8d8dc] bg-white/35 px-1 text-[#99999c] transition-[color,background,border-color,box-shadow] duration-500",
-                    playing &&
-                        "border-black/15 bg-[#138d40]/55 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]",
+                    "widget-interactive relative z-[3] grid h-10 grid-cols-5 items-center rounded-full border border-[#d8d8dc] bg-[#ededf0] px-1 text-[#8f8f93] transition-[color,background,border-color] duration-300",
+                    playing && "border-[#117a36] bg-[#158d40] text-white",
                 )}
                 role="group"
                 aria-label="Spotify playback controls"
@@ -267,7 +281,7 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
                 </button>
                 <button
                     type="button"
-                    className="grid size-9 cursor-pointer place-items-center justify-self-center rounded-full transition-[background,transform] hover:bg-black/6 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-current active:scale-95 disabled:cursor-default disabled:opacity-40"
+                    className="grid size-9 cursor-pointer place-items-center justify-self-center rounded-full transition-colors hover:bg-black/6 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-current disabled:cursor-default disabled:opacity-40"
                     onClick={togglePlayback}
                     disabled={!currentTrack.previewUrl}
                     aria-label={`${playing ? "Pause" : "Play"} ${currentTrack.title}`}

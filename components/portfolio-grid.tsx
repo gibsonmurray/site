@@ -548,19 +548,45 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                     </div>
                 </LayoutGroup>
 
-                <footer className="relative mx-auto flex w-[min(100%,32.203125rem)] items-center justify-between gap-4 px-[0.2rem] pt-5 text-[0.69rem] text-[#727272] min-[1121.5px]:w-[min(100%,66.09375rem)]">
-                    <span>Your layout is saved on this device.</span>
-                    <button
-                        type="button"
-                        className="inline-flex cursor-pointer items-center gap-[0.35rem] rounded-full border border-[#e8e8e6] bg-white px-[0.68rem] py-[0.48rem] text-[#727272] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#087cff]/70"
-                        onClick={resetLayout}
-                    >
-                        <RotateCcw
-                            className="size-[0.85rem]"
-                            aria-hidden="true"
-                        />
-                        Reset layout
-                    </button>
+                <footer className="relative mx-auto w-[min(100%,32.203125rem)] px-[0.2rem] pt-10 text-[0.69rem] text-[#727272] min-[760px]:pt-12 min-[1121.5px]:w-[min(100%,66.09375rem)]">
+                    <div className="flex items-center justify-between gap-4 border-b border-[#ededeb] pb-5">
+                        <span>Your layout is saved on this device.</span>
+                        <button
+                            type="button"
+                            className="inline-flex shrink-0 cursor-pointer items-center gap-[0.35rem] rounded-full border border-[#e8e8e6] bg-white px-[0.68rem] py-[0.48rem] text-[#727272] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#087cff]/70"
+                            onClick={resetLayout}
+                        >
+                            <RotateCcw
+                                className="size-[0.85rem]"
+                                aria-hidden="true"
+                            />
+                            Reset layout
+                        </button>
+                    </div>
+
+                    <div className="flex flex-col gap-4 pt-5 min-[560px]:flex-row min-[560px]:items-end min-[560px]:justify-between">
+                        <div className="flex items-start gap-2.5">
+                            <Image
+                                src="/gm-logo.svg"
+                                alt=""
+                                width={18}
+                                height={17}
+                                className="mt-px opacity-80"
+                                aria-hidden="true"
+                            />
+                            <div>
+                                <p className="m-0 font-[610] tracking-[-0.01em] text-[#3f3f3f]">
+                                    Gibson Murray
+                                </p>
+                                <p className="mt-0.5 mb-0 text-[#858585]">
+                                    Made with curiosity, care, and a little play.
+                                </p>
+                            </div>
+                        </div>
+                        <p className="m-0 text-[0.64rem] tracking-[0.015em] text-[#969696]">
+                            &copy; 2026 Gibson Murray
+                        </p>
+                    </div>
                 </footer>
             </main>
         </MotionConfig>

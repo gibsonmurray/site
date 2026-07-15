@@ -33,7 +33,7 @@ export function MapWidget({ widget }: MapWidgetProps) {
                 className="absolute top-1/2 left-[54%] z-3 size-[1.55rem] -translate-1/2"
                 aria-hidden="true"
             >
-                <span className="absolute inset-[-0.3rem] rounded-full bg-[#0a84ff] [animation:map-location-pulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none" />
+                <span className="map-location-pulse absolute inset-[-0.3rem] rounded-full bg-[#0a84ff]" />
                 <span className="absolute inset-0 rounded-full border-[0.2rem] border-white bg-[#0a84ff] shadow-[0_2px_10px_rgba(0,122,255,0.45),0_0_0_1px_rgba(0,0,0,0.08)]" />
             </span>
             <span className="absolute bottom-[0.9rem] left-[0.9rem] z-4! rounded-[0.8rem] border border-black/10 bg-white/90 px-[0.68rem] py-[0.48rem] text-[0.72rem] leading-none font-[570] text-[#111] shadow-[0_4px_16px_rgba(18,18,18,0.1)] backdrop-blur-xl">

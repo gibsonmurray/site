@@ -40,6 +40,7 @@ export type WidgetType =
     | "messages"
     | "quote"
     | "spotify"
+    | "reconstruction"
 
 export type WidgetDefinition = {
     id: string
@@ -68,8 +69,8 @@ export type GridPlacement = GridCoordinate & {
 }
 
 export const GRID_COLUMNS: Record<Breakpoint, number> = {
-    mobile: 2,
-    desktop: 4,
+    mobile: 1,
+    desktop: 1,
 }
 
 export const SIZE_MAP = {

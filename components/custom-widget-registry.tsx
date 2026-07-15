@@ -4,6 +4,7 @@ import { ImageWidget } from "@/components/image-widget"
 import { MapWidget } from "@/components/map-widget"
 import { MessagesWidget } from "@/components/messages-widget"
 import { QuoteWidget } from "@/components/quote-widget"
+import { ReconstructionWidget } from "@/components/reconstruction-widget"
 import { SocialWidget } from "@/components/social-widget"
 import { SpotifyWidget } from "@/components/spotify-widget"
 import { TextWidget } from "@/components/text-widget"
@@ -22,6 +23,7 @@ export const customWidgetRegistry: Record<
     map: MapWidget,
     messages: MessagesWidget,
     quote: QuoteWidget,
+    reconstruction: ReconstructionWidget,
     social: SocialWidget,
     spotify: SpotifyWidget,
     text: TextWidget,

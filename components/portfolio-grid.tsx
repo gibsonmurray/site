@@ -417,7 +417,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
         <MotionConfig reducedMotion="user">
             <main
                 className={cn(
-                    "relative min-h-svh overflow-clip px-4 pt-5 pb-10 opacity-0 transition-opacity duration-300 min-[760px]:px-8 min-[760px]:pt-[clamp(1.5rem,3vw,2.5rem)] min-[760px]:pb-12",
+                    "relative flex min-h-svh flex-col overflow-clip px-4 pt-5 pb-10 opacity-0 transition-opacity duration-300 min-[760px]:px-8 min-[760px]:pt-[clamp(1.5rem,3vw,2.5rem)] min-[760px]:pb-12",
                     ready && "opacity-100",
                 )}
             >
@@ -440,7 +440,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                 <LayoutGroup id="portfolio-widgets">
                     <div
                         ref={containerRef}
-                        className="relative mx-auto min-h-px w-[min(100%,32.203125rem)] min-[1121.5px]:w-[min(100%,66.09375rem)]"
+                        className="relative mx-auto my-8 min-h-px w-[min(17.5rem,calc(100vw-2.5rem))] min-[760px]:my-12"
                         onClickCapture={(event) => {
                             if (
                                 performance.now() >=
@@ -548,7 +548,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                     </div>
                 </LayoutGroup>
 
-                <footer className="relative mx-auto w-[min(100%,32.203125rem)] px-[0.2rem] pt-10 text-[0.69rem] text-[#727272] min-[760px]:pt-12 min-[1121.5px]:w-[min(100%,66.09375rem)]">
+                <footer className="relative mx-auto mt-auto w-[min(100%,32.203125rem)] px-[0.2rem] pt-10 text-[0.69rem] text-[#727272] min-[760px]:pt-12 min-[1121.5px]:w-[min(100%,66.09375rem)]">
                     <div className="flex items-center justify-between gap-4 border-b border-[#ededeb] pb-5">
                         <span>Your layout is saved on this device.</span>
                         <button

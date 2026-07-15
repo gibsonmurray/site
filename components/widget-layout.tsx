@@ -27,7 +27,7 @@ export function WidgetLayout({
             className={cn(
                 "relative flex h-full min-h-0 w-full min-w-0 flex-col gap-3",
                 isWide &&
-                    "grid grid-cols-[minmax(8rem,0.9fr)_minmax(0,1.1fr)] grid-rows-[auto_minmax(0,1fr)] gap-x-4 gap-y-[0.65rem]",
+                    "grid grid-cols-[minmax(8rem,0.7fr)_minmax(0,1.3fr)] grid-rows-[auto_minmax(0,1fr)] gap-x-4 gap-y-[0.65rem]",
             )}
         >
             {header && (

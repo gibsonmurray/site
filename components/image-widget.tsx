@@ -28,7 +28,7 @@ export function ImageWidget({ widget }: ImageWidgetProps) {
                     className="pointer-events-none absolute bottom-[0.9rem] left-[0.9rem] z-4! grid gap-[0.12rem] rounded-[0.8rem] border border-black/10 bg-white px-[0.68rem] py-[0.48rem] text-[0.72rem] leading-none font-[570] text-[#111] shadow-[0_4px_16px_rgba(18,18,18,0.1)]"
                     aria-hidden="true"
                 >
-                    <strong className="font-[inherit]">{widget.caption}</strong>
+                    <span className="font-normal">{widget.caption}</span>
                     {widget.description && (
                         <small className="text-[0.6rem] font-medium text-[#727272]">
                             {widget.description}
@@ -42,7 +42,7 @@ export function ImageWidget({ widget }: ImageWidgetProps) {
     if (widget.url) {
         return (
             <a
-                className={cn(widgetSurface, "bg-white p-0")}
+                className={cn(widgetSurface, "p-0")}
                 href={widget.url}
                 draggable={false}
                 target="_blank"
@@ -53,5 +53,5 @@ export function ImageWidget({ widget }: ImageWidgetProps) {
         )
     }
 
-    return <div className={cn(widgetSurface, "bg-white p-0")}>{content}</div>
+    return <div className={cn(widgetSurface, "p-0")}>{content}</div>
 }

@@ -111,7 +111,7 @@ export const WidgetCard = forwardRef<WidgetCardHandle, WidgetCardProps>(
                 <CustomWidget widget={widget} />
                 {externalUrl && (
                     <a
-                        className="widget-interactive absolute top-[clamp(0.95rem,3.6vw,1.25rem)] right-[clamp(0.95rem,3.6vw,1.25rem)] z-10 grid size-[2.55rem] place-items-center rounded-full border border-white/60 bg-white/40 text-[#777]/90 shadow-[0_2px_10px_rgba(18,18,18,0.08),inset_0_1px_0_rgba(255,255,255,0.45)] backdrop-blur-xl transition-[color,border-color,background,transform] duration-200 hover:scale-[1.04] hover:border-white/80 hover:bg-white/60 hover:text-[#555] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#087cff]/70"
+                        className="widget-interactive absolute top-[clamp(0.9rem,3.4vw,1.15rem)] right-[clamp(0.9rem,3.4vw,1.15rem)] z-10 grid size-[2.1rem] place-items-center rounded-full border border-black/[0.06] bg-white/55 text-[#777] backdrop-blur-md transition-[color,border-color,background,transform] duration-200 hover:scale-[1.03] hover:border-black/10 hover:bg-white/80 hover:text-[#444] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#087cff]/70"
                         href={externalUrl}
                         target="_blank"
                         rel="noreferrer"
@@ -122,7 +122,7 @@ export const WidgetCard = forwardRef<WidgetCardHandle, WidgetCardProps>(
                         }
                     >
                         <ArrowUpRight
-                            className="size-[1.3rem] stroke-[2.6]"
+                            className="size-[1.05rem] stroke-[2.15]"
                             aria-hidden="true"
                         />
                     </a>

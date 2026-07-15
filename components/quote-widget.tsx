@@ -15,7 +15,7 @@ export function QuoteWidget({ widget }: QuoteWidgetProps) {
     )
 
     return (
-        <div className={cn(widgetSurface, "justify-start bg-[#fcfcfc]")}>
+        <div className={cn(widgetSurface, "justify-start")}>
             <WidgetLayout
                 size={widget.size}
                 header={

@@ -21,12 +21,17 @@ const FALLBACK_LEVELS = [
     2, 0, 1, 0, 0, 2, 1, 0, 3, 0, 1, 0, 2,
 ]
 
+const FALLBACK_DAYS = Array.from(
+    { length: 126 },
+    (_, index) => FALLBACK_LEVELS[index % FALLBACK_LEVELS.length],
+)
+
 const levelClasses = [
-    "bg-[#ebedf0]",
-    "bg-[#9be9a8]",
-    "bg-[#40c463]",
-    "bg-[#30a14e]",
-    "bg-[#216e39]",
+    "bg-[#cfd3d7]",
+    "bg-[#7ee787]",
+    "bg-[#39d353]",
+    "bg-[#26a641]",
+    "bg-[#006d32]",
 ] as const
 
 export function GithubContributionGraph({
@@ -46,7 +51,7 @@ export function GithubContributionGraph({
                 if (!response.ok) return
 
                 const data = (await response.json()) as ContributionResponse
-                if (data.days?.length) setDays(data.days.slice(-63))
+                if (data.days?.length) setDays(data.days.slice(-126))
             } catch {
                 // The compact fallback keeps the card complete when GitHub is unavailable.
             }
@@ -56,17 +61,17 @@ export function GithubContributionGraph({
         return () => controller.abort()
     }, [username])
 
-    const levels = days.length ? days.map((day) => day.level) : FALLBACK_LEVELS
+    const levels = days.length ? days.map((day) => day.level) : FALLBACK_DAYS
 
     return (
         <span
-            className="relative z-1 grid auto-cols-[0.74rem] grid-flow-col grid-rows-7 gap-[0.28rem] place-self-center"
+            className="relative z-1 grid auto-cols-[0.8rem] grid-flow-col grid-rows-7 gap-[0.22rem] place-self-center"
             role="img"
             aria-label={`Recent GitHub contribution activity for ${username}`}
         >
             {levels.map((level, index) => (
                 <span
-                    className={`size-[0.74rem] rounded-[0.18rem] border border-[rgba(27,31,36,0.035)] ${levelClasses[level] ?? levelClasses[0]}`}
+                    className={`size-[0.8rem] rounded-[0.18rem] border border-[rgba(27,31,36,0.07)] ${levelClasses[level] ?? levelClasses[0]}`}
                     key={days[index]?.date ?? index}
                 />
             ))}

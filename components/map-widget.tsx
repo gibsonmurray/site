@@ -17,7 +17,7 @@ export function MapWidget({ widget }: MapWidgetProps) {
         <div
             className={cn(
                 widgetSurface,
-                "isolate overflow-hidden bg-[#e8eee6] p-0",
+                "isolate overflow-hidden p-0",
             )}
             aria-label={widget.title}
         >

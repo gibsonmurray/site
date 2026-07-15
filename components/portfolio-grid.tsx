@@ -20,15 +20,6 @@ import {
     type WidgetDefinition,
 } from "@/lib/widgets"
 
-const LAYOUT_STORAGE_KEY = "gm-bento-layout-v6"
-const STALE_LAYOUT_STORAGE_KEYS = [
-    "gm-bento-layout-v1",
-    "gm-bento-layout-v2",
-    "gm-bento-layout-v3",
-    "gm-bento-layout-v4",
-    "gm-bento-layout-v5",
-]
-const STALE_THEME_STORAGE_KEY = "gm-bento-theme"
 const DESKTOP_GRID_MEDIA_QUERY = "(min-width: 1121.5px)"
 const GRID_PLACEHOLDER_CLASSES =
     "overflow-hidden rounded-[clamp(1.35rem,4vw,1.8rem)] border border-white/10 bg-[#404040] opacity-[0.94] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-14px_30px_rgba(0,0,0,0.14),0_12px_28px_rgba(0,0,0,0.12)] transition-all duration-200 ease-[cubic-bezier(0.16,0.84,0.22,1)] after:absolute after:inset-[0.65rem] after:rounded-[clamp(0.8rem,3vw,1.25rem)] after:border after:border-dashed after:border-white/20 after:content-['']"
@@ -38,11 +29,6 @@ type PortfolioGridProps = {
 }
 
 type GridLayouts = Record<Breakpoint, Layout>
-
-type StoredLayout = {
-    version: 6
-    layouts: GridLayouts
-}
 
 type SettlingSlot = {
     breakpoint: Breakpoint
@@ -179,42 +165,8 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
         media.addEventListener("change", updateBreakpoint)
 
         const initializationFrame = window.requestAnimationFrame(() => {
-            try {
-                document.documentElement.removeAttribute("data-theme")
-                document.documentElement.style.colorScheme = "light"
-                window.localStorage.removeItem(STALE_THEME_STORAGE_KEY)
-
-                const storedLayout =
-                    window.localStorage.getItem(LAYOUT_STORAGE_KEY)
-                if (storedLayout) {
-                    const parsed = JSON.parse(
-                        storedLayout,
-                    ) as Partial<StoredLayout>
-                    if (parsed.version === 6 && parsed.layouts) {
-                        setLayouts({
-                            mobile: normalizeLayout(
-                                parsed.layouts.mobile,
-                                widgets,
-                                "mobile",
-                                defaultLayouts.mobile,
-                            ),
-                            desktop: normalizeLayout(
-                                parsed.layouts.desktop,
-                                widgets,
-                                "desktop",
-                                defaultLayouts.desktop,
-                            ),
-                        })
-                    }
-                }
-
-                for (const key of STALE_LAYOUT_STORAGE_KEYS) {
-                    window.localStorage.removeItem(key)
-                }
-            } catch {
-                setLayouts(defaultLayouts)
-            }
-
+            document.documentElement.removeAttribute("data-theme")
+            document.documentElement.style.colorScheme = "light"
             setReady(true)
         })
 
@@ -222,21 +174,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
             window.cancelAnimationFrame(initializationFrame)
             media.removeEventListener("change", updateBreakpoint)
         }
-    }, [defaultLayouts, widgets])
-
-    useEffect(() => {
-        if (!ready) return
-
-        const stored: StoredLayout = { version: 6, layouts }
-        try {
-            window.localStorage.setItem(
-                LAYOUT_STORAGE_KEY,
-                JSON.stringify(stored),
-            )
-        } catch {
-            // The experience still works when storage is unavailable.
-        }
-    }, [layouts, ready])
+    }, [])
 
     useEffect(
         () => () => {
@@ -404,11 +342,11 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
         <MotionConfig reducedMotion="user">
             <main
                 className={cn(
-                    "relative grid min-h-svh grid-rows-[auto_1fr_auto] overflow-clip px-4 pt-5 pb-10 opacity-0 transition-opacity duration-300 min-[760px]:px-8 min-[760px]:pt-[clamp(1.5rem,3vw,2.5rem)] min-[760px]:pb-12",
+                    "relative min-h-svh overflow-clip px-4 pt-5 pb-10 opacity-0 transition-opacity duration-300 min-[760px]:px-8 min-[760px]:pt-[clamp(1.5rem,3vw,2.5rem)] min-[760px]:pb-12",
                     ready && "opacity-100",
                 )}
             >
-                <header className="relative mx-auto flex w-[min(100%,32.203125rem)] items-center gap-4 px-[0.15rem] pt-2 pb-5 text-[0.73rem] font-[560] tracking-[-0.01em] text-[#727272] min-[1121.5px]:w-[min(100%,66.09375rem)]">
+                <header className="relative mx-auto flex w-[min(100%,32.203125rem)] items-center px-[0.15rem] pt-2 pb-20 text-[0.73rem] font-[560] tracking-[-0.01em] text-[#727272] min-[760px]:pb-24 min-[1121.5px]:w-[min(100%,66.09375rem)]">
                     <span className="flex items-center gap-[0.42rem]">
                         <Image
                             src="/gm-logo.svg"
@@ -424,7 +362,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                 <LayoutGroup id="portfolio-widgets">
                     <div
                         ref={containerRef}
-                        className="relative mx-auto my-8 min-h-px w-[min(17.5rem,calc(100vw-2.5rem))] self-center min-[760px]:my-12"
+                        className="relative mx-auto min-h-px w-[min(100%,32.203125rem)] min-[1121.5px]:w-[min(100%,66.09375rem)]"
                         onClickCapture={(event) => {
                             if (
                                 performance.now() >=
@@ -532,7 +470,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                     </div>
                 </LayoutGroup>
 
-                <footer className="relative mx-auto w-[min(100%,32.203125rem)] px-[0.2rem] pt-10 text-[0.69rem] text-[#727272] min-[760px]:pt-12 min-[1121.5px]:w-[min(100%,66.09375rem)]">
+                <footer className="relative mx-auto w-[min(100%,32.203125rem)] px-[0.2rem] pt-20 text-[0.69rem] text-[#727272] min-[760px]:pt-24 min-[1121.5px]:w-[min(100%,66.09375rem)]">
                     <div className="flex flex-col gap-4 min-[560px]:flex-row min-[560px]:items-end min-[560px]:justify-between">
                         <div className="flex items-start gap-2.5">
                             <Image

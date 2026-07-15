@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
                 protocol: "https",
                 hostname: "i.scdn.co",
             },
+            {
+                protocol: "https",
+                hostname: "img.magnific.com",
+            },
+            {
+                protocol: "https",
+                hostname: "imageproxy.youversionapi.com",
+            },
         ],
     },
     async headers() {

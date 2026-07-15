@@ -1,6 +1,6 @@
-export type WidgetSize = "1x1" | "2x1" | "1x2" | "2x2"
+export type WidgetSize = "1x1" | "2x1" | "1x2" | "2x2" | "2x3"
 export type Breakpoint = "mobile" | "desktop"
-export type WidgetColor =
+type WidgetColor =
     | "blue"
     | "green"
     | "orange"
@@ -12,10 +12,11 @@ export type SocialNetwork =
     | "instagram"
     | "x"
     | "substack"
+    | "tiktok"
     | "youtube"
 export type BrandName = SocialNetwork | "spotify"
 
-export type GridCoordinate = {
+type GridCoordinate = {
     x: number
     y: number
 }
@@ -25,7 +26,13 @@ export type WidgetMessage = {
     text: string
 }
 
-export type MapCoordinates = {
+type WidgetSocialLink = {
+    network: SocialNetwork
+    url: string
+    label: string
+}
+
+type MapCoordinates = {
     lat: number
     lng: number
     zoom?: number
@@ -33,14 +40,13 @@ export type MapCoordinates = {
 
 export type WidgetType =
     | "text"
-    | "article"
+    | "verse"
     | "social"
     | "image"
     | "map"
     | "messages"
     | "quote"
     | "spotify"
-    | "reconstruction"
 
 export type WidgetDefinition = {
     id: string
@@ -58,19 +64,21 @@ export type WidgetDefinition = {
     body?: string[]
     attribution?: string
     messages?: WidgetMessage[]
+    socials?: WidgetSocialLink[]
+    gallery?: string[]
     coordinates?: MapCoordinates
     layout?: Partial<Record<Breakpoint, GridCoordinate>>
 }
 
-export type GridPlacement = GridCoordinate & {
+type GridPlacement = GridCoordinate & {
     id: string
     width: number
     height: number
 }
 
 export const GRID_COLUMNS: Record<Breakpoint, number> = {
-    mobile: 1,
-    desktop: 1,
+    mobile: 2,
+    desktop: 4,
 }
 
 export const SIZE_MAP = {
@@ -78,6 +86,7 @@ export const SIZE_MAP = {
     "2x1": { width: 2, height: 1 },
     "1x2": { width: 1, height: 2 },
     "2x2": { width: 2, height: 2 },
+    "2x3": { width: 2, height: 3 },
 } as const satisfies Record<WidgetSize, { width: number; height: number }>
 
 export function getDefaultOrder(
@@ -96,19 +105,6 @@ export function getDefaultOrder(
             return aPosition.y - bPosition.y || aPosition.x - bPosition.x
         })
         .map((widget) => widget.id)
-}
-
-export function normalizeOrder(order: string[], widgets: WidgetDefinition[]) {
-    const validIds = new Set(widgets.map((widget) => widget.id))
-    const unique = order.filter(
-        (id, index) => validIds.has(id) && order.indexOf(id) === index,
-    )
-
-    for (const widget of widgets) {
-        if (!unique.includes(widget.id)) unique.push(widget.id)
-    }
-
-    return unique
 }
 
 export function packWidgets(

@@ -1,6 +1,6 @@
-export type SpotifyMediaType = "track" | "episode"
+type SpotifyMediaType = "track" | "episode"
 
-export type SpotifyMediaReference = {
+type SpotifyMediaReference = {
     type: SpotifyMediaType
     id: string
 }

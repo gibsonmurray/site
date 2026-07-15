@@ -98,7 +98,7 @@ export function MessagesWidget({ widget }: MessagesWidgetProps) {
         <div
             className={cn(
                 widgetSurface,
-                "cursor-default justify-between gap-2.5 bg-[#f7f7f9] p-[clamp(0.8rem,3vw,1.05rem)]",
+                "cursor-default justify-between gap-2.5 p-[clamp(0.8rem,3vw,1.05rem)]",
             )}
         >
             <div

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
         default: "Gibson Murray",
         template: "%s | Gibson Murray",
     },
-    description: "Down for (re) construction.",
+    description: "A rearrangeable, widget-based portfolio by Gibson Murray.",
     applicationName: "Gibson Murray",
     authors: [{ name: "Gibson Murray", url: siteUrl }],
     creator: "Gibson Murray",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: "Gibson Murray",
-        description: "Down for (re) construction.",
+        description: "A rearrangeable portfolio of code, books, and ideas.",
         url: siteUrl,
         siteName: "Gibson Murray",
         locale: "en_US",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Gibson Murray",
-        description: "Down for (re) construction.",
+        description: "A rearrangeable portfolio of code, books, and ideas.",
     },
     robots: {
         index: true,
@@ -53,9 +53,9 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${GeistSans.variable} min-w-80 bg-[#f5f5f3] scheme-light`}
+            className={`${GeistSans.variable} min-w-80 bg-white scheme-light`}
         >
-            <body className="min-h-svh min-w-80 bg-[#f5f5f3] font-[family-name:var(--font-geist-sans)] [font-feature-settings:'ss01'_on,'cv01'_on,'cv11'_on] text-[#111] antialiased selection:bg-[#1689e8]/25">
+            <body className="min-h-svh min-w-80 bg-white font-[family-name:var(--font-geist-sans)] [font-feature-settings:'ss01'_on,'cv01'_on,'cv11'_on] text-[#111] antialiased selection:bg-[#1689e8]/25">
                 {children}
                 <Analytics />
             </body>

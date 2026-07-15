@@ -1,6 +1,0 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <title>Verbatim</title>
-  <rect width="64" height="64" rx="16" fill="#101214"/>
-  <path d="M12 18L26 46L40 18" stroke="#F5F1E9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M52 14V50" stroke="#18D2AD" stroke-width="5" stroke-linecap="round"/>
-</svg>

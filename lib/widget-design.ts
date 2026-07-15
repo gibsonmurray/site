@@ -8,15 +8,15 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * The four widget contracts used across the portfolio.
+ * The five widget contracts used across the portfolio.
  * Components read these capabilities instead of hiding arbitrary content in CSS.
  */
-export const WIDGET_SIZE_SYSTEM: Record<
+const WIDGET_SIZE_SYSTEM: Record<
     WidgetSize,
     {
-        name: "compact" | "wide" | "tall" | "large"
+        name: "compact" | "wide" | "tall" | "large" | "feature"
         columns: 1 | 2
-        rows: 1 | 2
+        rows: 1 | 2 | 3
         showSummary: boolean
         showMedia: boolean
         showBody: boolean
@@ -59,6 +59,15 @@ export const WIDGET_SIZE_SYSTEM: Record<
         showBody: true,
         showAction: true,
     },
+    "2x3": {
+        name: "feature",
+        columns: SIZE_MAP["2x3"].width,
+        rows: SIZE_MAP["2x3"].height,
+        showSummary: true,
+        showMedia: true,
+        showBody: true,
+        showAction: true,
+    },
 }
 
 export function getWidgetSize(size: WidgetSize) {
@@ -66,7 +75,7 @@ export function getWidgetSize(size: WidgetSize) {
 }
 
 export const widgetCard = cva(
-    "group/widget relative z-[1] h-full min-w-0 overflow-hidden rounded-[clamp(1.35rem,4vw,1.8rem)] border border-[#e8e8e6] bg-[color-mix(in_srgb,var(--widget-color)_7%,#fff)] shadow-[0_2px_4px_rgba(18,18,18,0.035),0_10px_26px_rgba(18,18,18,0.025)] [transform:translateZ(0)] transition-[border-color,background,box-shadow] duration-[450ms] ease-out",
+    "group/widget relative z-[1] h-full min-w-0 overflow-hidden rounded-[clamp(1.35rem,4vw,1.8rem)] border border-[#e2e2e3] bg-[#ececed] shadow-[0_2px_4px_rgba(18,18,18,0.035),0_10px_26px_rgba(18,18,18,0.025)] [transform:translateZ(0)] transition-[border-color,background,box-shadow] duration-[450ms] ease-out",
     {
         variants: {
             color: {
@@ -90,7 +99,7 @@ export const widgetCard = cva(
 )
 
 export const widgetSurface =
-    "relative flex h-full w-full cursor-[inherit] flex-col items-stretch gap-3 overflow-hidden bg-transparent p-[clamp(0.95rem,3.6vw,1.25rem)] text-left focus-visible:-outline-offset-3 focus-visible:outline-3 focus-visible:outline-[#087cff]/70"
+    "relative flex h-full w-full cursor-[inherit] flex-col items-stretch gap-3 overflow-hidden bg-[#ececed] p-[clamp(0.95rem,3.6vw,1.25rem)] text-left focus-visible:-outline-offset-3 focus-visible:outline-3 focus-visible:outline-[#087cff]/70"
 
 export const widgetIcon =
     "grid size-[3.05rem] shrink-0 place-items-center rounded-[0.9rem] text-white"

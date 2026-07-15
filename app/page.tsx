@@ -4,6 +4,8 @@ import type { WidgetDefinition } from "@/lib/widgets"
 
 export default function Page() {
     return (
-        <PortfolioGrid widgets={widgets as unknown as WidgetDefinition[]} />
+        <PortfolioGrid
+            widgets={widgets as unknown as WidgetDefinition[]}
+        />
     )
 }

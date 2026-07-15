@@ -152,7 +152,7 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
         <div
             className={cn(
                 widgetSurface,
-                "isolate grid grid-rows-[minmax(0,1fr)_auto_auto] gap-2 bg-[#f6f6f8] p-[0.9rem] transition-colors duration-500",
+                "isolate grid grid-rows-[minmax(0,1fr)_auto_auto] gap-2 p-[0.9rem] transition-colors duration-500",
                 playing && "text-white",
             )}
         >
@@ -165,10 +165,10 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
                 )}
             />
 
-            <div className="relative z-[2] flex min-h-0 flex-row-reverse items-start justify-between gap-3">
+            <div className="relative z-[2] grid min-h-0 grid-cols-[3.05rem_minmax(0,1fr)] items-start gap-2.5">
                 {currentTrack.artwork ? (
                     <a
-                        className="relative block aspect-square h-full max-h-[7.75rem] min-h-0 overflow-hidden rounded-[0.55rem] bg-[#dcf4e5] shadow-[0_5px_13px_rgba(0,0,0,0.13)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+                        className="relative col-start-2 row-start-1 block aspect-square h-full max-h-[7.75rem] min-h-0 justify-self-center overflow-hidden rounded-[0.55rem] bg-[#dcf4e5] shadow-[0_5px_13px_rgba(0,0,0,0.13)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
                         href={currentTrack.spotifyUrl}
                         draggable={false}
                         target="_blank"
@@ -187,11 +187,11 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
                         />
                     </a>
                 ) : (
-                    <span className="aspect-square h-full max-h-[7.75rem] rounded-[0.55rem] bg-black/5" />
+                    <span className="col-start-2 row-start-1 aspect-square h-full max-h-[7.75rem] justify-self-center rounded-[0.55rem] bg-black/5" />
                 )}
 
                 <a
-                    className="grid size-[3.05rem] shrink-0 place-items-center rounded-[0.9rem] text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    className="col-start-1 row-start-1 grid size-[3.05rem] shrink-0 place-items-center rounded-[0.9rem] text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                     href={currentTrack.spotifyUrl}
                     draggable={false}
                     target="_blank"
@@ -204,7 +204,7 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
             </div>
 
             <a
-                className="relative z-[2] grid w-[min(7.75rem,100%)] min-w-0 gap-px justify-self-end text-center focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+                className="relative z-[2] ml-[3.675rem] grid min-w-0 gap-px justify-self-stretch text-center focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
                 href={currentTrack.spotifyUrl}
                 draggable={false}
                 target="_blank"

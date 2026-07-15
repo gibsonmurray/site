@@ -1,6 +1,7 @@
 import { BrandLogo } from "@/components/brand-logo"
 import { GithubContributionGraph } from "@/components/github-contribution-graph"
 import { WidgetLayout } from "@/components/widget-layout"
+import type { CSSProperties } from "react"
 import {
     cn,
     getWidgetSize,
@@ -18,6 +19,7 @@ const brandNames: Record<SocialNetwork, string> = {
     instagram: "Instagram",
     x: "X",
     substack: "Substack",
+    tiktok: "TikTok",
     youtube: "YouTube",
 }
 
@@ -26,22 +28,97 @@ const callsToAction: Record<SocialNetwork, string> = {
     instagram: "Follow",
     x: "Follow",
     substack: "Subscribe",
+    tiktok: "Follow",
     youtube: "Subscribe",
 }
 
 const brandSurface: Record<SocialNetwork, string> = {
-    github: "[--brand-color:#24292f] bg-[linear-gradient(145deg,color-mix(in_srgb,var(--brand-color)_9%,#fff),#fff)]",
-    instagram:
-        "[--brand-color:#d62976] bg-[linear-gradient(145deg,#fff6fb,#fffaf5)]",
-    x: "[--brand-color:#111111] bg-[linear-gradient(145deg,#f5f5f5,#fff)]",
-    substack: "[--brand-color:#ff6719] bg-[#fff7f3]",
-    youtube: "[--brand-color:#ff0033] bg-[#fff5f6]",
+    github: "[--brand-color:#24292f]",
+    instagram: "[--brand-color:#d62976]",
+    x: "[--brand-color:#111111]",
+    substack: "[--brand-color:#ff6719]",
+    tiktok: "[--brand-color:#111111]",
+    youtube: "[--brand-color:#ff0033]",
 }
 
-const instagramLogo =
-    "bg-[radial-gradient(circle_at_32%_102%,#ffd600_0_18%,#ff7a00_30%,transparent_52%),radial-gradient(circle_at_4%_12%,#7638fa_0_24%,transparent_58%),linear-gradient(135deg,#d300c5,#ff3040_58%,#ff7a00)]"
+const brandColors: Record<SocialNetwork, string> = {
+    github: "#24292f",
+    instagram: "#d62976",
+    x: "#111111",
+    substack: "#ff6719",
+    tiktok: "#111111",
+    youtube: "#ff0033",
+}
 
 export function SocialWidget({ widget }: SocialWidgetProps) {
+    if (widget.socials?.length) {
+        const isCompact = widget.size === "1x1"
+
+        return (
+            <div
+                className={cn(
+                    widgetSurface,
+                    isCompact
+                        ? "justify-start gap-5"
+                        : "grid grid-cols-[minmax(0,0.8fr)_minmax(10rem,1.2fr)] items-center gap-[clamp(0.75rem,3vw,1.25rem)]",
+                )}
+            >
+                <span className="grid min-w-0 gap-1">
+                    <strong
+                        className={cn(
+                            "leading-[1.02] font-[620] tracking-[-0.045em] text-balance",
+                            isCompact
+                                ? "text-[clamp(1rem,4vw,1.25rem)]"
+                                : "text-[clamp(1.08rem,4vw,1.5rem)]",
+                        )}
+                    >
+                        {widget.title}
+                    </strong>
+                    {!isCompact && widget.description && (
+                        <span className="text-[0.7rem] leading-[1.35] text-[#727272]">
+                            {widget.description}
+                        </span>
+                    )}
+                </span>
+                <span
+                    className={cn(
+                        "grid min-w-0 gap-[clamp(0.38rem,1.5vw,0.62rem)]",
+                        isCompact
+                            ? "my-auto w-fit self-center grid-cols-2 grid-rows-2 place-items-center gap-[0.65rem]"
+                            : "grid-cols-4",
+                    )}
+                >
+                    {widget.socials.map((social) => (
+                        <a
+                            className={cn(
+                                "widget-interactive grid place-items-center overflow-hidden rounded-[0.9rem] bg-[var(--brand-color)] text-white shadow-[0_6px_16px_color-mix(in_srgb,var(--brand-color)_16%,transparent)] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#087cff]/70",
+                                isCompact
+                                    ? "size-[3.05rem]"
+                                    : "aspect-square min-w-0",
+                                social.network === "instagram" &&
+                                    "bg-transparent",
+                            )}
+                            style={
+                                {
+                                    "--brand-color":
+                                        brandColors[social.network],
+                                } as CSSProperties
+                            }
+                            href={social.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            draggable={false}
+                            aria-label={`${social.label}, opens in a new tab`}
+                            key={social.network}
+                        >
+                            <BrandLogo brand={social.network} />
+                        </a>
+                    ))}
+                </span>
+            </div>
+        )
+    }
+
     if (!widget.network || !widget.url) return null
 
     const handle = widget.handle
@@ -75,7 +152,7 @@ export function SocialWidget({ widget }: SocialWidgetProps) {
                         className={cn(
                             widgetIcon,
                             "bg-[var(--brand-color)] shadow-[0_5px_13px_color-mix(in_srgb,var(--brand-color)_20%,transparent)]",
-                            widget.network === "instagram" && instagramLogo,
+                            widget.network === "instagram" && "bg-white",
                         )}
                         aria-hidden="true"
                     >

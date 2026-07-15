@@ -6,16 +6,18 @@ profiles, music, and contact.
 
 ## Widget design system
 
-The widget contract lives in `lib/widget-design.ts`. It defines the shared card,
-surface, typography, accent, and detail primitives, plus four content-density
-rules:
+The widget data schema lives in `lib/widgets.ts`; widget content lives in
+`data/widgets.json`. Every entry uses the same core keys: `id`, `type`, `size`,
+`title`, optional `description` and `color`, plus type-specific content. The
+design system in `lib/widget-design.ts` defines the shared card, surface,
+typography, and four content-density rules:
 
 | Size  | Role    | Content contract                    |
 | ----- | ------- | ----------------------------------- |
 | `1x1` | Compact | Identity and title                  |
 | `2x1` | Wide    | Identity, summary, and side preview |
 | `1x2` | Tall    | Vertical story, preview, and action |
-| `2x2` | Large   | Full preview, details, and action   |
+| `2x2` | Large   | Full preview, content, and action   |
 
 Widgets read these capabilities when rendering, so small cards do not render
 content that only gets hidden later. Component-specific styling uses inline

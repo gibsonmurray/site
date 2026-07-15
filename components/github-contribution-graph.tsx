@@ -60,7 +60,7 @@ export function GithubContributionGraph({
 
     return (
         <span
-            className="relative z-[1] grid auto-cols-[0.58rem] grid-flow-col grid-rows-7 gap-[0.24rem] place-self-center"
+            className="relative z-1 grid auto-cols-[0.58rem] grid-flow-col grid-rows-7 gap-[0.24rem] place-self-center"
             role="img"
             aria-label={`Recent GitHub contribution activity for ${username}`}
         >

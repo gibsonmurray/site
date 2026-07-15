@@ -7,9 +7,9 @@ import {
     SiYoutube,
 } from "react-icons/si"
 import type { IconType } from "react-icons"
-import type { WidgetBrand } from "@/lib/widgets"
+import type { BrandName } from "@/lib/widgets"
 
-const brandLogos: Record<WidgetBrand, IconType> = {
+const brandLogos: Record<BrandName, IconType> = {
     github: SiGithub,
     instagram: SiInstagram,
     x: SiX,
@@ -19,7 +19,7 @@ const brandLogos: Record<WidgetBrand, IconType> = {
 }
 
 type BrandLogoProps = {
-    brand: WidgetBrand
+    brand: BrandName
 }
 
 export function BrandLogo({ brand }: BrandLogoProps) {

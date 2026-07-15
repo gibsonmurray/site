@@ -1,22 +1,23 @@
 export type WidgetSize = "1x1" | "2x1" | "1x2" | "2x2"
-export type WidgetAction = "expand" | "open-link" | "none"
 export type Breakpoint = "mobile" | "desktop"
-export type WidgetBrand =
+export type WidgetColor =
+    | "blue"
+    | "green"
+    | "orange"
+    | "pink"
+    | "purple"
+    | "slate"
+export type SocialNetwork =
     | "github"
     | "instagram"
     | "x"
     | "substack"
     | "youtube"
-    | "spotify"
+export type BrandName = SocialNetwork | "spotify"
 
 export type GridCoordinate = {
     x: number
     y: number
-}
-
-export type WidgetLink = {
-    label: string
-    href: string
 }
 
 export type WidgetMessage = {
@@ -24,60 +25,40 @@ export type WidgetMessage = {
     text: string
 }
 
-export type WidgetLocation = {
-    label: string
-    region?: string
-    latitude?: number
-    longitude?: number
+export type MapCoordinates = {
+    lat: number
+    lng: number
     zoom?: number
 }
 
-export type WidgetQuote = {
-    paragraphs: string[]
-    attribution: string
-}
-
-export type WidgetDetails = {
-    eyebrow?: string
-    title?: string
-    body?: string[]
-    facts?: string[]
-    links?: WidgetLink[]
-    email?: string
-    messages?: WidgetMessage[]
-}
-
-export type WidgetKind =
+export type WidgetType =
     | "text"
     | "article"
     | "social"
     | "image"
     | "map"
+    | "messages"
     | "quote"
-    | "spotify-media"
+    | "spotify"
 
 export type WidgetDefinition = {
     id: string
+    type: WidgetType
     size: WidgetSize
-    widget: WidgetKind
-    action: WidgetAction
-    eyebrow?: string
     title: string
-    summary?: string
-    accent?: "blue" | "green" | "orange" | "pink" | "purple" | "slate"
-    brand?: WidgetBrand
-    icon?: string
+    description?: string
+    color?: WidgetColor
+    network?: SocialNetwork
+    url?: string
+    playlist?: string[]
+    handle?: string
     image?: string
-    gallery?: string[]
-    followers?: string
-    presentation?: "messages"
-    href?: string
-    username?: string
-    external?: boolean
-    location?: WidgetLocation
-    quote?: WidgetQuote
-    position?: Partial<Record<Breakpoint, GridCoordinate>>
-    details?: WidgetDetails
+    caption?: string
+    body?: string[]
+    attribution?: string
+    messages?: WidgetMessage[]
+    coordinates?: MapCoordinates
+    layout?: Partial<Record<Breakpoint, GridCoordinate>>
 }
 
 export type GridPlacement = GridCoordinate & {
@@ -104,8 +85,8 @@ export function getDefaultOrder(
 ) {
     return [...widgets]
         .sort((a, b) => {
-            const aPosition = a.position?.[breakpoint]
-            const bPosition = b.position?.[breakpoint]
+            const aPosition = a.layout?.[breakpoint]
+            const bPosition = b.layout?.[breakpoint]
 
             if (!aPosition && !bPosition) return 0
             if (!aPosition) return 1

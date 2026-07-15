@@ -20,12 +20,11 @@ export type WidgetCardHandle = {
 
 type WidgetCardProps = {
     widget: WidgetDefinition
-    onOpen: (widget: WidgetDefinition) => void
     onKeyboardMove: (direction: -1 | 1) => void
 }
 
 export const WidgetCard = forwardRef<WidgetCardHandle, WidgetCardProps>(
-    function WidgetCard({ widget, onOpen, onKeyboardMove }, ref) {
+    function WidgetCard({ widget, onKeyboardMove }, ref) {
         const reduceMotion = useReducedMotion()
         const [dragging, setDragging] = useState(false)
         const tiltTarget = useMotionValue(0)
@@ -46,7 +45,7 @@ export const WidgetCard = forwardRef<WidgetCardHandle, WidgetCardProps>(
             damping: 19,
             mass: 0.9,
         })
-        const CustomWidget = customWidgetRegistry[widget.widget]
+        const CustomWidget = customWidgetRegistry[widget.type]
 
         useImperativeHandle(
             ref,
@@ -80,10 +79,10 @@ export const WidgetCard = forwardRef<WidgetCardHandle, WidgetCardProps>(
                 layoutId={`widget-${widget.id}`}
                 data-widget-id={widget.id}
                 data-size={widget.size}
-                data-widget={widget.widget}
-                data-accent={widget.accent ?? "slate"}
+                data-type={widget.type}
+                data-color={widget.color ?? "slate"}
                 className={widgetCard({
-                    accent: widget.accent ?? "slate",
+                    color: widget.color ?? "slate",
                     dragging,
                 })}
                 style={{ rotate, scale, y }}
@@ -102,7 +101,7 @@ export const WidgetCard = forwardRef<WidgetCardHandle, WidgetCardProps>(
                     }
                 }}
             >
-                <CustomWidget widget={widget} onOpen={() => onOpen(widget)} />
+                <CustomWidget widget={widget} />
             </motion.article>
         )
     },

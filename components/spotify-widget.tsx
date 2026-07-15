@@ -2,9 +2,17 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
-import { Pause, Play } from "lucide-react"
+import {
+    Pause,
+    Play,
+    Radio,
+    SkipBack,
+    SkipForward,
+    Volume2,
+    VolumeX,
+} from "lucide-react"
 import { BrandLogo } from "@/components/brand-logo"
-import { cn, getWidgetSize, widgetSurface } from "@/lib/widget-design"
+import { cn, widgetSurface } from "@/lib/widget-design"
 import type { WidgetDefinition } from "@/lib/widgets"
 
 type SpotifyWidgetProps = {
@@ -12,42 +20,112 @@ type SpotifyWidgetProps = {
 }
 
 type SpotifyMedia = {
-    title?: string
+    title: string
     subtitle?: string
     artwork?: string | null
     previewUrl?: string | null
-    spotifyUrl?: string
+    spotifyUrl: string
+}
+
+function wrapIndex(index: number, length: number) {
+    return ((index % length) + length) % length
 }
 
 export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
     const audioRef = useRef<HTMLAudioElement>(null)
-    const [media, setMedia] = useState<SpotifyMedia | null>(null)
+    const resumeAfterTrackChangeRef = useRef(false)
+    const sources = widget.playlist?.length
+        ? widget.playlist
+        : widget.url
+          ? [widget.url]
+          : []
+    const [playlist, setPlaylist] = useState<SpotifyMedia[]>(() =>
+        sources.map((spotifyUrl, index) => ({
+            title: index === 0 ? widget.title : `Track ${index + 1}`,
+            subtitle: index === 0 ? widget.description : "Spotify",
+            spotifyUrl,
+        })),
+    )
+    const [trackIndex, setTrackIndex] = useState(0)
     const [playing, setPlaying] = useState(false)
+    const [muted, setMuted] = useState(false)
 
     useEffect(() => {
-        if (!widget.href) return
+        if (!sources.length) return
         const controller = new AbortController()
 
-        async function loadMedia() {
-            try {
-                const response = await fetch(
-                    `/api/spotify-media?url=${encodeURIComponent(widget.href ?? "")}`,
-                    { signal: controller.signal },
-                )
-                if (!response.ok) return
-                setMedia((await response.json()) as SpotifyMedia)
-            } catch {
-                // JSON fallback copy remains visible if Spotify is unavailable.
-            }
+        async function loadPlaylist() {
+            const loaded = await Promise.all(
+                sources.map(async (source, index) => {
+                    try {
+                        const response = await fetch(
+                            `/api/spotify-media?url=${encodeURIComponent(source)}`,
+                            { signal: controller.signal },
+                        )
+                        if (!response.ok) throw new Error("Unavailable")
+
+                        const media =
+                            (await response.json()) as Partial<SpotifyMedia>
+                        return {
+                            title:
+                                media.title ??
+                                (index === 0
+                                    ? widget.title
+                                    : `Track ${index + 1}`),
+                            subtitle:
+                                media.subtitle ??
+                                (index === 0 ? widget.description : "Spotify"),
+                            artwork: media.artwork,
+                            previewUrl: media.previewUrl,
+                            spotifyUrl: media.spotifyUrl ?? source,
+                        }
+                    } catch {
+                        return {
+                            title:
+                                index === 0
+                                    ? widget.title
+                                    : `Track ${index + 1}`,
+                            subtitle:
+                                index === 0 ? widget.description : "Spotify",
+                            spotifyUrl: source,
+                        }
+                    }
+                }),
+            )
+
+            if (!controller.signal.aborted) setPlaylist(loaded)
         }
 
-        void loadMedia()
+        void loadPlaylist()
         return () => controller.abort()
-    }, [widget.href])
+    }, [widget.id])
+
+    const currentTrack = playlist[trackIndex] ?? playlist[0]
+
+    useEffect(() => {
+        const audio = audioRef.current
+        if (!audio || !resumeAfterTrackChangeRef.current) return
+        resumeAfterTrackChangeRef.current = false
+
+        const resume = async () => {
+            try {
+                await audio.play()
+            } catch {
+                setPlaying(false)
+            }
+        }
+        void resume()
+    }, [trackIndex, currentTrack?.previewUrl])
+
+    const selectTrack = (index: number, resume = playing) => {
+        if (!playlist.length) return
+        resumeAfterTrackChangeRef.current = resume
+        setTrackIndex(wrapIndex(index, playlist.length))
+    }
 
     const togglePlayback = async () => {
         const audio = audioRef.current
-        if (!audio || !media?.previewUrl) return
+        if (!audio || !currentTrack?.previewUrl) return
 
         if (audio.paused) {
             try {
@@ -60,160 +138,182 @@ export function SpotifyWidget({ widget }: SpotifyWidgetProps) {
         }
     }
 
-    const spotifyUrl = media?.spotifyUrl ?? widget.href
-    const title = media?.title ?? widget.title
-    const subtitle = media?.subtitle ?? widget.summary
-    const size = getWidgetSize(widget.size)
-    const isWide = size.name === "wide"
+    const toggleMuted = () => {
+        const audio = audioRef.current
+        if (audio) audio.muted = !muted
+        setMuted((current) => !current)
+    }
+
+    if (!currentTrack) return null
 
     return (
         <div
             className={cn(
                 widgetSurface,
-                "isolate justify-start gap-4 bg-[#effbf4]",
-                isWide &&
-                    "grid grid-cols-[minmax(8rem,1fr)_auto] grid-rows-[1fr_auto] items-center gap-x-4 gap-y-[0.55rem]",
+                "isolate grid grid-rows-[minmax(0,1fr)_auto_auto] gap-2 bg-[#f6f6f8] p-[0.9rem] transition-colors duration-500",
+                playing && "text-white",
             )}
         >
-            <a
+            <span
+                aria-hidden="true"
                 className={cn(
-                    "relative z-[2] flex flex-col items-start gap-3",
-                    size.name === "compact" && "h-full justify-between",
-                    isWide && "flex-row items-center",
+                    "absolute top-[0.9rem] right-[0.9rem] z-0 size-[2.55rem] rounded-[0.76rem] bg-[#1ed760] shadow-[0_5px_13px_rgba(30,215,96,0.2)] transition-[inset,width,height,border-radius,box-shadow] duration-500 ease-[cubic-bezier(0.16,0.84,0.22,1)]",
+                    playing &&
+                        "inset-0 size-full rounded-none shadow-none duration-700",
                 )}
-                href={spotifyUrl}
-                draggable={false}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`${title} on Spotify, opens in a new tab`}
-            >
-                <span className="grid size-12 place-items-center rounded-[0.82rem] bg-[#1ed760] text-white shadow-[0_5px_14px_rgba(30,215,96,0.2)] [&>svg]:size-[1.65rem]">
-                    <BrandLogo brand="spotify" />
-                </span>
-                <span className="grid gap-1">
-                    <strong className="max-w-[14ch] text-[1.05rem] leading-[1.15] font-[560] tracking-[-0.025em]">
-                        {title}
-                    </strong>
-                    {size.showSummary && subtitle && (
-                        <span className="text-[0.68rem] text-[#727272]">
-                            {subtitle}
-                        </span>
-                    )}
-                </span>
-            </a>
+            />
 
-            {size.showMedia && media?.artwork && (
+            <div className="relative z-[2] flex min-h-0 items-start justify-between gap-3">
+                {currentTrack.artwork ? (
+                    <a
+                        className="relative block aspect-square h-full max-h-[7.75rem] min-h-0 overflow-hidden rounded-[0.55rem] border border-black/8 bg-[#dcf4e5] shadow-[0_5px_13px_rgba(0,0,0,0.13)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+                        href={currentTrack.spotifyUrl}
+                        draggable={false}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Open ${currentTrack.title} on Spotify`}
+                        onPointerDownCapture={(event) =>
+                            event.stopPropagation()
+                        }
+                    >
+                        <Image
+                            src={currentTrack.artwork}
+                            alt={`${currentTrack.title} artwork`}
+                            fill
+                            sizes="104px"
+                            className="object-cover"
+                        />
+                    </a>
+                ) : (
+                    <span className="aspect-square h-full max-h-[7.75rem] rounded-[0.55rem] bg-black/5" />
+                )}
+
                 <a
-                    className={cn(
-                        "relative z-[2] block aspect-square w-full overflow-hidden rounded-[0.9rem] border border-black/8 bg-[#dcf4e5]",
-                        isWide && "col-start-2 row-span-2 row-start-1 w-28",
-                        size.name === "large" &&
-                            "w-[min(100%,19rem)] self-center",
-                    )}
-                    href={spotifyUrl}
+                    className="grid size-[2.55rem] shrink-0 place-items-center rounded-[0.76rem] text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white [&>svg]:size-[1.35rem]"
+                    href={currentTrack.spotifyUrl}
                     draggable={false}
                     target="_blank"
                     rel="noreferrer"
-                    aria-label={`Open ${title} on Spotify`}
+                    aria-label={`${currentTrack.title} on Spotify, opens in a new tab`}
+                    onPointerDownCapture={(event) => event.stopPropagation()}
                 >
-                    <Image
-                        src={media.artwork}
-                        alt={`${title} artwork`}
-                        width={640}
-                        height={640}
-                        sizes="14rem"
-                        className="block size-full object-cover"
-                    />
+                    <BrandLogo brand="spotify" />
                 </a>
-            )}
+            </div>
 
-            {size.name !== "compact" && media?.previewUrl && (
-                <>
-                    <audio
-                        ref={audioRef}
-                        src={media.previewUrl}
-                        preload="none"
-                        onPlay={() => setPlaying(true)}
-                        onPause={() => setPlaying(false)}
-                        onEnded={() => setPlaying(false)}
-                    />
-                    <button
-                        type="button"
+            <a
+                className="relative z-[2] grid min-w-0 gap-px focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+                href={currentTrack.spotifyUrl}
+                draggable={false}
+                target="_blank"
+                rel="noreferrer"
+                onPointerDownCapture={(event) => event.stopPropagation()}
+            >
+                <strong className="truncate text-[1rem] leading-[1.08] font-[650] tracking-[-0.025em]">
+                    {currentTrack.title}
+                </strong>
+                {currentTrack.subtitle && (
+                    <span
                         className={cn(
-                            "group/playback relative z-[2] mt-auto inline-flex w-fit cursor-pointer items-center self-start justify-self-start rounded-full border border-[#159c3f]/15 bg-[#1ed760] py-[0.56rem] pr-[0.82rem] pl-[0.68rem] text-[0.68rem] leading-none font-[680] text-[#0b2714] shadow-[inset_0_1px_0_rgba(255,255,255,0.38),0_6px_16px_rgba(30,215,96,0.2)] transition-[background,box-shadow,transform] duration-200 ease-out hover:-translate-y-px hover:bg-[#23df66] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.42),0_9px_20px_rgba(30,215,96,0.25)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#168f42] active:translate-y-0 active:scale-[0.97]",
-                            isWide && "m-0",
+                            "truncate text-[0.67rem] leading-tight text-[#727272] transition-colors duration-500",
+                            playing && "text-white/78",
                         )}
-                        onClick={togglePlayback}
-                        aria-label={`${playing ? "Pause" : "Play"} ${title} preview`}
                     >
-                        <span className="relative mr-[0.45rem] grid size-[0.9rem] place-items-center">
-                            <Play
-                                aria-hidden="true"
-                                className={cn(
-                                    "absolute size-[0.88rem] fill-current stroke-[2.2] transition-[opacity,transform] duration-200",
-                                    playing
-                                        ? "scale-75 opacity-0"
-                                        : "scale-100 opacity-100",
-                                )}
-                            />
+                        {currentTrack.subtitle}
+                    </span>
+                )}
+            </a>
 
-                            <span
-                                aria-hidden="true"
-                                className={cn(
-                                    "spotify-playback-wave absolute flex h-[0.9rem] items-center gap-[0.09rem] transition-[opacity,transform] duration-200",
-                                    playing
-                                        ? "scale-100 opacity-100 group-hover/playback:scale-75 group-hover/playback:opacity-0 group-focus-visible/playback:scale-75 group-focus-visible/playback:opacity-0"
-                                        : "scale-75 opacity-0",
-                                )}
-                            >
-                                <span
-                                    className="h-[0.48rem] w-[0.11rem] origin-center rounded-full bg-current"
-                                    style={{ animationDelay: "-0.42s" }}
-                                />
-                                <span
-                                    className="h-[0.78rem] w-[0.11rem] origin-center rounded-full bg-current"
-                                    style={{ animationDelay: "-0.24s" }}
-                                />
-                                <span
-                                    className="h-[0.6rem] w-[0.11rem] origin-center rounded-full bg-current"
-                                    style={{ animationDelay: "-0.6s" }}
-                                />
-                                <span
-                                    className="h-[0.36rem] w-[0.11rem] origin-center rounded-full bg-current"
-                                    style={{ animationDelay: "-0.12s" }}
-                                />
-                            </span>
+            <audio
+                ref={audioRef}
+                src={currentTrack.previewUrl ?? undefined}
+                preload="metadata"
+                muted={muted}
+                onPlay={() => setPlaying(true)}
+                onPause={() => setPlaying(false)}
+                onEnded={() => selectTrack(trackIndex + 1, true)}
+            />
 
-                            <Pause
-                                aria-hidden="true"
-                                className={cn(
-                                    "absolute size-[0.88rem] fill-current stroke-[2.2] opacity-0 transition-[opacity,transform] duration-200",
-                                    playing
-                                        ? "scale-75 group-hover/playback:scale-100 group-hover/playback:opacity-100 group-focus-visible/playback:scale-100 group-focus-visible/playback:opacity-100"
-                                        : "scale-75",
-                                )}
-                            />
-                        </span>
+            <div
+                className={cn(
+                    "relative z-[3] grid h-10 grid-cols-5 items-center rounded-full border border-[#d8d8dc] bg-white/35 px-1 text-[#99999c] transition-[color,background,border-color,box-shadow] duration-500",
+                    playing &&
+                        "border-black/15 bg-[#138d40]/55 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]",
+                )}
+                role="group"
+                aria-label="Spotify playback controls"
+                onPointerDownCapture={(event) => event.stopPropagation()}
+            >
+                <a
+                    className="grid size-8 place-items-center justify-self-center rounded-full transition-colors hover:bg-black/6 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-current"
+                    href={currentTrack.spotifyUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Open current track on Spotify"
+                >
+                    <Radio aria-hidden="true" className="size-[0.95rem]" />
+                </a>
+                <button
+                    type="button"
+                    className="grid size-8 cursor-pointer place-items-center justify-self-center rounded-full transition-colors hover:bg-black/6 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-current disabled:cursor-default disabled:opacity-40"
+                    onClick={() => selectTrack(trackIndex - 1)}
+                    disabled={playlist.length < 2}
+                    aria-label="Previous track"
+                >
+                    <SkipBack
+                        aria-hidden="true"
+                        className="size-[0.95rem] fill-current"
+                    />
+                </button>
+                <button
+                    type="button"
+                    className="grid size-9 cursor-pointer place-items-center justify-self-center rounded-full transition-[background,transform] hover:bg-black/6 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-current active:scale-95 disabled:cursor-default disabled:opacity-40"
+                    onClick={togglePlayback}
+                    disabled={!currentTrack.previewUrl}
+                    aria-label={`${playing ? "Pause" : "Play"} ${currentTrack.title}`}
+                >
+                    {playing ? (
+                        <Pause
+                            aria-hidden="true"
+                            className="size-[1.12rem] fill-current stroke-[2.4]"
+                        />
+                    ) : (
+                        <Play
+                            aria-hidden="true"
+                            className="size-[1.12rem] translate-x-px fill-current stroke-[2.4]"
+                        />
+                    )}
+                </button>
+                <button
+                    type="button"
+                    className="grid size-8 cursor-pointer place-items-center justify-self-center rounded-full transition-colors hover:bg-black/6 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-current disabled:cursor-default disabled:opacity-40"
+                    onClick={() => selectTrack(trackIndex + 1)}
+                    disabled={playlist.length < 2}
+                    aria-label="Next track"
+                >
+                    <SkipForward
+                        aria-hidden="true"
+                        className="size-[0.95rem] fill-current"
+                    />
+                </button>
+                <button
+                    type="button"
+                    className="grid size-8 cursor-pointer place-items-center justify-self-center rounded-full transition-colors hover:bg-black/6 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-current"
+                    onClick={toggleMuted}
+                    aria-label={muted ? "Unmute" : "Mute"}
+                >
+                    {muted ? (
+                        <VolumeX aria-hidden="true" className="size-[1rem]" />
+                    ) : (
+                        <Volume2 aria-hidden="true" className="size-[1rem]" />
+                    )}
+                </button>
+            </div>
 
-                        <span className="relative grid min-w-[2.55rem]">
-                            <span
-                                className={cn(
-                                    "col-start-1 row-start-1 transition-[opacity,transform] duration-200",
-                                    playing &&
-                                        "group-hover/playback:-translate-y-0.5 group-hover/playback:opacity-0 group-focus-visible/playback:-translate-y-0.5 group-focus-visible/playback:opacity-0",
-                                )}
-                            >
-                                {playing ? "Playing" : "Play"}
-                            </span>
-                            {playing && (
-                                <span className="col-start-1 row-start-1 translate-y-0.5 opacity-0 transition-[opacity,transform] duration-200 group-hover/playback:translate-y-0 group-hover/playback:opacity-100 group-focus-visible/playback:translate-y-0 group-focus-visible/playback:opacity-100">
-                                    Pause
-                                </span>
-                            )}
-                        </span>
-                    </button>
-                </>
-            )}
+            <span className="sr-only" aria-live="polite">
+                {playing ? "Playing" : "Paused"}: {currentTrack.title} by{" "}
+                {currentTrack.subtitle}
+            </span>
         </div>
     )
 }

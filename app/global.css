@@ -3,24 +3,3 @@
 @source "./**/*.{ts,tsx}";
 @source "../components/**/*.{ts,tsx}";
 @source "../lib/**/*.{ts,tsx}";
-
-@keyframes spotify-wave {
-    0%,
-    100% {
-        transform: scaleY(0.35);
-    }
-    50% {
-        transform: scaleY(1);
-    }
-}
-
-.spotify-playback-wave > span {
-    animation: spotify-wave 0.72s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .spotify-playback-wave > span {
-        animation: none;
-        transform: scaleY(0.72);
-    }
-}

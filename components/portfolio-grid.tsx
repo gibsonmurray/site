@@ -1,7 +1,8 @@
 "use client"
 
+import Image from "next/image"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { AnimatePresence, LayoutGroup, MotionConfig } from "motion/react"
+import { LayoutGroup, MotionConfig } from "motion/react"
 import { RotateCcw } from "lucide-react"
 import ReactGridLayout, {
     type Layout,
@@ -10,8 +11,6 @@ import ReactGridLayout, {
     verticalCompactor,
 } from "react-grid-layout"
 import { WidgetCard, type WidgetCardHandle } from "@/components/widget-card"
-import { MessagesModal } from "@/components/messages-modal"
-import { WidgetModal } from "@/components/widget-modal"
 import { cn } from "@/lib/widget-design"
 import {
     GRID_COLUMNS,
@@ -31,7 +30,7 @@ const STALE_LAYOUT_STORAGE_KEYS = [
     "gm-bento-layout-v5",
 ]
 const STALE_THEME_STORAGE_KEY = "gm-bento-theme"
-const DESKTOP_GRID_MEDIA_QUERY = "(min-width: 1004px)"
+const DESKTOP_GRID_MEDIA_QUERY = "(min-width: 1121.5px)"
 const GRID_PLACEHOLDER_CLASSES =
     "overflow-hidden rounded-[clamp(1.35rem,4vw,1.8rem)] border border-white/10 bg-[#404040] opacity-[0.94] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-14px_30px_rgba(0,0,0,0.14),0_12px_28px_rgba(0,0,0,0.12)] transition-all duration-200 ease-[cubic-bezier(0.16,0.84,0.22,1)] after:absolute after:inset-[0.65rem] after:rounded-[clamp(0.8rem,3vw,1.25rem)] after:border after:border-dashed after:border-white/20 after:content-['']"
 
@@ -65,7 +64,7 @@ function createDefaultLayout(
 
     const layout = widgets.map((widget) => {
         const fallback = fallbackById.get(widget.id)
-        const position = widget.position?.[breakpoint]
+        const position = widget.layout?.[breakpoint]
         const size = SIZE_MAP[widget.size]
         const width = Math.min(size.width, columns)
 
@@ -162,14 +161,11 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
     )
     const [layouts, setLayouts] = useState<GridLayouts>(defaultLayouts)
     const [breakpoint, setBreakpoint] = useState<Breakpoint>("mobile")
-    const [activeWidget, setActiveWidget] = useState<WidgetDefinition | null>(
-        null,
-    )
     const [settlingSlot, setSettlingSlot] = useState<SettlingSlot | null>(null)
     const [ready, setReady] = useState(false)
 
     const columns = GRID_COLUMNS[breakpoint]
-    const gap = breakpoint === "desktop" ? 16 : 12
+    const gap = breakpoint === "desktop" ? 18 : 13.5
     const rowHeight = Math.max(1, (width - gap * (columns - 1)) / columns)
     const widgetsById = useMemo(
         () => new Map(widgets.map((widget) => [widget.id, widget])),
@@ -425,8 +421,17 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                     ready && "opacity-100",
                 )}
             >
-                <header className="relative mx-auto flex w-[min(100%,28.625rem)] items-center justify-between gap-4 px-[0.15rem] pt-2 pb-5 text-[0.73rem] font-[560] tracking-[-0.01em] text-[#727272] min-[1004px]:w-[min(100%,58.75rem)]">
-                    <span>GM / Portfolio</span>
+                <header className="relative mx-auto flex w-[min(100%,32.203125rem)] items-center justify-between gap-4 px-[0.15rem] pt-2 pb-5 text-[0.73rem] font-[560] tracking-[-0.01em] text-[#727272] min-[1121.5px]:w-[min(100%,66.09375rem)]">
+                    <span className="flex items-center gap-[0.42rem]">
+                        <Image
+                            src="/gm-logo.svg"
+                            alt="Gibson Murray"
+                            width={14}
+                            height={13}
+                        />
+                        <span aria-hidden="true">/</span>
+                        <span>Portfolio</span>
+                    </span>
                     <p className="m-0 text-right text-[0.65rem] font-[530] tracking-[0.02em]">
                         Drag any widget to rearrange this space.
                     </p>
@@ -435,7 +440,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                 <LayoutGroup id="portfolio-widgets">
                     <div
                         ref={containerRef}
-                        className="relative mx-auto min-h-px w-[min(100%,28.625rem)] min-[1004px]:w-[min(100%,58.75rem)]"
+                        className="relative mx-auto min-h-px w-[min(100%,32.203125rem)] min-[1121.5px]:w-[min(100%,66.09375rem)]"
                         onClickCapture={(event) => {
                             if (
                                 performance.now() >=
@@ -488,6 +493,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                                 dragConfig={{
                                     enabled: true,
                                     bounded: false,
+                                    cancel: ".widget-interactive",
                                     threshold: 3,
                                 }}
                                 resizeConfig={{ enabled: false }}
@@ -527,7 +533,6 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                                                     }
                                                 }}
                                                 widget={widget}
-                                                onOpen={setActiveWidget}
                                                 onKeyboardMove={(direction) =>
                                                     handleKeyboardMove(
                                                         widget.id,
@@ -541,26 +546,9 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                             </ReactGridLayout>
                         )}
                     </div>
-
-                    <AnimatePresence>
-                        {activeWidget &&
-                            (activeWidget.presentation === "messages" ? (
-                                <MessagesModal
-                                    key={activeWidget.id}
-                                    widget={activeWidget}
-                                    onClose={() => setActiveWidget(null)}
-                                />
-                            ) : (
-                                <WidgetModal
-                                    key={activeWidget.id}
-                                    widget={activeWidget}
-                                    onClose={() => setActiveWidget(null)}
-                                />
-                            ))}
-                    </AnimatePresence>
                 </LayoutGroup>
 
-                <footer className="relative mx-auto flex w-[min(100%,28.625rem)] items-center justify-between gap-4 px-[0.2rem] pt-5 text-[0.69rem] text-[#727272] min-[1004px]:w-[min(100%,58.75rem)]">
+                <footer className="relative mx-auto flex w-[min(100%,32.203125rem)] items-center justify-between gap-4 px-[0.2rem] pt-5 text-[0.69rem] text-[#727272] min-[1121.5px]:w-[min(100%,66.09375rem)]">
                     <span>Your layout is saved on this device.</span>
                     <button
                         type="button"

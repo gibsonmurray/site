@@ -1,99 +1,181 @@
-import { ChevronRight, MessageCircle } from "lucide-react"
-import { cn, getWidgetSize, widgetSurface } from "@/lib/widget-design"
+"use client"
+
+import Image from "next/image"
+import { useState, type FormEvent } from "react"
+import { ArrowUp, Mail } from "lucide-react"
+import { cn, widgetSurface } from "@/lib/widget-design"
 import type { WidgetDefinition } from "@/lib/widgets"
 
 type MessagesWidgetProps = {
     widget: WidgetDefinition
-    onOpen: () => void
 }
 
-export function MessagesWidget({ widget, onOpen }: MessagesWidgetProps) {
-    const messages = widget.details?.messages?.slice(-2) ?? []
-    const size = getWidgetSize(widget.size)
-    const isCompact = size.name === "compact"
-    const isTall = size.name === "tall"
+const CONTACT_EMAIL = "hi@gibsonmurray.com"
+
+function MessageTail({ side }: { side: "incoming" | "outgoing" }) {
+    return (
+        <svg
+            viewBox="0 0 12 14"
+            className={cn(
+                "absolute bottom-0 h-3.5 w-3 fill-current",
+                side === "outgoing"
+                    ? "-right-[0.42rem] text-[#0a84ff]"
+                    : "-left-[0.42rem] scale-x-[-1] text-[#e5e5ea]",
+            )}
+            aria-hidden="true"
+        >
+            <path d="M0 0h4v5.5c0 3.2 2.7 5.9 7.5 7.2C6.8 13.7 2.7 12.2 0 9V0Z" />
+        </svg>
+    )
+}
+
+export function MessagesWidget({ widget }: MessagesWidgetProps) {
+    const [draft, setDraft] = useState("")
+    const [sendState, setSendState] = useState<
+        "idle" | "sending" | "sent" | "error"
+    >("idle")
+    const incomingMessages = widget.messages?.filter(
+        (message) => message.side === "incoming",
+    ) ?? [{ side: "incoming", text: "hey! stoked you're here." }]
+
+    const sendMessage = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        const message = draft.trim()
+        if (!message || sendState === "sending") return
+
+        setSendState("sending")
+
+        try {
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message }),
+            })
+
+            if (!response.ok) throw new Error("Message delivery failed")
+
+            setDraft("")
+            setSendState("sent")
+        } catch {
+            setSendState("error")
+        }
+    }
 
     return (
-        <button
-            type="button"
+        <div
             className={cn(
                 widgetSurface,
-                "isolate grid grid-cols-[minmax(0,0.82fr)_minmax(9rem,1.18fr)] grid-rows-[auto_1fr] gap-x-4 gap-y-[0.8rem] bg-[radial-gradient(circle_at_92%_12%,rgba(10,132,255,0.16),transparent_31%),linear-gradient(145deg,#f8fbff,#edf6ff)]",
-                (isCompact || isTall) && "flex flex-col",
-                isTall && "gap-[0.85rem]",
-                size.name === "large" &&
-                    "grid-cols-[minmax(10rem,0.8fr)_minmax(0,1.2fr)] gap-x-6 gap-y-4 p-6",
+                "cursor-default justify-between gap-2.5 p-[clamp(0.8rem,3vw,1.05rem)]",
             )}
-            onClick={onOpen}
-            aria-label={`Open ${widget.title}`}
         >
-            <span className="relative z-[2] col-span-full flex items-center gap-[0.55rem] text-[0.67rem] font-[650] text-[#41719f]">
-                <span className="grid size-[2.35rem] place-items-center rounded-[0.78rem] bg-[#0a84ff] text-white shadow-[0_6px_16px_rgba(10,132,255,0.24)]">
-                    <MessageCircle
-                        className="size-[1.2rem] stroke-[2.25]"
+            <div className="flex min-h-0 flex-1 flex-col justify-center gap-2.5">
+                <div className="flex items-end gap-2">
+                    <div className="relative size-9 shrink-0 overflow-hidden rounded-full ring-1 ring-black/5">
+                        <Image
+                            src={
+                                widget.image ??
+                                "/media/gibson-murray-headshot.jpeg"
+                            }
+                            alt="Gibson Murray"
+                            fill
+                            sizes="36px"
+                            className="object-cover object-[50%_42%]"
+                        />
+                    </div>
+
+                    <div className="min-w-0 max-w-[78%]">
+                        <p className="mb-1 pl-2 text-[0.62rem] leading-none font-[520] text-[#8e8e93]">
+                            Gibson
+                        </p>
+                        <div className="flex flex-col items-start gap-[0.15rem]">
+                            {incomingMessages.map((message, index) => (
+                                <p
+                                    className="relative rounded-[1.05rem] bg-[#e5e5ea] px-3 py-1.5 text-[clamp(0.72rem,2.4vw,0.88rem)] leading-[1.22] font-[450] tracking-[-0.02em] text-black"
+                                    key={`${message.text}-${index}`}
+                                >
+                                    <span className="relative z-10">
+                                        {message.text}
+                                    </span>
+                                    {index === incomingMessages.length - 1 && (
+                                        <MessageTail side="incoming" />
+                                    )}
+                                </p>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <p className="relative ml-auto mr-2 max-w-[52%] rounded-[1.05rem] bg-[#0a84ff] px-3 py-2 text-[clamp(0.72rem,2.4vw,0.88rem)] leading-none font-[450] tracking-[-0.02em] text-white">
+                    <span className="relative z-10">sounds good 🙏</span>
+                    <MessageTail side="outgoing" />
+                </p>
+            </div>
+
+            <div className="flex items-center gap-2.5">
+                <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    aria-label={`Email ${CONTACT_EMAIL}`}
+                    aria-describedby="contact-email-tooltip"
+                    className="widget-interactive group/mail relative grid size-8 shrink-0 cursor-pointer place-items-center rounded-full text-[#9b9b9f] transition-colors duration-200 hover:text-[#0a84ff] focus-visible:text-[#0a84ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0a84ff]"
+                >
+                    <Mail
+                        className="size-[1.4rem] stroke-[2.2]"
                         aria-hidden="true"
                     />
-                </span>
-                {!isCompact && <span>Messages</span>}
-                <span
-                    className="ml-auto grid size-[1.65rem] place-items-center rounded-full border border-[#0a84ff]/12 bg-white/70 text-[#0a84ff]"
-                    aria-hidden="true"
-                >
-                    <ChevronRight className="size-[0.8rem] stroke-[2.4]" />
-                </span>
-            </span>
+                    <span
+                        id="contact-email-tooltip"
+                        role="tooltip"
+                        className="pointer-events-none absolute bottom-[calc(100%+0.55rem)] left-1/2 z-20 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-[0.48rem] bg-black px-2.5 py-1.5 text-[0.65rem] font-[560] tracking-[-0.01em] text-white opacity-0 shadow-[0_6px_16px_rgba(0,0,0,0.16)] transition-[opacity,transform] duration-150 after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-x-[0.3rem] after:border-t-[0.35rem] after:border-x-transparent after:border-t-black after:content-[''] group-hover/mail:translate-y-0 group-hover/mail:opacity-100 group-focus-visible/mail:translate-y-0 group-focus-visible/mail:opacity-100"
+                    >
+                        {CONTACT_EMAIL}
+                    </span>
+                </a>
 
-            {size.showMedia && (
-                <span
-                    className={cn(
-                        "col-start-2 row-start-2 flex min-w-0 flex-col justify-center gap-[0.42rem] rounded-2xl border border-[#0a84ff]/10 bg-white/70 p-[0.68rem] shadow-[0_8px_24px_rgba(37,91,143,0.06)]",
-                        isTall && "order-3 flex-1",
-                    )}
-                    aria-hidden="true"
+                <form
+                    className="widget-interactive flex h-8 min-w-0 flex-1 items-center rounded-full border-[1.5px] border-[#d4d4d8] bg-white/35 pl-3 focus-within:border-[#0a84ff]/55"
+                    onSubmit={sendMessage}
                 >
-                    <span className="flex min-w-0 flex-col gap-[0.35rem]">
-                        {messages.map((message) => (
-                            <span
-                                key={message.text}
-                                className={cn(
-                                    "max-w-full self-start rounded-[0.85rem_0.85rem_0.85rem_0.25rem] bg-[#e8e8ed] px-[0.62rem] py-[0.45rem] text-[0.62rem] leading-[1.28] text-[#111]",
-                                    message.side === "outgoing" &&
-                                        "self-end rounded-[0.85rem_0.85rem_0.25rem_0.85rem] bg-[#0a84ff] text-white",
-                                    size.name === "large" &&
-                                        "px-[0.8rem] py-[0.62rem] text-[0.78rem]",
-                                )}
-                            >
-                                {message.text}
-                            </span>
-                        ))}
+                    <label htmlFor={`message-${widget.id}`} className="sr-only">
+                        Message Gibson Murray
+                    </label>
+                    <input
+                        id={`message-${widget.id}`}
+                        value={draft}
+                        onChange={(event) => {
+                            setDraft(event.target.value)
+                            if (sendState !== "idle") setSendState("idle")
+                        }}
+                        placeholder={
+                            sendState === "sent"
+                                ? "Sent — thank you!"
+                                : sendState === "error"
+                                  ? "Couldn’t send — try again"
+                                  : "iMessage"
+                        }
+                        maxLength={2000}
+                        autoComplete="off"
+                        className="min-w-0 flex-1 bg-transparent text-[0.68rem] text-[#111] outline-none placeholder:text-[#c7c7cc]"
+                    />
+                    <button
+                        type="submit"
+                        disabled={!draft.trim() || sendState === "sending"}
+                        aria-label="Send message to Gibson Murray"
+                        className="mr-0.5 grid size-6 shrink-0 cursor-pointer place-items-center rounded-full bg-[#0a84ff] text-white transition-[background,opacity,transform] duration-150 active:scale-90 disabled:cursor-default disabled:bg-[#c7c7cc]"
+                    >
+                        <ArrowUp
+                            className="size-4 stroke-[3]"
+                            aria-hidden="true"
+                        />
+                    </button>
+                    <span className="sr-only" role="status" aria-live="polite">
+                        {sendState === "sent"
+                            ? "Message sent"
+                            : sendState === "error"
+                              ? "Message could not be sent"
+                              : ""}
                     </span>
-                    <span className="flex w-max gap-[0.18rem] rounded-full bg-[#e8e8ed] px-[0.48rem] py-[0.38rem]">
-                        {[0, 1, 2].map((dot) => (
-                            <span
-                                className="size-[0.22rem] rounded-full bg-[#9b9ba1]"
-                                key={dot}
-                            />
-                        ))}
-                    </span>
-                </span>
-            )}
-
-            <span
-                className={cn(
-                    "col-start-1 flex flex-col gap-1 self-end",
-                    isCompact && "mt-auto",
-                    isTall && "order-2",
-                )}
-            >
-                <strong className="text-[clamp(1rem,4vw,1.45rem)] font-[640] tracking-[-0.04em]">
-                    {widget.title}
-                </strong>
-                {size.showSummary && widget.summary && (
-                    <span className="text-[0.69rem] text-[#727272]">
-                        {widget.summary}
-                    </span>
-                )}
-            </span>
-        </button>
+                </form>
+            </div>
+        </div>
     )
 }

@@ -4,6 +4,121 @@
 @source "../components/**/*.{ts,tsx}";
 @source "../lib/**/*.{ts,tsx}";
 
+:root {
+    background: #f5f5f3;
+}
+
+body {
+    margin: 0;
+}
+
+.reconstruction-widget-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: clamp(1.05rem, 5vw, 1.3rem);
+    background: #fff;
+}
+
+.reconstruction-widget-content h1 {
+    max-width: 11ch;
+    margin: 0;
+    color: #202020;
+    font-size: clamp(1.28rem, 5.5vw, 1.5rem);
+    font-weight: 610;
+    letter-spacing: -0.05em;
+    line-height: 1.02;
+    text-align: left;
+    text-wrap: balance;
+}
+
+.reconstruction-widget-content h1 span {
+    color: #8a8a86;
+}
+
+.unfinished-app-icon {
+    position: relative;
+    display: grid;
+    width: 4.15rem;
+    aspect-ratio: 1;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid #deded9;
+    border-radius: 1.08rem;
+    background:
+        linear-gradient(
+            45deg,
+            transparent calc(50% - 0.5px),
+            #e3e3df calc(50% - 0.5px),
+            #e3e3df calc(50% + 0.5px),
+            transparent calc(50% + 0.5px)
+        ),
+        linear-gradient(
+            -45deg,
+            transparent calc(50% - 0.5px),
+            #e3e3df calc(50% - 0.5px),
+            #e3e3df calc(50% + 0.5px),
+            transparent calc(50% + 0.5px)
+        ),
+        #fafaf9;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 5px 14px rgba(20, 20, 20, 0.055);
+}
+
+.unfinished-app-icon::before,
+.unfinished-app-icon::after {
+    position: absolute;
+    content: "";
+}
+
+.unfinished-app-icon::before {
+    inset: 0.58rem;
+    border: 1px dashed #cdcdc7;
+    border-radius: 0.72rem;
+}
+
+.unfinished-app-icon::after {
+    width: 1px;
+    height: 100%;
+    background: #e3e3df;
+    box-shadow: 1.55rem 0 0 #eeeeeb, -1.55rem 0 0 #eeeeeb;
+}
+
+.unfinished-app-icon__circle {
+    position: relative;
+    z-index: 1;
+    width: 2.08rem;
+    aspect-ratio: 1;
+    border: 1px solid #d5d5d0;
+    border-radius: 999px;
+    background: rgba(250, 250, 249, 0.72);
+}
+
+.unfinished-app-icon__circle::before,
+.unfinished-app-icon__circle::after {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    background: #d5d5d0;
+    content: "";
+    transform: translate(-50%, -50%);
+}
+
+.unfinished-app-icon__circle::before {
+    width: 100%;
+    height: 1px;
+}
+
+.unfinished-app-icon__circle::after {
+    width: 1px;
+    height: 100%;
+}
+
 @keyframes map-location-pulse {
     0% {
         opacity: 0.3;

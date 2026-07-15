@@ -3,7 +3,6 @@
 import Image from "next/image"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { LayoutGroup, MotionConfig } from "motion/react"
-import { RotateCcw } from "lucide-react"
 import ReactGridLayout, {
     type Layout,
     type LayoutItem,
@@ -401,27 +400,15 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
         [breakpoint, columns],
     )
 
-    const resetLayout = () => {
-        setLayouts(defaultLayouts)
-        try {
-            window.localStorage.removeItem(LAYOUT_STORAGE_KEY)
-            for (const key of STALE_LAYOUT_STORAGE_KEYS) {
-                window.localStorage.removeItem(key)
-            }
-        } catch {
-            // Nothing else to reset when storage is unavailable.
-        }
-    }
-
     return (
         <MotionConfig reducedMotion="user">
             <main
                 className={cn(
-                    "relative min-h-svh overflow-clip px-4 pt-5 pb-10 opacity-0 transition-opacity duration-300 min-[760px]:px-8 min-[760px]:pt-[clamp(1.5rem,3vw,2.5rem)] min-[760px]:pb-12",
+                    "relative grid min-h-svh grid-rows-[auto_1fr_auto] overflow-clip px-4 pt-5 pb-10 opacity-0 transition-opacity duration-300 min-[760px]:px-8 min-[760px]:pt-[clamp(1.5rem,3vw,2.5rem)] min-[760px]:pb-12",
                     ready && "opacity-100",
                 )}
             >
-                <header className="relative mx-auto flex w-[min(100%,32.203125rem)] items-center justify-between gap-4 px-[0.15rem] pt-2 pb-5 text-[0.73rem] font-[560] tracking-[-0.01em] text-[#727272] min-[1121.5px]:w-[min(100%,66.09375rem)]">
+                <header className="relative mx-auto flex w-[min(100%,32.203125rem)] items-center gap-4 px-[0.15rem] pt-2 pb-5 text-[0.73rem] font-[560] tracking-[-0.01em] text-[#727272] min-[1121.5px]:w-[min(100%,66.09375rem)]">
                     <span className="flex items-center gap-[0.42rem]">
                         <Image
                             src="/gm-logo.svg"
@@ -432,15 +419,12 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                         <span aria-hidden="true">/</span>
                         <span>Portfolio</span>
                     </span>
-                    <p className="m-0 text-right text-[0.65rem] font-[530] tracking-[0.02em]">
-                        Drag any widget to rearrange this space.
-                    </p>
                 </header>
 
                 <LayoutGroup id="portfolio-widgets">
                     <div
                         ref={containerRef}
-                        className="relative mx-auto min-h-px w-[min(100%,32.203125rem)] min-[1121.5px]:w-[min(100%,66.09375rem)]"
+                        className="relative mx-auto my-8 min-h-px w-[min(17.5rem,calc(100vw-2.5rem))] self-center min-[760px]:my-12"
                         onClickCapture={(event) => {
                             if (
                                 performance.now() >=
@@ -549,22 +533,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                 </LayoutGroup>
 
                 <footer className="relative mx-auto w-[min(100%,32.203125rem)] px-[0.2rem] pt-10 text-[0.69rem] text-[#727272] min-[760px]:pt-12 min-[1121.5px]:w-[min(100%,66.09375rem)]">
-                    <div className="flex items-center justify-between gap-4 border-b border-[#ededeb] pb-5">
-                        <span>Your layout is saved on this device.</span>
-                        <button
-                            type="button"
-                            className="inline-flex shrink-0 cursor-pointer items-center gap-[0.35rem] rounded-full border border-[#e8e8e6] bg-white px-[0.68rem] py-[0.48rem] text-[#727272] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#087cff]/70"
-                            onClick={resetLayout}
-                        >
-                            <RotateCcw
-                                className="size-[0.85rem]"
-                                aria-hidden="true"
-                            />
-                            Reset layout
-                        </button>
-                    </div>
-
-                    <div className="flex flex-col gap-4 pt-5 min-[560px]:flex-row min-[560px]:items-end min-[560px]:justify-between">
+                    <div className="flex flex-col gap-4 min-[560px]:flex-row min-[560px]:items-end min-[560px]:justify-between">
                         <div className="flex items-start gap-2.5">
                             <Image
                                 src="/gm-logo.svg"

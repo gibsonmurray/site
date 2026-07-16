@@ -86,14 +86,9 @@ export const widgetCard = cva(
                 purple: "[--widget-color:#7046ee]",
                 slate: "[--widget-color:#282828]",
             },
-            dragging: {
-                true: "pointer-events-none z-20 shadow-[0_22px_55px_rgba(0,0,0,0.16)]",
-                false: "",
-            },
         },
         defaultVariants: {
             color: "slate",
-            dragging: false,
         },
     },
 )

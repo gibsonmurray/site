@@ -1,28 +1,6 @@
-# Gibson Murray
+# Manuscript
 
-A rearrangeable, bento-style Next.js portfolio for Gibson Murray. The public
-site is a small App Router app with widgets for writing, books, projects, social
-profiles, music, and contact.
-
-## Widget design system
-
-The widget data schema lives in `lib/widgets.ts`; widget content lives in
-`data/widgets.json`. Every entry uses the same core keys: `id`, `type`, `size`,
-`title`, optional `description` and `color`, plus type-specific content. The
-design system in `lib/widget-design.ts` defines the shared card, surface,
-typography, and four content-density rules:
-
-| Size  | Role    | Content contract                    |
-| ----- | ------- | ----------------------------------- |
-| `1x1` | Compact | Identity and title                  |
-| `2x1` | Wide    | Identity, summary, and side preview |
-| `1x2` | Tall    | Vertical story, preview, and action |
-| `2x2` | Large   | Full preview, content, and action   |
-
-Widgets read these capabilities when rendering, so small cards do not render
-content that only gets hidden later. Component-specific styling uses inline
-Tailwind utilities; `app/global.css` only loads Tailwind and declares source
-paths. The grid library keeps its required vendor styles.
+A minimal manuscript reader whose words reveal as the reader scrolls.
 
 ## Scripts
 

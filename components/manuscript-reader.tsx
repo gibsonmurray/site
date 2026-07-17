@@ -1,13 +1,7 @@
 "use client"
 
-import { useMemo, useRef, useState } from "react"
-import {
-    motion,
-    type MotionValue,
-    useMotionValueEvent,
-    useScroll,
-    useTransform,
-} from "motion/react"
+import { useMemo, useRef } from "react"
+import { motion, type MotionValue, useScroll, useTransform } from "motion/react"
 
 type Token = { text: string }
 
@@ -62,9 +56,6 @@ function Word({
     text: string
 }) {
     const wordRef = useRef<HTMLSpanElement>(null)
-    const bookHasOpened = useRef(false)
-    const [isBookOpen, setIsBookOpen] = useState(false)
-    const hasBook = text.replace(/[^a-z]/gi, "").toLowerCase() === "author"
     const reveal = useTransform(scrollY, (position) => {
         if (index === 0) return 1
         if (typeof window === "undefined") return 0
@@ -92,14 +83,7 @@ function Word({
     })
     const blur = useTransform(reveal, (value) => `blur(${(1 - value) * 0.12}em)`)
 
-    useMotionValueEvent(reveal, "change", (value) => {
-        if (hasBook && value >= 0.99 && !bookHasOpened.current) {
-            bookHasOpened.current = true
-            setIsBookOpen(true)
-        }
-    })
-
-    const word = (
+    return (
         <motion.span
             className="word"
             ref={wordRef}
@@ -108,27 +92,4 @@ function Word({
             {text}
         </motion.span>
     )
-
-    if (hasBook) {
-        return (
-            <span className="author-word">
-                <span
-                    aria-hidden="true"
-                    className={`author-book${isBookOpen ? " is-open" : ""}`}
-                >
-                    <span className="book-shadow" />
-                    <span className="book-cover book-cover-left">
-                        <span className="book-page-lines" />
-                    </span>
-                    <span className="book-cover book-cover-right">
-                        <span className="book-page-lines" />
-                    </span>
-                    <span className="book-spine" />
-                </span>
-                {word}
-            </span>
-        )
-    }
-
-    return word
 }

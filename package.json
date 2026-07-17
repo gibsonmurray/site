@@ -8,36 +8,22 @@
         "dev": "next dev --turbopack",
         "build": "next build",
         "start": "next start",
-        "lint": "eslint app components lib next.config.ts",
-        "ts": "tsc --noEmit",
-        "update": "bun update next react react-dom motion tailwindcss @tailwindcss/postcss shadcn --latest"
+        "lint": "eslint app components",
+        "ts": "tsc --noEmit"
     },
     "dependencies": {
-        "@tailwindcss/postcss": "^4.3.2",
-        "@vercel/analytics": "^2.0.1",
-        "class-variance-authority": "^0.7.1",
-        "clsx": "^2.1.1",
         "geist": "^1.7.2",
-        "lucide-react": "^1.18.0",
         "motion": "^12.42.2",
         "next": "^16.2.10",
         "react": "^19.2.7",
-        "react-dom": "^19.2.7",
-        "react-grid-layout": "2.2.3",
-        "react-icons": "^5.7.0",
-        "react-resizable": "^3.2.0",
-        "tailwind-merge": "^3.6.0"
+        "react-dom": "^19.2.7"
     },
     "devDependencies": {
         "@types/node": "^25.9.3",
         "@types/react": "^19.2.17",
         "@types/react-dom": "^19.2.3",
-        "eslint": "^10.0.0",
+        "eslint": "^9.39.1",
         "eslint-config-next": "^16.2.10",
-        "prettier": "^3.8.4",
-        "prettier-plugin-tailwindcss": "^0.7.4",
-        "shadcn": "^4.13.0",
-        "tailwindcss": "^4.3.2",
         "typescript": "^5.9.3"
     }
 }

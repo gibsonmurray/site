@@ -346,7 +346,7 @@ export function PortfolioGrid({ widgets }: PortfolioGridProps) {
                     ready && "opacity-100",
                 )}
             >
-                <header className="relative mx-auto flex w-[min(100%,32.203125rem)] items-center px-[0.15rem] pt-2 pb-20 text-[0.73rem] font-[560] tracking-[-0.01em] text-[#727272] min-[760px]:pb-24 min-[1121.5px]:w-[min(100%,66.09375rem)]">
+                <header className="relative mx-auto flex w-[min(100%,32.203125rem)] items-center px-[0.15rem] pt-2 pb-14 text-[0.73rem] font-[560] tracking-[-0.01em] text-[#727272] min-[560px]:pb-20 min-[760px]:pb-24 min-[1121.5px]:w-[min(100%,66.09375rem)]">
                     <span className="flex items-center gap-[0.42rem]">
                         <Image
                             src="/gm-logo.svg"

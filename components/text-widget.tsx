@@ -15,11 +15,11 @@ type TextWidgetProps = {
 }
 
 const photoPositions = [
-    "top-0 -left-[2%] z-[1] -rotate-[7deg]",
+    "top-4 -left-[2%] z-[1] -rotate-[7deg] min-[760px]:top-0",
     "bottom-0 left-[17%] z-[2] rotate-[4deg]",
-    "top-0 left-[36%] z-[3] -rotate-[1deg]",
+    "top-4 left-[36%] z-[3] -rotate-[1deg] min-[760px]:top-0",
     "bottom-0 left-[55%] z-[4] rotate-[8deg]",
-    "-top-8 left-[72%] z-[5] -rotate-[5deg]",
+    "top-4 left-[72%] z-[5] -rotate-[5deg] min-[760px]:-top-8",
 ] as const
 
 export function TextWidget({ widget }: TextWidgetProps) {
@@ -68,7 +68,7 @@ export function TextWidget({ widget }: TextWidgetProps) {
 
                                 {gallery.length > 0 && (
                                     <span
-                                        className="relative mt-auto block h-[21rem] w-full shrink-0"
+                                        className="relative mt-auto block h-[15.5rem] w-full shrink-0 min-[560px]:h-[18rem] min-[760px]:h-[21rem]"
                                         aria-hidden="true"
                                     >
                                         {gallery
@@ -76,7 +76,7 @@ export function TextWidget({ widget }: TextWidgetProps) {
                                             .map((image, index) => (
                                                 <span
                                                     className={cn(
-                                                        "absolute aspect-[2/3] w-[32%] cursor-default overflow-hidden rounded-[1rem] bg-[#d8d8d8] shadow-[0_7px_18px_rgba(18,18,18,0.16)]",
+                                                        "absolute aspect-[2/3] w-[31%] cursor-default overflow-hidden rounded-[clamp(0.75rem,3vw,1rem)] bg-[#d8d8d8] shadow-[0_7px_18px_rgba(18,18,18,0.16)] min-[560px]:w-[32%]",
                                                         photoPositions[index],
                                                     )}
                                                     key={image}

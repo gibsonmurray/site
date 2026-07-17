@@ -65,13 +65,13 @@ export function GithubContributionGraph({
 
     return (
         <span
-            className="relative z-1 grid auto-cols-[0.8rem] grid-flow-col grid-rows-7 gap-[0.22rem] place-self-center"
+            className="relative z-1 grid auto-cols-[clamp(0.35rem,1.9vw,0.8rem)] grid-flow-col grid-rows-7 gap-[clamp(0.09rem,0.48vw,0.22rem)] place-self-center"
             role="img"
             aria-label={`Recent GitHub contribution activity for ${username}`}
         >
             {levels.map((level, index) => (
                 <span
-                    className={`size-[0.8rem] rounded-[0.18rem] border border-[rgba(27,31,36,0.07)] ${levelClasses[level] ?? levelClasses[0]}`}
+                    className={`size-[clamp(0.35rem,1.9vw,0.8rem)] rounded-[clamp(0.1rem,0.4vw,0.18rem)] border border-[rgba(27,31,36,0.07)] ${levelClasses[level] ?? levelClasses[0]}`}
                     key={days[index]?.date ?? index}
                 />
             ))}

@@ -102,7 +102,13 @@ function Word({
     const blur = useTransform(reveal, (value) => `blur(${(1 - value) * 0.12}em)`)
 
     useMotionValueEvent(reveal, "change", (value) => {
-        if (signature && value > 0.08) setShowSignature(true)
+        if (!signature) return
+
+        if (value >= 0.99) {
+            setShowSignature(true)
+        } else if (value <= 0.01) {
+            setShowSignature(false)
+        }
     })
 
     return (

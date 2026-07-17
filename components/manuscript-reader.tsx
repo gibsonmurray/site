@@ -11,7 +11,7 @@ import {
     useTransform,
 } from "motion/react"
 
-type Token = { text: string; signature: boolean }
+type Token = { text: string; signature: boolean; codeIcon: boolean }
 
 function parseManuscript(source: string): Token[] {
     const tokens: Token[] = []
@@ -21,6 +21,7 @@ function parseManuscript(source: string): Token[] {
             tokens.push({
                 text: piece.replaceAll("~", ""),
                 signature: piece.includes("~author~"),
+                codeIcon: piece.includes("~programmer~"),
             })
         }
     })
@@ -49,6 +50,7 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                         <Word
                             index={++wordIndex}
                             key={tokenIndex}
+                            codeIcon={token.codeIcon}
                             signature={token.signature}
                             scrollY={scrollY}
                             text={token.text}
@@ -61,11 +63,13 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
 }
 
 function Word({
+    codeIcon,
     index,
     signature,
     scrollY,
     text,
 }: {
+    codeIcon: boolean
     index: number
     signature: boolean
     scrollY: MotionValue<number>
@@ -73,6 +77,7 @@ function Word({
 }) {
     const wordRef = useRef<HTMLSpanElement>(null)
     const signatureDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const [showCodeIcon, setShowCodeIcon] = useState(false)
     const [showSignature, setShowSignature] = useState(false)
     const reduceMotion = useReducedMotion()
     const reveal = useTransform(scrollY, (position) => {
@@ -109,26 +114,32 @@ function Word({
     }, [])
 
     useMotionValueEvent(reveal, "change", (value) => {
-        if (!signature) return
-
-        if (value >= 0.99 && !showSignature && !signatureDelayRef.current) {
-            signatureDelayRef.current = setTimeout(() => {
+        if (signature) {
+            if (value >= 0.99 && !showSignature && !signatureDelayRef.current) {
+                signatureDelayRef.current = setTimeout(() => {
+                    signatureDelayRef.current = null
+                    setShowSignature(true)
+                }, 500)
+            } else if (value < 0.99 && !showSignature && signatureDelayRef.current) {
+                clearTimeout(signatureDelayRef.current)
                 signatureDelayRef.current = null
-                setShowSignature(true)
-            }, 500)
-        } else if (value < 0.99 && !showSignature && signatureDelayRef.current) {
-            clearTimeout(signatureDelayRef.current)
-            signatureDelayRef.current = null
+            }
+
+            if (value <= 0.01) setShowSignature(false)
         }
 
-        if (value <= 0.01) {
-            setShowSignature(false)
+        if (codeIcon) {
+            if (value >= 0.99) {
+                setShowCodeIcon(true)
+            } else if (value <= 0.01) {
+                setShowCodeIcon(false)
+            }
         }
     })
 
     return (
         <motion.span
-            className={`word${signature ? " signature-word" : ""}`}
+            className={`word${signature ? " signature-word" : ""}${codeIcon ? " code-word" : ""}`}
             ref={wordRef}
             style={index === 0 ? { opacity: 1, filter: "blur(0)" } : { opacity: reveal, filter: blur }}
         >
@@ -139,6 +150,16 @@ function Word({
                         className="signature-lottie"
                         loop
                         src="/signature.lottie"
+                    />
+                </span>
+            ) : null}
+            {codeIcon && showCodeIcon ? (
+                <span className="code-animation" aria-hidden="true">
+                    <DotLottieReact
+                        autoplay={!reduceMotion}
+                        className="code-lottie"
+                        loop
+                        src="/code-icon.lottie"
                     />
                 </span>
             ) : null}

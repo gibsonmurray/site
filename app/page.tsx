@@ -1,11 +1,13 @@
-import { PortfolioGrid } from "@/components/portfolio-grid"
-import widgets from "@/data/widgets.json"
-import type { WidgetDefinition } from "@/lib/widgets"
+import { readFile } from "node:fs/promises"
+import path from "node:path"
 
-export default function Page() {
-    return (
-        <PortfolioGrid
-            widgets={widgets as unknown as WidgetDefinition[]}
-        />
+import { ManuscriptReader } from "@/components/manuscript-reader"
+
+export default async function Page() {
+    const manuscript = await readFile(
+        path.join(process.cwd(), "data", "manuscript.md"),
+        "utf8",
     )
+
+    return <ManuscriptReader manuscript={manuscript} />
 }

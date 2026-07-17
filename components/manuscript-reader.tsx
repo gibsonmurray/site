@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import { DotLottieReact } from "@lottiefiles/dotlottie-react"
+import Lottie from "lottie-react"
 import {
     motion,
     type MotionValue,
@@ -10,6 +10,9 @@ import {
     useScroll,
     useTransform,
 } from "motion/react"
+
+import signatureAnimation from "@/animations/signature.json"
+import typeScriptAnimation from "@/animations/type-script.json"
 
 type Token = { text: string; signature: boolean; codeIcon: boolean }
 
@@ -145,21 +148,23 @@ function Word({
         >
             {signature && showSignature ? (
                 <span className="signature-animation" aria-hidden="true">
-                    <DotLottieReact
+                    <Lottie
+                        animationData={signatureAnimation}
                         autoplay={!reduceMotion}
                         className="signature-lottie"
                         loop
-                        src="/signature.json"
+                        renderer="svg"
                     />
                 </span>
             ) : null}
             {codeIcon && showCodeIcon ? (
                 <span className="code-animation" aria-hidden="true">
-                    <DotLottieReact
+                    <Lottie
+                        animationData={typeScriptAnimation}
                         autoplay={!reduceMotion}
                         className="code-lottie"
                         loop
-                        src="/type-script.json"
+                        renderer="svg"
                     />
                 </span>
             ) : null}

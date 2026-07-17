@@ -53,6 +53,191 @@ body {
     will-change: opacity, filter;
 }
 
+.author-word {
+    display: inline-block;
+    position: relative;
+}
+
+.author-book {
+    bottom: calc(100% + 0.12em);
+    height: 0.76em;
+    left: 50%;
+    opacity: 0;
+    perspective: 5em;
+    pointer-events: none;
+    position: absolute;
+    transform: translate(-50%, 0.18em) scale(0.72);
+    transform-origin: center bottom;
+    width: 1.45em;
+    z-index: 2;
+}
+
+.author-book.is-open {
+    animation: book-arrive 720ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.book-shadow {
+    background: color-mix(in srgb, var(--ink) 22%, transparent);
+    border-radius: 50%;
+    bottom: -0.04em;
+    filter: blur(0.055em);
+    height: 0.12em;
+    left: 12%;
+    opacity: 0;
+    position: absolute;
+    transform: scaleX(0.5);
+    width: 76%;
+}
+
+.is-open .book-shadow {
+    animation: book-shadow-open 720ms ease-out forwards;
+}
+
+.book-cover {
+    background: #5b342b;
+    border: 0.025em solid var(--ink);
+    bottom: 0.06em;
+    height: 0.62em;
+    overflow: hidden;
+    position: absolute;
+    width: 0.72em;
+}
+
+.book-cover::before {
+    background: #fffdf7;
+    border: 0.018em solid color-mix(in srgb, var(--ink) 42%, transparent);
+    content: "";
+    inset: 0.045em 0.045em 0.055em;
+    position: absolute;
+}
+
+.book-cover-left {
+    border-radius: 0.04em 0.08em 0.08em 0.06em;
+    left: 50%;
+    transform: translateX(-96%) rotateY(82deg);
+    transform-origin: right center;
+}
+
+.book-cover-left::before {
+    border-radius: 0.025em 0.06em 0.06em 0.035em;
+}
+
+.book-cover-right {
+    border-radius: 0.08em 0.04em 0.06em 0.08em;
+    right: 50%;
+    transform: translateX(96%) rotateY(-82deg);
+    transform-origin: left center;
+}
+
+.book-cover-right::before {
+    border-radius: 0.06em 0.025em 0.035em 0.06em;
+}
+
+.book-page-lines {
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0 0.105em,
+        color-mix(in srgb, var(--ink) 24%, transparent) 0.105em 0.12em
+    );
+    inset: 0.1em 0.13em 0.11em;
+    opacity: 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.book-spine {
+    background: var(--ink);
+    border-radius: 999px;
+    bottom: 0.075em;
+    height: 0.51em;
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    transform: translateX(-50%) scaleY(0.3);
+    transform-origin: bottom;
+    width: 0.025em;
+    z-index: 3;
+}
+
+.is-open .book-cover-left {
+    animation: book-left-open 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.is-open .book-cover-right {
+    animation: book-right-open 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.is-open .book-page-lines {
+    animation: book-lines-appear 280ms 390ms ease-out forwards;
+}
+
+.is-open .book-spine {
+    animation: book-spine-appear 320ms 350ms ease-out forwards;
+}
+
+@keyframes book-arrive {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 0.18em) scale(0.72);
+    }
+    52% {
+        opacity: 1;
+        transform: translate(-50%, -0.045em) scale(1.04);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+    }
+}
+
+@keyframes book-left-open {
+    0%, 18% {
+        transform: translateX(-96%) rotateY(82deg) rotateZ(0);
+    }
+    72% {
+        transform: translateX(-99%) rotateY(-4deg) rotateZ(-9deg);
+    }
+    100% {
+        transform: translateX(-99%) rotateY(0) rotateZ(-6deg);
+    }
+}
+
+@keyframes book-right-open {
+    0%, 18% {
+        transform: translateX(96%) rotateY(-82deg) rotateZ(0);
+    }
+    72% {
+        transform: translateX(99%) rotateY(4deg) rotateZ(9deg);
+    }
+    100% {
+        transform: translateX(99%) rotateY(0) rotateZ(6deg);
+    }
+}
+
+@keyframes book-shadow-open {
+    0%, 30% {
+        opacity: 0;
+        transform: scaleX(0.45);
+    }
+    100% {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes book-lines-appear {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes book-spine-appear {
+    to {
+        opacity: 1;
+        transform: translateX(-50%) scaleY(1);
+    }
+}
+
 @media (max-width: 640px) {
     .manuscript-text {
         width: calc(100vw - 40px);
@@ -67,6 +252,16 @@ body {
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
+    }
+
+    .author-book.is-open,
+    .is-open .book-cover-left,
+    .is-open .book-cover-right,
+    .is-open .book-shadow,
+    .is-open .book-page-lines,
+    .is-open .book-spine {
+        animation-duration: 1ms;
+        animation-delay: 0ms;
     }
 
 }

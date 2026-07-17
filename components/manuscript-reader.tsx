@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
 import {
     motion,
@@ -72,6 +72,7 @@ function Word({
     text: string
 }) {
     const wordRef = useRef<HTMLSpanElement>(null)
+    const signatureDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const [showSignature, setShowSignature] = useState(false)
     const reduceMotion = useReducedMotion()
     const reveal = useTransform(scrollY, (position) => {
@@ -101,12 +102,26 @@ function Word({
     })
     const blur = useTransform(reveal, (value) => `blur(${(1 - value) * 0.12}em)`)
 
+    useEffect(() => {
+        return () => {
+            if (signatureDelayRef.current) clearTimeout(signatureDelayRef.current)
+        }
+    }, [])
+
     useMotionValueEvent(reveal, "change", (value) => {
         if (!signature) return
 
-        if (value >= 0.99) {
-            setShowSignature(true)
-        } else if (value <= 0.01) {
+        if (value >= 0.99 && !showSignature && !signatureDelayRef.current) {
+            signatureDelayRef.current = setTimeout(() => {
+                signatureDelayRef.current = null
+                setShowSignature(true)
+            }, 500)
+        } else if (value < 0.99 && !showSignature && signatureDelayRef.current) {
+            clearTimeout(signatureDelayRef.current)
+            signatureDelayRef.current = null
+        }
+
+        if (value <= 0.01) {
             setShowSignature(false)
         }
     })

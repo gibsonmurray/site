@@ -149,7 +149,7 @@ function Word({
                         autoplay={!reduceMotion}
                         className="signature-lottie"
                         loop
-                        src="/signature.lottie"
+                        src="/signature.json"
                     />
                 </span>
             ) : null}

@@ -2,6 +2,7 @@
     --paper: #f7f5ef;
     --ink: #171714;
     --signature-blue: #0857a0;
+    --code-green: #22a06b;
 }
 
 * {
@@ -52,7 +53,8 @@ body {
     will-change: opacity, filter;
 }
 
-.signature-word {
+.signature-word,
+.code-word {
     display: inline-block;
     position: relative;
     transition: color 420ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -62,12 +64,16 @@ body {
     color: var(--signature-blue);
 }
 
-.signature-label {
+.code-word.is-emphasized {
+    color: var(--code-green);
+}
+
+.accent-label {
     display: inline-block;
     position: relative;
 }
 
-.signature-label::after {
+.accent-label::after {
     position: absolute;
     right: 0;
     bottom: -0.03em;
@@ -81,13 +87,9 @@ body {
     transition: transform 560ms 80ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.signature-word.is-emphasized .signature-label::after {
+.signature-word.is-emphasized .accent-label::after,
+.code-word.is-emphasized .accent-label::after {
     transform: scaleX(1);
-}
-
-.code-word {
-    display: inline-block;
-    position: relative;
 }
 
 .signature-animation {
@@ -163,7 +165,8 @@ body {
     }
 
     .signature-word,
-    .signature-label::after {
+    .code-word,
+    .accent-label::after {
         transition: none;
     }
 }

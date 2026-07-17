@@ -148,7 +148,7 @@ function Word({
 
     return (
         <motion.span
-            className={`word${signature ? " signature-word" : ""}${signature && emphasizeAuthor ? " is-emphasized" : ""}${codeIcon ? " code-word" : ""}`}
+            className={`word${signature ? " signature-word" : ""}${signature && emphasizeAuthor ? " is-emphasized" : ""}${codeIcon ? " code-word" : ""}${codeIcon && showCodeIcon ? " is-emphasized" : ""}`}
             ref={wordRef}
             style={index === 0 ? { opacity: 1, filter: "blur(0)" } : { opacity: reveal, filter: blur }}
         >
@@ -174,9 +174,9 @@ function Word({
                     />
                 </span>
             ) : null}
-            {signature ? (
+            {signature || codeIcon ? (
                 <>
-                    <span className="signature-label">
+                    <span className="accent-label">
                         {text.replace(/[.,!?;:]+$/, "")}
                     </span>
                     {text.match(/[.,!?;:]+$/)?.[0]}

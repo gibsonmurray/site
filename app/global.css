@@ -51,6 +51,28 @@ body {
     will-change: opacity, filter;
 }
 
+.signature-word {
+    display: inline-block;
+    position: relative;
+}
+
+.signature-animation {
+    position: absolute;
+    z-index: 1;
+    bottom: 0.55em;
+    left: 50%;
+    width: 3.15em;
+    height: 3.15em;
+    pointer-events: none;
+    transform: translateX(-50%);
+}
+
+.signature-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 @media (max-width: 640px) {
     .manuscript-text {
         width: calc(100vw - 40px);
@@ -64,5 +86,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
+    }
+
+    .signature-animation {
+        display: none;
     }
 }

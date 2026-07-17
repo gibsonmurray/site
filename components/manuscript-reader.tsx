@@ -1,15 +1,28 @@
 "use client"
 
-import { useMemo, useRef } from "react"
-import { motion, type MotionValue, useScroll, useTransform } from "motion/react"
+import { useMemo, useRef, useState } from "react"
+import { DotLottieReact } from "@lottiefiles/dotlottie-react"
+import {
+    motion,
+    type MotionValue,
+    useMotionValueEvent,
+    useReducedMotion,
+    useScroll,
+    useTransform,
+} from "motion/react"
 
-type Token = { text: string }
+type Token = { text: string; signature: boolean }
 
 function parseManuscript(source: string): Token[] {
     const tokens: Token[] = []
 
-    source.replaceAll("~", "").split(/(\s+)/).forEach((piece) => {
-        if (piece) tokens.push({ text: piece })
+    source.split(/(\s+)/).forEach((piece) => {
+        if (piece) {
+            tokens.push({
+                text: piece.replaceAll("~", ""),
+                signature: piece.includes("~author~"),
+            })
+        }
     })
 
     return tokens
@@ -36,6 +49,7 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                         <Word
                             index={++wordIndex}
                             key={tokenIndex}
+                            signature={token.signature}
                             scrollY={scrollY}
                             text={token.text}
                         />
@@ -48,14 +62,18 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
 
 function Word({
     index,
+    signature,
     scrollY,
     text,
 }: {
     index: number
+    signature: boolean
     scrollY: MotionValue<number>
     text: string
 }) {
     const wordRef = useRef<HTMLSpanElement>(null)
+    const [showSignature, setShowSignature] = useState(false)
+    const reduceMotion = useReducedMotion()
     const reveal = useTransform(scrollY, (position) => {
         if (index === 0) return 1
         if (typeof window === "undefined") return 0
@@ -83,12 +101,26 @@ function Word({
     })
     const blur = useTransform(reveal, (value) => `blur(${(1 - value) * 0.12}em)`)
 
+    useMotionValueEvent(reveal, "change", (value) => {
+        if (signature && value > 0.08) setShowSignature(true)
+    })
+
     return (
         <motion.span
-            className="word"
+            className={`word${signature ? " signature-word" : ""}`}
             ref={wordRef}
             style={index === 0 ? { opacity: 1, filter: "blur(0)" } : { opacity: reveal, filter: blur }}
         >
+            {signature && showSignature ? (
+                <span className="signature-animation" aria-hidden="true">
+                    <DotLottieReact
+                        autoplay={!reduceMotion}
+                        className="signature-lottie"
+                        loop
+                        src="/signature.lottie"
+                    />
+                </span>
+            ) : null}
             {text}
         </motion.span>
     )

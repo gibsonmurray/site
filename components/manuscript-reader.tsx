@@ -80,6 +80,7 @@ function Word({
 }) {
     const wordRef = useRef<HTMLSpanElement>(null)
     const signatureDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const [emphasizeAuthor, setEmphasizeAuthor] = useState(false)
     const [showCodeIcon, setShowCodeIcon] = useState(false)
     const [showSignature, setShowSignature] = useState(false)
     const reduceMotion = useReducedMotion()
@@ -118,6 +119,8 @@ function Word({
 
     useMotionValueEvent(reveal, "change", (value) => {
         if (signature) {
+            if (value >= 0.99) setEmphasizeAuthor(true)
+
             if (value >= 0.99 && !showSignature && !signatureDelayRef.current) {
                 signatureDelayRef.current = setTimeout(() => {
                     signatureDelayRef.current = null
@@ -128,7 +131,10 @@ function Word({
                 signatureDelayRef.current = null
             }
 
-            if (value <= 0.01) setShowSignature(false)
+            if (value <= 0.01) {
+                setEmphasizeAuthor(false)
+                setShowSignature(false)
+            }
         }
 
         if (codeIcon) {
@@ -142,7 +148,7 @@ function Word({
 
     return (
         <motion.span
-            className={`word${signature ? " signature-word" : ""}${codeIcon ? " code-word" : ""}`}
+            className={`word${signature ? " signature-word" : ""}${signature && emphasizeAuthor ? " is-emphasized" : ""}${codeIcon ? " code-word" : ""}`}
             ref={wordRef}
             style={index === 0 ? { opacity: 1, filter: "blur(0)" } : { opacity: reveal, filter: blur }}
         >
@@ -168,7 +174,16 @@ function Word({
                     />
                 </span>
             ) : null}
-            {text}
+            {signature ? (
+                <>
+                    <span className="signature-label">
+                        {text.replace(/[.,!?;:]+$/, "")}
+                    </span>
+                    {text.match(/[.,!?;:]+$/)?.[0]}
+                </>
+            ) : (
+                text
+            )}
         </motion.span>
     )
 }

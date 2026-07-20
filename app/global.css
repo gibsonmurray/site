@@ -15,6 +15,7 @@
     --ai-cyan: #15b8e5;
     --champion-gold: #ff8645;
     --tennis-yellow: #c5bb57;
+    --school-red: #c94b40;
 }
 
 * {
@@ -46,7 +47,7 @@ body {
 .manuscript-text {
     width: min(88vw, 980px);
     margin: 0 auto;
-    padding: 34vh 0 14vh;
+    padding: 34vh 0 20vh;
     font-size: clamp(1.75rem, 4.35vw, 4.15rem);
     font-weight: 520;
     letter-spacing: -0.045em;
@@ -151,6 +152,7 @@ body {
 .nerd-word,
 .plant-word,
 .pointing-word,
+.school-word,
 .teacher-word,
 .tennis-word,
 .friend-word {
@@ -205,6 +207,10 @@ body {
 
 .pointing-word.is-emphasized {
     color: var(--friend-gold);
+}
+
+.school-word.is-emphasized {
+    color: var(--school-red);
 }
 
 .globe-word.is-emphasized {
@@ -265,6 +271,7 @@ body {
 .nerd-word.is-emphasized .accent-label::after,
 .plant-word.is-emphasized .accent-label::after,
 .pointing-word.is-emphasized .accent-label::after,
+.school-word.is-emphasized .accent-label::after,
 .teacher-word.is-emphasized .accent-label::after,
 .tennis-word.is-emphasized .accent-label::after,
 .friend-word.is-emphasized .accent-label::after {

@@ -218,8 +218,8 @@ body {
         inset 0.01em -0.02em 0.04em color-mix(in srgb, white 90%, transparent),
         0 0.04em 0.12em color-mix(in srgb, var(--ink) 18%, transparent),
         0 0.12em 0.34em color-mix(in srgb, var(--ink) 10%, transparent);
-    backdrop-filter: blur(0.018em) saturate(1.14) contrast(1.05);
-    -webkit-backdrop-filter: blur(0.018em) saturate(1.14) contrast(1.05);
+    backdrop-filter: saturate(1.08);
+    -webkit-backdrop-filter: saturate(1.08);
 }
 
 .zoom-lens-viewport {
@@ -228,7 +228,7 @@ body {
     inset: 0;
     overflow: hidden;
     border-radius: inherit;
-    filter: url("#zoom-lens-refraction") contrast(1.08);
+    filter: url("#zoom-lens-refraction");
 }
 
 .zoom-lens-copy {
@@ -240,7 +240,6 @@ body {
     font: inherit;
     letter-spacing: inherit;
     line-height: inherit;
-    text-shadow: 0 0.015em 0 color-mix(in srgb, white 58%, transparent);
     transform: translateY(-50%) scale(var(--lens-scale));
     transform-origin: calc(var(--lens-offset) + 0.75em) center;
     white-space: nowrap;

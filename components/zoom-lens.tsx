@@ -45,24 +45,9 @@ export function ZoomLens({ text }: { text: string }) {
                         <feDisplacementMap
                             in="SourceGraphic"
                             in2="fisheyeMap"
-                            result="fisheye"
                             scale="28"
                             xChannelSelector="R"
                             yChannelSelector="G"
-                        />
-                        <feTurbulence
-                            baseFrequency="0.018 0.07"
-                            numOctaves="1"
-                            result="refractionNoise"
-                            seed="7"
-                            type="turbulence"
-                        />
-                        <feDisplacementMap
-                            in="fisheye"
-                            in2="refractionNoise"
-                            scale="3"
-                            xChannelSelector="R"
-                            yChannelSelector="B"
                         />
                     </filter>
                 </defs>

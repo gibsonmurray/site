@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import Lottie, { type LottieRefCurrentProps } from "lottie-react"
 import { FaGithub, FaInstagram } from "react-icons/fa"
 import { LuBookOpen, LuMail } from "react-icons/lu"
+import { SiSubstack } from "react-icons/si"
 import {
     motion,
     type MotionValue,
@@ -162,6 +163,10 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                 >
                     <span>Instagram</span>
                     <FaInstagram aria-hidden="true" />
+                </a>
+                <a href="https://substack.com/@gibsonmurray" target="_blank" rel="noreferrer">
+                    <span>Substack</span>
+                    <SiSubstack aria-hidden="true" />
                 </a>
                 <a href="mailto:hi@gibsonmurray.com">
                     <span>Email</span>

@@ -89,7 +89,8 @@ body {
         box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.currently-reading:hover .currently-reading-cover {
+.currently-reading:has(.currently-reading-copy > a:hover) .currently-reading-cover,
+.currently-reading:has(.currently-reading-copy > a:focus-visible) .currently-reading-cover {
     box-shadow: 0 0.7rem 1.7rem rgb(23 23 20 / 17%);
     transform: translateY(-0.2rem) rotate(1deg);
 }

@@ -255,7 +255,7 @@ function Word({
                     style={{ originX: 0.5, originY: 0.5 }}
                     transition={POP_SPRING}
                 >
-                    <ZoomLens />
+                    <ZoomLens text={text} />
                 </motion.span>
             ) : null}
             {zoomLens ? (

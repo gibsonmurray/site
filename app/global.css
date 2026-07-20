@@ -269,25 +269,19 @@ body {
     0%,
     8% {
         --lens-offset: 0px;
-        border-radius: 52% 48% 48% 52% / 48% 52% 48% 52%;
-        transform: translateY(-50%) scale(0.94, 1.04);
     }
 
     42% {
         --lens-offset: calc(100cqi - var(--lens-size));
-        transform: translateY(-50%) scale(1.05, 0.96);
     }
 
     50% {
         --lens-offset: calc(100cqi - var(--lens-size));
-        transform: translateY(-50%) scale(0.98, 1.03);
     }
 
     92%,
     100% {
         --lens-offset: 0px;
-        border-radius: 48% 52% 52% 48% / 52% 48% 52% 48%;
-        transform: translateY(-50%) scale(1, 1);
     }
 }
 

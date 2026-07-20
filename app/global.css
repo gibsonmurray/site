@@ -122,6 +122,7 @@ body {
 }
 
 .currently-reading-copy {
+    flex: 1;
     min-width: 0;
 }
 
@@ -232,6 +233,13 @@ body {
     letter-spacing: -0.045em;
     line-height: 1.28;
     text-decoration: none;
+}
+
+.currently-reading-copy > a span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .currently-reading-copy > a::after {

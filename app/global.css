@@ -59,7 +59,7 @@ body {
     display: flex;
     width: min(88vw, 980px);
     margin: 0 auto;
-    padding: 0 0 10vh;
+    padding: 0 0 5vh;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.18em;
@@ -67,6 +67,78 @@ body {
     font-weight: 520;
     letter-spacing: -0.045em;
     line-height: 1.28;
+}
+
+.currently-reading {
+    display: flex;
+    width: min(88vw, 980px);
+    margin: 0 auto;
+    padding: 0 0 10vh;
+    align-items: center;
+    gap: 1rem;
+}
+
+.currently-reading-cover {
+    width: clamp(4.5rem, 9vw, 6.25rem);
+    aspect-ratio: 2 / 3;
+    border-radius: 0.55rem;
+    box-shadow: 0 0.45rem 1.2rem rgb(23 23 20 / 12%);
+    object-fit: cover;
+}
+
+.currently-reading-copy {
+    min-width: 0;
+}
+
+.currently-reading-label,
+.currently-reading-author {
+    margin: 0;
+    color: color-mix(in srgb, var(--ink) 56%, transparent);
+    font-size: 0.8rem;
+    font-weight: 540;
+    letter-spacing: 0.01em;
+}
+
+.currently-reading-label {
+    display: flex;
+    margin-bottom: 0.34rem;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.currently-reading-label svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.currently-reading-copy > a {
+    display: inline-flex;
+    max-width: 100%;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--ink);
+    font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+    font-weight: 570;
+    letter-spacing: -0.025em;
+    line-height: 1.16;
+    text-decoration-thickness: 0.07em;
+    text-underline-offset: 0.16em;
+}
+
+.currently-reading-copy > a svg {
+    width: 0.82em;
+    height: 0.82em;
+    flex: 0 0 auto;
+}
+
+.currently-reading-copy > a:focus-visible {
+    border-radius: 0.12rem;
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+}
+
+.currently-reading-author {
+    margin-top: 0.34rem;
 }
 
 .site-links a {

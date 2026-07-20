@@ -63,6 +63,56 @@ const LINK_REVEAL = {
     },
 }
 
+const CURRENTLY_READING = {
+    title: "Project Hail Mary",
+    author: "Andy Weir",
+    cover: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1764703833i/54493401.jpg",
+    url: "https://www.goodreads.com/book/show/54493401-project-hail-mary",
+}
+
+function AnimatedBookIcon() {
+    return (
+        <motion.svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <motion.path
+                d="M12 7v14"
+                variants={{ hidden: { pathLength: 0.5 }, visible: { pathLength: 1 } }}
+            />
+            <motion.path
+                d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
+                variants={{ hidden: { pathLength: 0.78 }, visible: { pathLength: 1 } }}
+            />
+        </motion.svg>
+    )
+}
+
+function AnimatedExternalLinkIcon() {
+    return (
+        <motion.svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <motion.g variants={{ hidden: { x: 0, y: 0 }, visible: { x: 2, y: -2 } }}>
+                <path d="M15 3h6v6" />
+                <path d="M10 14 21 3" />
+            </motion.g>
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        </motion.svg>
+    )
+}
+
 type Token = {
     aiSearchingIcon: boolean
     bibleIcon: boolean
@@ -237,6 +287,42 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                     <LuMail aria-hidden="true" />
                 </motion.a>
             </motion.nav>
+            <motion.section
+                className="currently-reading"
+                aria-labelledby="currently-reading-title"
+                animate={manuscriptComplete ? "visible" : "hidden"}
+                initial="hidden"
+                variants={LINK_REVEAL}
+            >
+                <img
+                    className="currently-reading-cover"
+                    src={CURRENTLY_READING.cover}
+                    alt={`Cover of ${CURRENTLY_READING.title} by ${CURRENTLY_READING.author}`}
+                />
+                <div className="currently-reading-copy">
+                    <motion.p
+                        className="currently-reading-label"
+                        initial="hidden"
+                        whileHover="visible"
+                    >
+                        <AnimatedBookIcon />
+                        Currently reading
+                    </motion.p>
+                    <motion.a
+                        id="currently-reading-title"
+                        href={CURRENTLY_READING.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        initial="hidden"
+                        whileHover="visible"
+                        whileFocus="visible"
+                    >
+                        <span>{CURRENTLY_READING.title}</span>
+                        <AnimatedExternalLinkIcon />
+                    </motion.a>
+                    <p className="currently-reading-author">by {CURRENTLY_READING.author}</p>
+                </div>
+            </motion.section>
             <footer className="site-copyright">© 2026 Gibson Murray</footer>
         </main>
     )

@@ -130,7 +130,7 @@ body {
     font-size: clamp(1.75rem, 4.35vw, 4.15rem);
     font-weight: 520;
     letter-spacing: -0.045em;
-    line-height: 1.08;
+    line-height: 1.28;
     text-decoration: none;
 }
 
@@ -941,6 +941,7 @@ body {
     .currently-reading-copy > a {
         font-size: clamp(1.65rem, 8vw, 2.45rem);
         letter-spacing: -0.04em;
+        line-height: 1.3;
     }
 
 

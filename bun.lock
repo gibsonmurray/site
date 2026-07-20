@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "site",
+      "name": "manuscript",
       "dependencies": {
         "geist": "^1.7.2",
         "lottie-react": "^2.4.1",

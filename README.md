@@ -8,4 +8,4 @@ A minimal manuscript reader whose words reveal as the reader scrolls.
 - `bun run build` creates the production Next build.
 - `bun run start` serves the production build locally.
 - `bun run lint` checks the active Next source.
-- `bun run ts` runs the TypeScript checks without emitting files.
+- `bun run typecheck` checks the TypeScript source without emitting files.

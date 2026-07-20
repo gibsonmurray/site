@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 
-import "./global.css"
+import "./globals.css"
 
 export const metadata: Metadata = {
     title: "A Story by Gibson Murray",

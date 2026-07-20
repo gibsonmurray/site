@@ -1,15 +1,15 @@
 {
-    "name": "site",
+    "name": "manuscript",
     "version": "2.0.0",
     "private": true,
     "type": "module",
     "packageManager": "bun@1.3.14",
     "scripts": {
         "dev": "next dev --turbopack",
-        "build": "next build && node scripts/package-static.mjs",
+        "build": "next build",
         "start": "next start",
         "lint": "eslint app components",
-        "ts": "tsc --noEmit"
+        "typecheck": "tsc --noEmit"
     },
     "dependencies": {
         "geist": "^1.7.2",

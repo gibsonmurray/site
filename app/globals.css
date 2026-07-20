@@ -1019,6 +1019,205 @@ body {
     display: inline-block;
 }
 
+@media (min-width: 641px) and (max-width: 1399px) {
+    .manuscript-text {
+        width: min(84vw, 860px);
+        padding-top: 30svh;
+        padding-bottom: 18svh;
+        font-size: clamp(2.05rem, 4.35vw, 3.2rem);
+        line-height: 1.32;
+    }
+
+    .site-links,
+    .currently-reading,
+    .recently-played,
+    .site-copyright {
+        width: min(84vw, 860px);
+    }
+
+    .site-links,
+    .currently-reading-copy > a,
+    .recently-played-copy > a {
+        font-size: clamp(2.05rem, 4.35vw, 3.2rem);
+    }
+
+    .signature-word {
+        padding-right: 1.2em;
+    }
+
+    .signature-animation {
+        top: 50%;
+        right: 0;
+        bottom: auto;
+        left: auto;
+        width: 1.15em;
+        height: 1.15em;
+        transform: translateY(-50%);
+    }
+
+    .code-word {
+        padding-right: 1.12em;
+    }
+
+    .code-animation {
+        top: 50%;
+        right: 0;
+        width: 1.05em;
+        height: 1.05em;
+        transform: translateY(-50%);
+    }
+
+    .friend-word,
+    .laugh-word,
+    .nerd-word,
+    .pointing-word {
+        padding-right: 0.92em;
+    }
+
+    .friend-animation,
+    .laugh-animation,
+    .nerd-animation,
+    .pointing-animation {
+        top: 50%;
+        right: 0;
+        bottom: auto;
+        left: auto;
+        font-size: 0.78em;
+        transform: translateY(-50%);
+    }
+
+    .friend-animation {
+        transform: translateY(-50%) rotate(6deg);
+    }
+
+    .laugh-animation {
+        transform: translateY(-50%) rotate(5deg);
+    }
+
+    .nerd-animation {
+        transform: translateY(-50%) rotate(-8deg);
+    }
+
+    .pointing-animation .emoji-pop {
+        font-size: 0.78em;
+    }
+
+    .school-word {
+        padding-left: 0.98em;
+    }
+
+    .school-animation {
+        top: 50%;
+        right: auto;
+        left: 0;
+        font-size: 0.82em;
+        transform: translateY(-50%) rotate(-4deg);
+    }
+
+    .logo-word {
+        padding-right: 0.88em;
+    }
+
+    .logo-animation {
+        top: 50%;
+        right: 0;
+        bottom: auto;
+        left: auto;
+        width: 0.74em;
+        height: 0.74em;
+        transform: translateY(-50%);
+    }
+
+    .globe-word,
+    .idea-word,
+    .teacher-word {
+        padding-right: 1.22em;
+    }
+
+    .globe-animation,
+    .idea-animation,
+    .teacher-animation {
+        top: 50%;
+        right: 0;
+        left: auto;
+        width: 1.08em;
+        height: 1.08em;
+        transform: translateY(-50%);
+    }
+
+    .movie-word {
+        padding-right: 1.68em;
+    }
+
+    .movie-animation {
+        top: 50%;
+        right: 0;
+        left: auto;
+        width: 1.58em;
+        height: 0.99em;
+        transform: translateY(-50%);
+    }
+
+    .hero-word {
+        padding-right: 1.12em;
+    }
+
+    .hero-animation {
+        top: 50%;
+        right: 0;
+        left: auto;
+        width: 0.84em;
+        height: 1.18em;
+        transform: translateY(-50%);
+    }
+
+    .bible-word,
+    .plant-word,
+    .champion-word {
+        padding-right: 1.2em;
+    }
+
+    .bible-animation,
+    .plant-animation,
+    .champion-animation {
+        top: 50%;
+        right: 0;
+        bottom: auto;
+        left: auto;
+        width: 1.08em;
+        height: 1.08em;
+        transform: translateY(-50%);
+    }
+
+    .tennis-word {
+        padding-right: 1.32em;
+    }
+
+    .tennis-animation {
+        top: 50%;
+        right: 0;
+        left: auto;
+        width: 1.22em;
+        height: 1.22em;
+        transform: translateY(-50%);
+    }
+
+    .love-word,
+    .ai-searching-word {
+        padding-right: 1.46em;
+    }
+
+    .love-animation,
+    .ai-searching-animation {
+        top: 50%;
+        right: 0;
+        left: auto;
+        width: 1.36em;
+        height: 1.36em;
+        transform: translateY(-50%);
+    }
+}
+
 @media (max-width: 640px) {
     body {
         --mobile-page-gutter: clamp(2rem, 10vw, 3.75rem);

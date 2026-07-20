@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import Lottie, { type LottieRefCurrentProps } from "lottie-react"
-import { FaGithub, FaInstagram } from "react-icons/fa"
+import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa"
 import { LuBookOpen, LuMail } from "react-icons/lu"
 import { SiSubstack } from "react-icons/si"
 import {
@@ -213,6 +213,15 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                 >
                     <span>Instagram</span>
                     <FaInstagram aria-hidden="true" />
+                </motion.a>
+                <motion.a
+                    href="https://linkedin.com/in/gibsonmurray/"
+                    target="_blank"
+                    rel="noreferrer"
+                    variants={LINK_REVEAL}
+                >
+                    <span>LinkedIn</span>
+                    <FaLinkedin aria-hidden="true" />
                 </motion.a>
                 <motion.a
                     href="https://substack.com/@gibsonmurray"

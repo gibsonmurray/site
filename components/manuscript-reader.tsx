@@ -131,7 +131,8 @@ function parseManuscript(source: string): Token[] {
 export function ManuscriptReader({ manuscript }: { manuscript: string }) {
     const tokens = useMemo(() => parseManuscript(manuscript), [manuscript])
     const { scrollY } = useScroll()
-    const reduceMotion = useReducedMotion()
+    const [manuscriptComplete, setManuscriptComplete] = useState(false)
+    const lastWordIndex = tokens.filter((token) => !/^\s+$/.test(token.text)).length - 1
     let wordIndex = -1
 
     return (
@@ -171,6 +172,9 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                             signature={token.signature}
                             scrollY={scrollY}
                             text={token.text}
+                            onCompletionChange={
+                                wordIndex === lastWordIndex ? setManuscriptComplete : undefined
+                            }
                             zoomLens={token.zoomLens}
                         />
                     ),
@@ -179,10 +183,9 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
             <motion.nav
                 className="site-links"
                 aria-label="Elsewhere"
-                initial={reduceMotion ? false : "hidden"}
+                animate={manuscriptComplete ? "visible" : "hidden"}
+                initial="hidden"
                 variants={LINKS_REVEAL}
-                viewport={{ amount: 0.05, once: false }}
-                whileInView="visible"
             >
                 <motion.a
                     href="https://a.co/d/03Co6ZxH"
@@ -253,6 +256,7 @@ function Word({
     signature,
     scrollY,
     text,
+    onCompletionChange,
     zoomLens,
 }: {
     aiSearchingIcon: boolean
@@ -277,6 +281,7 @@ function Word({
     signature: boolean
     scrollY: MotionValue<number>
     text: string
+    onCompletionChange?: React.Dispatch<React.SetStateAction<boolean>>
     zoomLens: boolean
 }) {
     const wordRef = useRef<HTMLSpanElement>(null)
@@ -345,6 +350,8 @@ function Word({
     }, [reduceMotion, showPlantIcon])
 
     useMotionValueEvent(reveal, "change", (value) => {
+        if (onCompletionChange) onCompletionChange(value >= 0.99)
+
         if (aiSearchingIcon) {
             if (value >= 0.99) {
                 setShowAiSearchingIcon(true)

@@ -63,6 +63,21 @@ const LINK_REVEAL = {
     },
 }
 
+const READING_REVEAL = {
+    hidden: { opacity: 0, x: -32, y: 8 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        transition: {
+            delay: 1.22,
+            type: "spring" as const,
+            stiffness: 210,
+            damping: 22,
+        },
+    },
+}
+
 const CURRENTLY_READING = {
     title: "Project Hail Mary",
     author: "Andy Weir",
@@ -319,7 +334,7 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                 aria-labelledby="currently-reading-title"
                 animate={manuscriptComplete ? "visible" : "hidden"}
                 initial="hidden"
-                variants={LINK_REVEAL}
+                variants={READING_REVEAL}
             >
                 <img
                     className="currently-reading-cover"

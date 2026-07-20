@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import Lottie, { type LottieRefCurrentProps } from "lottie-react"
 import { FaGithub, FaInstagram } from "react-icons/fa"
-import { LuArrowUpRight, LuMail } from "react-icons/lu"
+import { LuBookOpen, LuMail } from "react-icons/lu"
 import {
     motion,
     type MotionValue,
@@ -148,11 +148,11 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
             </article>
             <nav className="site-links" aria-label="Elsewhere">
                 <a href="https://a.co/d/03Co6ZxH" target="_blank" rel="noreferrer">
-                    <span>order walls</span>
-                    <LuArrowUpRight aria-hidden="true" />
+                    <span>Order Walls</span>
+                    <LuBookOpen aria-hidden="true" />
                 </a>
                 <a href="https://github.com/gibsonmurray" target="_blank" rel="noreferrer">
-                    <span>github</span>
+                    <span>Github</span>
                     <FaGithub aria-hidden="true" />
                 </a>
                 <a
@@ -160,11 +160,11 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                     target="_blank"
                     rel="noreferrer"
                 >
-                    <span>instagram</span>
+                    <span>Instagram</span>
                     <FaInstagram aria-hidden="true" />
                 </a>
                 <a href="mailto:hi@gibsonmurray.com">
-                    <span>email</span>
+                    <span>Email</span>
                     <LuMail aria-hidden="true" />
                 </a>
             </nav>

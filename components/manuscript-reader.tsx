@@ -38,6 +38,26 @@ const POP_SPRING = {
     opacity: { duration: 0.18 },
 }
 
+const LINKS_REVEAL = {
+    hidden: {},
+    visible: {
+        transition: {
+            delayChildren: 0.12,
+            staggerChildren: 0.14,
+        },
+    },
+}
+
+const LINK_REVEAL = {
+    hidden: { opacity: 0, x: -32, y: 8 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        transition: { type: "spring" as const, stiffness: 210, damping: 22 },
+    },
+}
+
 type Token = {
     aiSearchingIcon: boolean
     bibleIcon: boolean
@@ -104,6 +124,7 @@ function parseManuscript(source: string): Token[] {
 export function ManuscriptReader({ manuscript }: { manuscript: string }) {
     const tokens = useMemo(() => parseManuscript(manuscript), [manuscript])
     const { scrollY } = useScroll()
+    const reduceMotion = useReducedMotion()
     let wordIndex = -1
 
     return (
@@ -147,32 +168,55 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                     ),
                 )}
             </article>
-            <nav className="site-links" aria-label="Elsewhere">
-                <a href="https://a.co/d/03Co6ZxH" target="_blank" rel="noreferrer">
+            <motion.nav
+                className="site-links"
+                aria-label="Elsewhere"
+                initial={reduceMotion ? false : "hidden"}
+                variants={LINKS_REVEAL}
+                viewport={{ amount: 0.05, once: true }}
+                whileInView="visible"
+            >
+                <motion.a
+                    href="https://a.co/d/03Co6ZxH"
+                    target="_blank"
+                    rel="noreferrer"
+                    variants={LINK_REVEAL}
+                >
                     <span>Order Walls</span>
                     <LuBookOpen aria-hidden="true" />
-                </a>
-                <a href="https://github.com/gibsonmurray" target="_blank" rel="noreferrer">
+                </motion.a>
+                <motion.a
+                    href="https://github.com/gibsonmurray"
+                    target="_blank"
+                    rel="noreferrer"
+                    variants={LINK_REVEAL}
+                >
                     <span>Github</span>
                     <FaGithub aria-hidden="true" />
-                </a>
-                <a
+                </motion.a>
+                <motion.a
                     href="https://www.instagram.com/gibson.murray/"
                     target="_blank"
                     rel="noreferrer"
+                    variants={LINK_REVEAL}
                 >
                     <span>Instagram</span>
                     <FaInstagram aria-hidden="true" />
-                </a>
-                <a href="https://substack.com/@gibsonmurray" target="_blank" rel="noreferrer">
+                </motion.a>
+                <motion.a
+                    href="https://substack.com/@gibsonmurray"
+                    target="_blank"
+                    rel="noreferrer"
+                    variants={LINK_REVEAL}
+                >
                     <span>Substack</span>
                     <SiSubstack className="substack-icon" aria-hidden="true" />
-                </a>
-                <a href="mailto:hi@gibsonmurray.com">
+                </motion.a>
+                <motion.a href="mailto:hi@gibsonmurray.com" variants={LINK_REVEAL}>
                     <span>Email</span>
                     <LuMail aria-hidden="true" />
-                </a>
-            </nav>
+                </motion.a>
+            </motion.nav>
         </main>
     )
 }

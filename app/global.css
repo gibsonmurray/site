@@ -578,6 +578,19 @@ body {
     }
 }
 
+.school-animation {
+    position: absolute;
+    z-index: 1;
+    top: 48%;
+    right: calc(100% + 0.18em);
+    pointer-events: none;
+    color: initial;
+    font-family: system-ui, sans-serif;
+    font-size: 0.92em;
+    line-height: 1;
+    transform: translateY(-50%) rotate(-4deg);
+}
+
 .teacher-animation {
     position: absolute;
     z-index: 1;
@@ -842,6 +855,7 @@ body {
     .nerd-animation,
     .plant-animation,
     .pointing-animation,
+    .school-animation,
     .teacher-animation,
     .tennis-animation,
     .zoom-lens-stage {
@@ -864,6 +878,7 @@ body {
     .nerd-word,
     .plant-word,
     .pointing-word,
+    .school-word,
     .teacher-word,
     .tennis-word,
     .accent-label::after {

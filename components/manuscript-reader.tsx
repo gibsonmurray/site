@@ -81,6 +81,7 @@ type Token = {
     nerdEmoji: boolean
     plantIcon: boolean
     pointingEmoji: boolean
+    schoolEmoji: boolean
     teacherIcon: boolean
     tennisBallIcon: boolean
     zoomLens: boolean
@@ -114,6 +115,7 @@ function parseManuscript(source: string): Token[] {
                 nerdEmoji: piece.includes("~least favorite student~"),
                 plantIcon: markedLive && markedLiveCount === 0,
                 pointingEmoji: piece.includes("~your~"),
+                schoolEmoji: piece.includes("~school~"),
                 teacherIcon: piece.includes("~blackboard~"),
                 tennisBallIcon: piece.includes("~fling"),
                 zoomLens: piece.includes("~zoom out~"),
@@ -160,6 +162,7 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                             nerdEmoji={token.nerdEmoji}
                             plantIcon={token.plantIcon}
                             pointingEmoji={token.pointingEmoji}
+                            schoolEmoji={token.schoolEmoji}
                             teacherIcon={token.teacherIcon}
                             tennisBallIcon={token.tennisBallIcon}
                             index={++wordIndex}
@@ -243,6 +246,7 @@ function Word({
     nerdEmoji,
     plantIcon,
     pointingEmoji,
+    schoolEmoji,
     teacherIcon,
     tennisBallIcon,
     index,
@@ -266,6 +270,7 @@ function Word({
     nerdEmoji: boolean
     plantIcon: boolean
     pointingEmoji: boolean
+    schoolEmoji: boolean
     teacherIcon: boolean
     tennisBallIcon: boolean
     index: number
@@ -293,6 +298,7 @@ function Word({
     const [showNerdEmoji, setShowNerdEmoji] = useState(false)
     const [showPlantIcon, setShowPlantIcon] = useState(false)
     const [showPointingEmoji, setShowPointingEmoji] = useState(false)
+    const [showSchoolEmoji, setShowSchoolEmoji] = useState(false)
     const [showTeacherIcon, setShowTeacherIcon] = useState(false)
     const [showTennisBallIcon, setShowTennisBallIcon] = useState(false)
     const [showSignature, setShowSignature] = useState(false)
@@ -478,6 +484,14 @@ function Word({
             }
         }
 
+        if (schoolEmoji) {
+            if (value >= 0.99) {
+                setShowSchoolEmoji(true)
+            } else if (value <= 0.01) {
+                setShowSchoolEmoji(false)
+            }
+        }
+
         if (teacherIcon) {
             if (value >= 0.99) {
                 setShowTeacherIcon(true)
@@ -505,7 +519,7 @@ function Word({
 
     return (
         <motion.span
-            className={`word${aiSearchingIcon ? " ai-searching-word" : ""}${aiSearchingIcon && showAiSearchingIcon ? " is-emphasized" : ""}${bibleIcon ? " bible-word" : ""}${bibleIcon && showBibleIcon ? " is-emphasized" : ""}${championIcon ? " champion-word" : ""}${championIcon && showChampionIcon ? " is-emphasized" : ""}${signature ? " signature-word" : ""}${signature && emphasizeAuthor ? " is-emphasized" : ""}${codeIcon ? " code-word" : ""}${codeIcon && showCodeIcon ? " is-emphasized" : ""}${friendEmoji ? " friend-word" : ""}${friendEmoji && showFriendEmoji ? " is-emphasized" : ""}${globeIcon ? " globe-word" : ""}${globeIcon && showGlobeIcon ? " is-emphasized" : ""}${heroIcon ? " hero-word" : ""}${heroIcon && showHeroIcon ? " is-emphasized" : ""}${ideaIcon ? " idea-word" : ""}${ideaIcon && showIdeaIcon ? " is-emphasized" : ""}${laughEmoji ? " laugh-word" : ""}${laughEmoji && showLaughEmoji ? " is-emphasized" : ""}${loveIcon ? " love-word" : ""}${loveIcon && showLoveIcon ? " is-emphasized" : ""}${logoIcon ? " logo-word" : ""}${logoIcon && showLogoIcon ? " is-emphasized" : ""}${movieIcon ? " movie-word" : ""}${movieIcon && showMovieIcon ? " is-emphasized" : ""}${nerdEmoji ? " nerd-word" : ""}${nerdEmoji && showNerdEmoji ? " is-emphasized" : ""}${plantIcon ? " plant-word" : ""}${plantIcon && showPlantIcon ? " is-emphasized" : ""}${pointingEmoji ? " pointing-word" : ""}${pointingEmoji && showPointingEmoji ? " is-emphasized" : ""}${teacherIcon ? " teacher-word" : ""}${teacherIcon && showTeacherIcon ? " is-emphasized" : ""}${tennisBallIcon ? " tennis-word" : ""}${tennisBallIcon && showTennisBallIcon ? " is-emphasized" : ""}${zoomLens ? " zoom-word" : ""}`}
+            className={`word${aiSearchingIcon ? " ai-searching-word" : ""}${aiSearchingIcon && showAiSearchingIcon ? " is-emphasized" : ""}${bibleIcon ? " bible-word" : ""}${bibleIcon && showBibleIcon ? " is-emphasized" : ""}${championIcon ? " champion-word" : ""}${championIcon && showChampionIcon ? " is-emphasized" : ""}${signature ? " signature-word" : ""}${signature && emphasizeAuthor ? " is-emphasized" : ""}${codeIcon ? " code-word" : ""}${codeIcon && showCodeIcon ? " is-emphasized" : ""}${friendEmoji ? " friend-word" : ""}${friendEmoji && showFriendEmoji ? " is-emphasized" : ""}${globeIcon ? " globe-word" : ""}${globeIcon && showGlobeIcon ? " is-emphasized" : ""}${heroIcon ? " hero-word" : ""}${heroIcon && showHeroIcon ? " is-emphasized" : ""}${ideaIcon ? " idea-word" : ""}${ideaIcon && showIdeaIcon ? " is-emphasized" : ""}${laughEmoji ? " laugh-word" : ""}${laughEmoji && showLaughEmoji ? " is-emphasized" : ""}${loveIcon ? " love-word" : ""}${loveIcon && showLoveIcon ? " is-emphasized" : ""}${logoIcon ? " logo-word" : ""}${logoIcon && showLogoIcon ? " is-emphasized" : ""}${movieIcon ? " movie-word" : ""}${movieIcon && showMovieIcon ? " is-emphasized" : ""}${nerdEmoji ? " nerd-word" : ""}${nerdEmoji && showNerdEmoji ? " is-emphasized" : ""}${plantIcon ? " plant-word" : ""}${plantIcon && showPlantIcon ? " is-emphasized" : ""}${pointingEmoji ? " pointing-word" : ""}${pointingEmoji && showPointingEmoji ? " is-emphasized" : ""}${schoolEmoji ? " school-word" : ""}${schoolEmoji && showSchoolEmoji ? " is-emphasized" : ""}${teacherIcon ? " teacher-word" : ""}${teacherIcon && showTeacherIcon ? " is-emphasized" : ""}${tennisBallIcon ? " tennis-word" : ""}${tennisBallIcon && showTennisBallIcon ? " is-emphasized" : ""}${zoomLens ? " zoom-word" : ""}`}
             ref={wordRef}
             style={index === 0 ? { opacity: 1, filter: "blur(0)" } : { opacity: reveal, filter: blur }}
         >
@@ -786,6 +800,19 @@ function Word({
                     </motion.span>
                 </span>
             ) : null}
+            {schoolEmoji && showSchoolEmoji ? (
+                <span className="school-animation" aria-hidden="true">
+                    <motion.span
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="emoji-pop"
+                        initial={{ opacity: 0, scale: 0.3 }}
+                        style={{ originX: 1, originY: 0.5 }}
+                        transition={POP_SPRING}
+                    >
+                        🏫
+                    </motion.span>
+                </span>
+            ) : null}
             {teacherIcon && showTeacherIcon ? (
                 <span className="teacher-animation" aria-hidden="true">
                     <motion.span
@@ -838,7 +865,7 @@ function Word({
             ) : null}
             {zoomLens ? (
                 <span className="zoom-label">{text}</span>
-            ) : aiSearchingIcon || bibleIcon || championIcon || signature || codeIcon || friendEmoji || globeIcon || heroIcon || ideaIcon || laughEmoji || loveIcon || logoIcon || movieIcon || nerdEmoji || plantIcon || pointingEmoji || teacherIcon || tennisBallIcon ? (
+            ) : aiSearchingIcon || bibleIcon || championIcon || signature || codeIcon || friendEmoji || globeIcon || heroIcon || ideaIcon || laughEmoji || loveIcon || logoIcon || movieIcon || nerdEmoji || plantIcon || pointingEmoji || schoolEmoji || teacherIcon || tennisBallIcon ? (
                 <>
                     <span className="accent-label">
                         {text.replace(/[.,!?;:]+$/, "")}

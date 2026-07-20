@@ -10,7 +10,7 @@ Think about it.
 
 What do we love to go see when Christopher Nolan or Quentin Tarantino headline the ~theaters~?
 
-How do we learn material in school the easiest?
+How do we learn material in ~school~ the easiest?
 
 How is it that we remember the random tale a professor told about his ~least favorite student~ rather than the boring ol' math scribbles that were on the ~blackboard~ behind him?
 

@@ -136,20 +136,20 @@ body {
 .currently-reading-copy > a::after {
     position: absolute;
     right: 0;
-    bottom: -0.08em;
+    bottom: 0.02em;
     left: 0;
     height: 0.055em;
     border-radius: 999px;
     background: currentColor;
     content: "";
-    transform: scaleX(0.32);
+    transform: scaleX(1);
     transform-origin: left center;
     transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .currently-reading-copy > a:hover::after,
 .currently-reading-copy > a:focus-visible::after {
-    transform: scaleX(1);
+    transform: scaleX(0.32);
 }
 
 .currently-reading-copy > a svg {

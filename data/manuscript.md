@@ -1,4 +1,4 @@
-Hi! I'm Gibson.
+Hi! I'm ~Gibson~.
 
 You might know me as an ~author~, a ~programmer~, or, simply, just as a ~friend~.
 

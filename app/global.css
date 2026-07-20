@@ -75,6 +75,7 @@ body {
 .idea-word,
 .laugh-word,
 .love-word,
+.logo-word,
 .movie-word,
 .nerd-word,
 .plant-word,
@@ -117,6 +118,10 @@ body {
 
 .love-word.is-emphasized {
     color: var(--love-coral);
+}
+
+.logo-word.is-emphasized {
+    color: var(--ink);
 }
 
 .nerd-word.is-emphasized {
@@ -184,6 +189,7 @@ body {
 .idea-word.is-emphasized .accent-label::after,
 .laugh-word.is-emphasized .accent-label::after,
 .love-word.is-emphasized .accent-label::after,
+.logo-word.is-emphasized .accent-label::after,
 .movie-word.is-emphasized .accent-label::after,
 .nerd-word.is-emphasized .accent-label::after,
 .plant-word.is-emphasized .accent-label::after,
@@ -321,6 +327,24 @@ body {
 }
 
 .love-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.logo-animation {
+    position: absolute;
+    z-index: 1;
+    bottom: 0.58em;
+    left: calc(100% + 0.18em);
+    width: 0.9em;
+    height: 0.9em;
+    pointer-events: none;
+    color: var(--ink);
+}
+
+.logo-pop,
+.logo-pop svg {
     display: block;
     width: 100%;
     height: 100%;
@@ -719,6 +743,7 @@ body {
     .friend-animation,
     .laugh-animation,
     .love-animation,
+    .logo-animation,
     .globe-animation,
     .hero-animation,
     .idea-animation,
@@ -740,6 +765,7 @@ body {
     .friend-word,
     .laugh-word,
     .love-word,
+    .logo-word,
     .globe-word,
     .hero-word,
     .idea-word,

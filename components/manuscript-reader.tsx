@@ -166,7 +166,7 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                 </a>
                 <a href="https://substack.com/@gibsonmurray" target="_blank" rel="noreferrer">
                     <span>Substack</span>
-                    <SiSubstack aria-hidden="true" />
+                    <SiSubstack className="substack-icon" aria-hidden="true" />
                 </a>
                 <a href="mailto:hi@gibsonmurray.com">
                     <span>Email</span>

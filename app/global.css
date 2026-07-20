@@ -109,6 +109,12 @@ body {
     stroke-width: 1.8;
 }
 
+.site-links .substack-icon {
+    overflow: visible;
+    transform: scale(0.84);
+    transform-origin: center;
+}
+
 .manuscript-text br {
     display: block;
     content: "";

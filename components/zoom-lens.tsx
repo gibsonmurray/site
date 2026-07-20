@@ -1,4 +1,4 @@
-export function ZoomLens({ text }: { text: string }) {
+export function ZoomLens() {
     return (
         <span className="zoom-liquid-shell">
             <svg aria-hidden="true" className="zoom-filter-defs">
@@ -35,9 +35,6 @@ export function ZoomLens({ text }: { text: string }) {
                     <span className="zoom-liquid-blob zoom-liquid-blob-two" />
                 </span>
                 <span className="zoom-liquid-lens">
-                    <span className="zoom-lens-viewport">
-                        <span className="zoom-lens-copy">{text}</span>
-                    </span>
                     <span className="zoom-lens-sheen" />
                 </span>
             </span>

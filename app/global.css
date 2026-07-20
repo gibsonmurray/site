@@ -58,7 +58,7 @@ body {
     display: flex;
     width: min(88vw, 980px);
     margin: 0 auto;
-    padding: 0 0 18vh;
+    padding: 0 0 10vh;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.18em;
@@ -113,6 +113,16 @@ body {
     overflow: visible;
     transform: scale(0.84);
     transform-origin: center;
+}
+
+.site-copyright {
+    width: min(88vw, 980px);
+    margin: 0 auto;
+    padding: 0 0 4vh;
+    color: color-mix(in srgb, var(--ink) 55%, transparent);
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
 }
 
 .manuscript-text br {
@@ -792,10 +802,15 @@ body {
 
     .site-links {
         width: calc(100vw - 40px);
-        padding-bottom: 12vh;
+        padding-bottom: 8vh;
         font-size: clamp(1.65rem, 8vw, 2.45rem);
         letter-spacing: -0.04em;
         line-height: 1.3;
+    }
+
+
+    .site-copyright {
+        width: calc(100vw - 40px);
     }
 }
 

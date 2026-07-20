@@ -217,6 +217,7 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                     <LuMail aria-hidden="true" />
                 </motion.a>
             </motion.nav>
+            <footer className="site-copyright">© 2026 Gibson Murray</footer>
         </main>
     )
 }

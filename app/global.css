@@ -4,6 +4,17 @@
     --signature-blue: #0857a0;
     --code-green: #22a06b;
     --friend-gold: #dfa100;
+    --globe-blue: #2f80c9;
+    --hero-red: #ef3340;
+    --idea-yellow: #d2ae00;
+    --love-coral: #ff4155;
+    --movie-orange: #ef6c00;
+    --plant-green: #09a200;
+    --blackboard-green: #429488;
+    --book-brown: #a87676;
+    --ai-cyan: #15b8e5;
+    --champion-gold: #ff8645;
+    --tennis-yellow: #c5bb57;
 }
 
 * {
@@ -55,7 +66,21 @@ body {
 }
 
 .signature-word,
+.ai-searching-word,
+.bible-word,
+.champion-word,
 .code-word,
+.globe-word,
+.hero-word,
+.idea-word,
+.laugh-word,
+.love-word,
+.movie-word,
+.nerd-word,
+.plant-word,
+.pointing-word,
+.teacher-word,
+.tennis-word,
 .friend-word {
     display: inline-block;
     position: relative;
@@ -66,12 +91,68 @@ body {
     color: var(--signature-blue);
 }
 
+.ai-searching-word.is-emphasized {
+    color: var(--ai-cyan);
+}
+
+.bible-word.is-emphasized {
+    color: var(--book-brown);
+}
+
+.champion-word.is-emphasized {
+    color: var(--champion-gold);
+}
+
 .code-word.is-emphasized {
     color: var(--code-green);
 }
 
 .friend-word.is-emphasized {
     color: var(--friend-gold);
+}
+
+.laugh-word.is-emphasized {
+    color: var(--friend-gold);
+}
+
+.love-word.is-emphasized {
+    color: var(--love-coral);
+}
+
+.nerd-word.is-emphasized {
+    color: var(--friend-gold);
+}
+
+.plant-word.is-emphasized {
+    color: var(--plant-green);
+}
+
+.pointing-word.is-emphasized {
+    color: var(--friend-gold);
+}
+
+.globe-word.is-emphasized {
+    color: var(--globe-blue);
+}
+
+.hero-word.is-emphasized {
+    color: var(--hero-red);
+}
+
+.idea-word.is-emphasized {
+    color: var(--idea-yellow);
+}
+
+.movie-word.is-emphasized {
+    color: var(--movie-orange);
+}
+
+.teacher-word.is-emphasized {
+    color: var(--blackboard-green);
+}
+
+.tennis-word.is-emphasized {
+    color: var(--tennis-yellow);
 }
 
 .accent-label {
@@ -94,7 +175,21 @@ body {
 }
 
 .signature-word.is-emphasized .accent-label::after,
+.ai-searching-word.is-emphasized .accent-label::after,
+.bible-word.is-emphasized .accent-label::after,
+.champion-word.is-emphasized .accent-label::after,
 .code-word.is-emphasized .accent-label::after,
+.globe-word.is-emphasized .accent-label::after,
+.hero-word.is-emphasized .accent-label::after,
+.idea-word.is-emphasized .accent-label::after,
+.laugh-word.is-emphasized .accent-label::after,
+.love-word.is-emphasized .accent-label::after,
+.movie-word.is-emphasized .accent-label::after,
+.nerd-word.is-emphasized .accent-label::after,
+.plant-word.is-emphasized .accent-label::after,
+.pointing-word.is-emphasized .accent-label::after,
+.teacher-word.is-emphasized .accent-label::after,
+.tennis-word.is-emphasized .accent-label::after,
 .friend-word.is-emphasized .accent-label::after {
     transform: scaleX(1);
 }
@@ -108,6 +203,56 @@ body {
     height: 3.15em;
     pointer-events: none;
     transform: translateX(-50%);
+}
+
+.ai-searching-animation {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: calc(100% + 3.5em);
+    width: 3em;
+    height: 3em;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.ai-searching-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.bible-animation {
+    position: absolute;
+    z-index: 1;
+    top: calc(100% + 0.08em);
+    left: 50%;
+    width: 2em;
+    height: 2em;
+    pointer-events: none;
+    transform: translateX(-50%);
+}
+
+.bible-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.champion-animation {
+    position: absolute;
+    z-index: 1;
+    right: calc(100% + 0.24em);
+    bottom: 0.68em;
+    width: 1.8em;
+    height: 1.8em;
+    pointer-events: none;
+}
+
+.champion-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
 .signature-lottie {
@@ -125,7 +270,7 @@ body {
 .code-animation {
     position: absolute;
     z-index: 1;
-    top: 50%;
+    top: 66%;
     right: 100%;
     width: 1.65em;
     height: 1.65em;
@@ -152,8 +297,217 @@ body {
     transform: rotate(8deg);
 }
 
+.laugh-animation {
+    position: absolute;
+    z-index: 1;
+    top: 44%;
+    left: calc(100% + 7.4em);
+    pointer-events: none;
+    color: initial;
+    font-family: system-ui, sans-serif;
+    font-size: 0.9em;
+    line-height: 1;
+    transform: translateY(-50%) rotate(6deg);
+}
+
+.love-animation {
+    position: absolute;
+    z-index: 1;
+    top: 48%;
+    right: calc(100% + 0.08em);
+    width: 2.4em;
+    height: 2.22em;
+    pointer-events: none;
+}
+
+.love-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.nerd-animation {
+    position: absolute;
+    z-index: 1;
+    top: 42%;
+    right: calc(100% + 1.85em);
+    pointer-events: none;
+    color: initial;
+    font-family: system-ui, sans-serif;
+    font-size: 0.9em;
+    line-height: 1;
+    transform: translateY(-50%) rotate(-10deg);
+}
+
 .emoji-pop {
     display: block;
+}
+
+.globe-animation {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: calc(100% + 0.12em);
+    width: 1.35em;
+    height: 1.35em;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.globe-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-animation {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: calc(100% + clamp(2.5em, 18vw, 5em));
+    width: 1.45em;
+    height: 2.04em;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.hero-float {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation: hero-float 3.6s ease-in-out infinite;
+}
+
+.hero-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.idea-animation {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: calc(100% + 0.14em);
+    width: 1.6em;
+    height: 1.6em;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.idea-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes hero-float {
+    0%,
+    100% {
+        transform: translateY(-0.16em);
+    }
+
+    50% {
+        transform: translateY(0.16em);
+    }
+}
+
+.movie-animation {
+    position: absolute;
+    z-index: 1;
+    top: 56%;
+    left: calc(100% + 0.04em);
+    width: 2.2em;
+    height: 1.375em;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.movie-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.plant-animation {
+    position: absolute;
+    z-index: 1;
+    top: 48%;
+    right: calc(100% + 1.65em);
+    width: 1.5em;
+    height: 1.5em;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.plant-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.pointing-animation {
+    position: absolute;
+    z-index: 1;
+    top: calc(100% + 0.4em);
+    left: 50%;
+    pointer-events: none;
+    color: initial;
+    font-family: system-ui, sans-serif;
+    font-size: 0.8em;
+    line-height: 1;
+    transform: translateX(-50%);
+}
+
+.pointing-pulse {
+    display: block;
+    animation: pointing-pulse 1.65s ease-in-out infinite;
+    transform-origin: center center;
+}
+
+@keyframes pointing-pulse {
+    0%,
+    100% {
+        transform: scale(0.86);
+    }
+
+    50% {
+        transform: scale(1.12);
+    }
+}
+
+.teacher-animation {
+    position: absolute;
+    z-index: 1;
+    top: 60%;
+    left: calc(100% + 0.20em);
+    width: 1.65em;
+    height: 1.65em;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.teacher-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.tennis-animation {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: calc(100% + 1.7em);
+    width: 5em;
+    height: 5em;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.tennis-lottie {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
 .zoom-word {
@@ -358,15 +712,43 @@ body {
     }
 
     .signature-animation,
+    .ai-searching-animation,
+    .bible-animation,
+    .champion-animation,
     .code-animation,
     .friend-animation,
+    .laugh-animation,
+    .love-animation,
+    .globe-animation,
+    .hero-animation,
+    .idea-animation,
+    .movie-animation,
+    .nerd-animation,
+    .plant-animation,
+    .pointing-animation,
+    .teacher-animation,
+    .tennis-animation,
     .zoom-lens-stage {
         display: none;
     }
 
     .signature-word,
+    .ai-searching-word,
+    .bible-word,
+    .champion-word,
     .code-word,
     .friend-word,
+    .laugh-word,
+    .love-word,
+    .globe-word,
+    .hero-word,
+    .idea-word,
+    .movie-word,
+    .nerd-word,
+    .plant-word,
+    .pointing-word,
+    .teacher-word,
+    .tennis-word,
     .accent-label::after {
         transition: none;
     }

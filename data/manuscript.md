@@ -18,13 +18,13 @@ We love hearing about an ~underdog's rise~.
 
 We are emotionally connected to fictional people that don't exist outside of an author's ~imagination~.
 
-The greatest story ever told is printed in the greatest, most printed ~Book~ ever created.
+The greatest story ever told is printed in the most printed ~Book~ ever written.
 
 We ~live~ for stories.
 
 We are the main characters in our own stories.
 
-My story isn't just that I write, or code, or play tennis with a buncha other peeps on Wednesdays who inadvertantly ~fling~ the ball to the opposite side of the court (yes... outside the chainlink fence).
+My story isn't just that I write, or code, or play tennis with a buncha other peeps on Wednesdays who inadvertantly ~fling the ball~ to the opposite side of the court (yes... outside the chainlink fence).
 
 I ~live~ for something. 
 I ~laugh~ with someone. 

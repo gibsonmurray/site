@@ -27,29 +27,6 @@ export function ZoomLens({ text }: { text: string }) {
                         />
                         <feComposite in="SourceGraphic" in2="goo" operator="atop" />
                     </filter>
-                    <filter
-                        colorInterpolationFilters="sRGB"
-                        height="160%"
-                        id="zoom-lens-refraction"
-                        width="160%"
-                        x="-30%"
-                        y="-30%"
-                    >
-                        <feImage
-                            height="100%"
-                            href="/lens-fisheye-map.svg"
-                            preserveAspectRatio="none"
-                            result="fisheyeMap"
-                            width="100%"
-                        />
-                        <feDisplacementMap
-                            in="SourceGraphic"
-                            in2="fisheyeMap"
-                            scale="28"
-                            xChannelSelector="R"
-                            yChannelSelector="G"
-                        />
-                    </filter>
                 </defs>
             </svg>
             <span className="zoom-liquid-group">

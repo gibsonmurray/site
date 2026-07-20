@@ -189,7 +189,7 @@ body {
 
 .zoom-liquid-group {
     --lens-offset: 0px;
-    --lens-scale: 1.28;
+    --lens-scale: 1.42;
     --lens-size: 1.5em;
 
     position: absolute;
@@ -228,7 +228,6 @@ body {
     inset: 0;
     overflow: hidden;
     border-radius: inherit;
-    filter: url("#zoom-lens-refraction");
 }
 
 .zoom-lens-copy {

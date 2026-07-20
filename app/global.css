@@ -75,15 +75,23 @@ body {
     margin: 0 auto;
     padding: 0 0 10vh;
     align-items: center;
-    gap: 1rem;
+    gap: clamp(1rem, 2.4vw, 1.6rem);
 }
 
 .currently-reading-cover {
-    width: clamp(4.5rem, 9vw, 6.25rem);
+    width: clamp(5rem, 10vw, 7.5rem);
     aspect-ratio: 2 / 3;
-    border-radius: 0.55rem;
+    border-radius: 0.7rem;
     box-shadow: 0 0.45rem 1.2rem rgb(23 23 20 / 12%);
     object-fit: cover;
+    transform: rotate(-2deg);
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.currently-reading:hover .currently-reading-cover {
+    box-shadow: 0 0.7rem 1.7rem rgb(23 23 20 / 17%);
+    transform: translateY(-0.2rem) rotate(1deg);
 }
 
 .currently-reading-copy {
@@ -94,40 +102,59 @@ body {
 .currently-reading-author {
     margin: 0;
     color: color-mix(in srgb, var(--ink) 56%, transparent);
-    font-size: 0.8rem;
+    font-size: clamp(0.78rem, 1.2vw, 0.92rem);
     font-weight: 540;
     letter-spacing: 0.01em;
 }
 
 .currently-reading-label {
     display: flex;
-    margin-bottom: 0.34rem;
+    margin-bottom: 0.42rem;
     align-items: center;
     gap: 0.35rem;
 }
 
 .currently-reading-label svg {
-    width: 1rem;
-    height: 1rem;
+    width: 1.08rem;
+    height: 1.08rem;
 }
 
 .currently-reading-copy > a {
     display: inline-flex;
+    position: relative;
     max-width: 100%;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.22em;
     color: var(--ink);
-    font-size: clamp(1.1rem, 2.2vw, 1.5rem);
-    font-weight: 570;
-    letter-spacing: -0.025em;
-    line-height: 1.16;
-    text-decoration-thickness: 0.07em;
-    text-underline-offset: 0.16em;
+    font-size: clamp(1.75rem, 4.35vw, 4.15rem);
+    font-weight: 520;
+    letter-spacing: -0.045em;
+    line-height: 1.08;
+    text-decoration: none;
+}
+
+.currently-reading-copy > a::after {
+    position: absolute;
+    right: 0;
+    bottom: -0.08em;
+    left: 0;
+    height: 0.055em;
+    border-radius: 999px;
+    background: currentColor;
+    content: "";
+    transform: scaleX(0.32);
+    transform-origin: left center;
+    transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.currently-reading-copy > a:hover::after,
+.currently-reading-copy > a:focus-visible::after {
+    transform: scaleX(1);
 }
 
 .currently-reading-copy > a svg {
-    width: 0.82em;
-    height: 0.82em;
+    width: 0.46em;
+    height: 0.46em;
     flex: 0 0 auto;
 }
 
@@ -138,7 +165,7 @@ body {
 }
 
 .currently-reading-author {
-    margin-top: 0.34rem;
+    margin-top: 0.62rem;
 }
 
 .site-links a {
@@ -898,6 +925,21 @@ body {
         font-size: clamp(1.65rem, 8vw, 2.45rem);
         letter-spacing: -0.04em;
         line-height: 1.3;
+    }
+
+    .currently-reading {
+        width: calc(100vw - 40px);
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .currently-reading-cover {
+        width: 4.7rem;
+    }
+
+    .currently-reading-copy > a {
+        font-size: clamp(1.65rem, 8vw, 2.45rem);
+        letter-spacing: -0.04em;
     }
 
 

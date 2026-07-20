@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import Lottie, { type LottieRefCurrentProps } from "lottie-react"
+import { FaGithub, FaInstagram } from "react-icons/fa"
+import { LuArrowUpRight, LuMail } from "react-icons/lu"
 import {
     motion,
     type MotionValue,
@@ -144,6 +146,28 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                     ),
                 )}
             </article>
+            <nav className="site-links" aria-label="Elsewhere">
+                <a href="https://a.co/d/03Co6ZxH" target="_blank" rel="noreferrer">
+                    <span>order walls</span>
+                    <LuArrowUpRight aria-hidden="true" />
+                </a>
+                <a href="https://github.com/gibsonmurray" target="_blank" rel="noreferrer">
+                    <span>github</span>
+                    <FaGithub aria-hidden="true" />
+                </a>
+                <a
+                    href="https://www.instagram.com/gibson.murray/"
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    <span>instagram</span>
+                    <FaInstagram aria-hidden="true" />
+                </a>
+                <a href="mailto:hi@gibsonmurray.com">
+                    <span>email</span>
+                    <LuMail aria-hidden="true" />
+                </a>
+            </nav>
         </main>
     )
 }

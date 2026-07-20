@@ -71,6 +71,8 @@ const CURRENTLY_READING = {
 }
 
 function AnimatedBookIcon() {
+    const prefersReducedMotion = useReducedMotion()
+
     return (
         <motion.svg
             aria-hidden="true"
@@ -83,17 +85,31 @@ function AnimatedBookIcon() {
         >
             <motion.path
                 d="M12 7v14"
-                variants={{ hidden: { pathLength: 0.5 }, visible: { pathLength: 1 } }}
+                animate={{ pathLength: prefersReducedMotion ? 1 : [1, 0.55, 1] }}
+                transition={{
+                    duration: 1.8,
+                    ease: "easeInOut",
+                    repeat: prefersReducedMotion ? 0 : Infinity,
+                    repeatDelay: 1.2,
+                }}
             />
             <motion.path
                 d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
-                variants={{ hidden: { pathLength: 0.78 }, visible: { pathLength: 1 } }}
+                animate={{ pathLength: prefersReducedMotion ? 1 : [1, 0.76, 1] }}
+                transition={{
+                    duration: 1.8,
+                    ease: "easeInOut",
+                    repeat: prefersReducedMotion ? 0 : Infinity,
+                    repeatDelay: 1.2,
+                }}
             />
         </motion.svg>
     )
 }
 
 function AnimatedExternalLinkIcon() {
+    const prefersReducedMotion = useReducedMotion()
+
     return (
         <motion.svg
             aria-hidden="true"
@@ -104,7 +120,18 @@ function AnimatedExternalLinkIcon() {
             strokeLinecap="round"
             strokeLinejoin="round"
         >
-            <motion.g variants={{ hidden: { x: 0, y: 0 }, visible: { x: 2, y: -2 } }}>
+            <motion.g
+                animate={{
+                    x: prefersReducedMotion ? 0 : [0, 2, 0],
+                    y: prefersReducedMotion ? 0 : [0, -2, 0],
+                }}
+                transition={{
+                    duration: 0.7,
+                    ease: "easeInOut",
+                    repeat: prefersReducedMotion ? 0 : Infinity,
+                    repeatDelay: 1.5,
+                }}
+            >
                 <path d="M15 3h6v6" />
                 <path d="M10 14 21 3" />
             </motion.g>

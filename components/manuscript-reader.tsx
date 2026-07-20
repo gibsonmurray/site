@@ -85,11 +85,9 @@ const CURRENTLY_READING = {
     url: "https://www.goodreads.com/book/show/54493401-project-hail-mary",
 }
 
-function AnimatedBookIcon() {
-    const prefersReducedMotion = useReducedMotion()
-
+function BookIcon() {
     return (
-        <motion.svg
+        <svg
             aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
@@ -98,27 +96,9 @@ function AnimatedBookIcon() {
             strokeLinecap="round"
             strokeLinejoin="round"
         >
-            <motion.path
-                d="M12 7v14"
-                animate={{ pathLength: prefersReducedMotion ? 1 : [1, 0.55, 1] }}
-                transition={{
-                    duration: 1.8,
-                    ease: "easeInOut",
-                    repeat: prefersReducedMotion ? 0 : Infinity,
-                    repeatDelay: 1.2,
-                }}
-            />
-            <motion.path
-                d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
-                animate={{ pathLength: prefersReducedMotion ? 1 : [1, 0.76, 1] }}
-                transition={{
-                    duration: 1.8,
-                    ease: "easeInOut",
-                    repeat: prefersReducedMotion ? 0 : Infinity,
-                    repeatDelay: 1.2,
-                }}
-            />
-        </motion.svg>
+            <path d="M12 7v14" />
+            <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+        </svg>
     )
 }
 
@@ -347,7 +327,7 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                         initial="hidden"
                         whileHover="visible"
                     >
-                        <AnimatedBookIcon />
+                        <BookIcon />
                         Currently reading
                     </motion.p>
                     <motion.a

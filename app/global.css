@@ -46,7 +46,7 @@ body {
 .manuscript-text {
     width: min(88vw, 980px);
     margin: 0 auto;
-    padding: 34vh 0 62vh;
+    padding: 34vh 0 14vh;
     font-size: clamp(1.75rem, 4.35vw, 4.15rem);
     font-weight: 520;
     letter-spacing: -0.045em;

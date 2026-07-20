@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import Lottie, { type LottieRefCurrentProps } from "lottie-react"
 import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa"
 import { LuBookOpen, LuMail } from "react-icons/lu"
@@ -546,6 +546,31 @@ function Word({
     const [showSignature, setShowSignature] = useState(false)
     const [showZoomLens, setShowZoomLens] = useState(false)
     const reduceMotion = useReducedMotion()
+
+    useLayoutEffect(() => {
+        if (!signature && !codeIcon && !friendEmoji) return
+
+        const updateRightRailOffset = () => {
+            const word = wordRef.current
+            const article = word?.closest<HTMLElement>(".manuscript-text")
+            if (!word || !article) return
+
+            const wordBounds = word.getBoundingClientRect()
+            const articleBounds = article.getBoundingClientRect()
+            word.style.setProperty(
+                "--right-rail-offset",
+                `${articleBounds.right - wordBounds.left}px`,
+            )
+
+        }
+
+        updateRightRailOffset()
+        window.addEventListener("resize", updateRightRailOffset)
+        document.fonts.ready.then(updateRightRailOffset)
+
+        return () => window.removeEventListener("resize", updateRightRailOffset)
+    }, [codeIcon, friendEmoji, signature])
+
     const reveal = useTransform(scrollY, (position) => {
         if (index === 0) return 1
         if (typeof window === "undefined") return 0

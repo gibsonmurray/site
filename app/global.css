@@ -189,7 +189,7 @@ body {
 
 .zoom-liquid-group {
     --lens-offset: 0px;
-    --lens-scale: 1.16;
+    --lens-scale: 1.28;
     --lens-size: 1.5em;
 
     position: absolute;
@@ -228,6 +228,7 @@ body {
     inset: 0;
     overflow: hidden;
     border-radius: inherit;
+    filter: url("#zoom-lens-refraction") contrast(1.08);
 }
 
 .zoom-lens-copy {
@@ -239,7 +240,6 @@ body {
     font: inherit;
     letter-spacing: inherit;
     line-height: inherit;
-    filter: url("#zoom-lens-refraction") contrast(1.08);
     text-shadow: 0 0.015em 0 color-mix(in srgb, white 58%, transparent);
     transform: translateY(-50%) scale(var(--lens-scale));
     transform-origin: calc(var(--lens-offset) + 0.75em) center;

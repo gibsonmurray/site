@@ -35,17 +35,32 @@ export function ZoomLens({ text }: { text: string }) {
                         x="-30%"
                         y="-30%"
                     >
+                        <feImage
+                            height="100%"
+                            href="/lens-fisheye-map.svg"
+                            preserveAspectRatio="none"
+                            result="fisheyeMap"
+                            width="100%"
+                        />
+                        <feDisplacementMap
+                            in="SourceGraphic"
+                            in2="fisheyeMap"
+                            result="fisheye"
+                            scale="28"
+                            xChannelSelector="R"
+                            yChannelSelector="G"
+                        />
                         <feTurbulence
-                            baseFrequency="0.012 0.045"
-                            numOctaves="2"
+                            baseFrequency="0.018 0.07"
+                            numOctaves="1"
                             result="refractionNoise"
                             seed="7"
                             type="turbulence"
                         />
                         <feDisplacementMap
-                            in="SourceGraphic"
+                            in="fisheye"
                             in2="refractionNoise"
-                            scale="11"
+                            scale="3"
                             xChannelSelector="R"
                             yChannelSelector="B"
                         />

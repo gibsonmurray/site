@@ -73,7 +73,7 @@ body {
     display: flex;
     width: min(88vw, 980px);
     margin: 0 auto;
-    padding: 0 0 12vh;
+    padding: 0 0 5vh;
     align-items: center;
     gap: clamp(1rem, 2.4vw, 1.6rem);
 }

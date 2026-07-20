@@ -39,7 +39,12 @@ const POP_SPRING = {
 }
 
 const LINKS_REVEAL = {
-    hidden: {},
+    hidden: {
+        transition: {
+            staggerChildren: 0.1,
+            staggerDirection: -1,
+        },
+    },
     visible: {
         transition: {
             delayChildren: 0.12,
@@ -173,7 +178,7 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                 aria-label="Elsewhere"
                 initial={reduceMotion ? false : "hidden"}
                 variants={LINKS_REVEAL}
-                viewport={{ amount: 0.05, once: true }}
+                viewport={{ amount: 0.05, once: false }}
                 whileInView="visible"
             >
                 <motion.a

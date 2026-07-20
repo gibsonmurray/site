@@ -78,6 +78,21 @@ const READING_REVEAL = {
     },
 }
 
+const LISTENING_REVEAL = {
+    hidden: { opacity: 0, x: -32, y: 8 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        transition: {
+            delay: 1.68,
+            type: "spring" as const,
+            stiffness: 210,
+            damping: 22,
+        },
+    },
+}
+
 type CurrentlyReading = {
     title: string
     author: string
@@ -90,6 +105,20 @@ const CURRENTLY_READING_FALLBACK: CurrentlyReading = {
     author: "Stephen King",
     cover: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1420938311l/21558901.jpg",
     url: "https://www.goodreads.com/book/show/21558901-mr-mercedes",
+}
+
+type RecentlyPlayed = {
+    title: string
+    artist: string
+    cover: string
+    url: string
+}
+
+const RECENTLY_PLAYED_FALLBACK: RecentlyPlayed = {
+    title: "HOLD STILL",
+    artist: "The Kid LAROI",
+    cover: "https://i1.sndcdn.com/artworks-yXkV7hohH4f5-0-t500x500.jpg",
+    url: "https://open.spotify.com/",
 }
 
 function BookIcon() {
@@ -105,6 +134,24 @@ function BookIcon() {
         >
             <path d="M12 7v14" />
             <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+        </svg>
+    )
+}
+
+function MusicIcon() {
+    return (
+        <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M9 18V5l12-2v13" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="16" r="3" />
         </svg>
     )
 }
@@ -212,6 +259,7 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
     const { scrollY } = useScroll()
     const [manuscriptComplete, setManuscriptComplete] = useState(false)
     const [currentlyReading, setCurrentlyReading] = useState(CURRENTLY_READING_FALLBACK)
+    const [recentlyPlayed, setRecentlyPlayed] = useState(RECENTLY_PLAYED_FALLBACK)
     const lastWordIndex = tokens.filter((token) => !/^\s+$/.test(token.text)).length - 1
     let wordIndex = -1
 
@@ -224,6 +272,22 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                 return response.json() as Promise<CurrentlyReading>
             })
             .then(setCurrentlyReading)
+            .catch((error: unknown) => {
+                if (error instanceof DOMException && error.name === "AbortError") return
+            })
+
+        return () => controller.abort()
+    }, [])
+
+    useEffect(() => {
+        const controller = new AbortController()
+
+        fetch("/api/recently-played", { signal: controller.signal })
+            .then((response) => {
+                if (!response.ok) throw new Error("Spotify history unavailable")
+                return response.json() as Promise<RecentlyPlayed>
+            })
+            .then(setRecentlyPlayed)
             .catch((error: unknown) => {
                 if (error instanceof DOMException && error.name === "AbortError") return
             })
@@ -367,6 +431,38 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                         <AnimatedExternalLinkIcon />
                     </motion.a>
                     <p className="currently-reading-author">by {currentlyReading.author}</p>
+                </div>
+            </motion.section>
+            <motion.section
+                className="recently-played"
+                aria-labelledby="recently-played-title"
+                animate={manuscriptComplete ? "visible" : "hidden"}
+                initial="hidden"
+                variants={LISTENING_REVEAL}
+            >
+                <img
+                    className="recently-played-cover"
+                    src={recentlyPlayed.cover}
+                    alt={`Cover art for ${recentlyPlayed.title} by ${recentlyPlayed.artist}`}
+                />
+                <div className="recently-played-copy">
+                    <p className="recently-played-label">
+                        <MusicIcon />
+                        Recently played
+                    </p>
+                    <motion.a
+                        id="recently-played-title"
+                        href={recentlyPlayed.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        initial="hidden"
+                        whileHover="visible"
+                        whileFocus="visible"
+                    >
+                        <span>{recentlyPlayed.title}</span>
+                        <AnimatedExternalLinkIcon />
+                    </motion.a>
+                    <p className="recently-played-artist">by {recentlyPlayed.artist}</p>
                 </div>
             </motion.section>
             <footer className="site-copyright">© 2026 Gibson Murray</footer>

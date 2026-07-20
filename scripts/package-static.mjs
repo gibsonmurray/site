@@ -68,6 +68,63 @@ await writeFile(
             }
         }
 
+        if (url.pathname === "/api/recently-played") {
+            try {
+                if (
+                    !env.SPOTIFY_CLIENT_ID ||
+                    !env.SPOTIFY_CLIENT_SECRET ||
+                    !env.SPOTIFY_REFRESH_TOKEN
+                ) {
+                    throw new Error("Spotify credentials are missing")
+                }
+
+                const basic = btoa(env.SPOTIFY_CLIENT_ID + ":" + env.SPOTIFY_CLIENT_SECRET)
+                const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Basic " + basic,
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams({
+                        grant_type: "refresh_token",
+                        refresh_token: env.SPOTIFY_REFRESH_TOKEN,
+                    }),
+                })
+
+                if (!tokenResponse.ok) throw new Error("Spotify token refresh failed")
+                const token = await tokenResponse.json()
+                const recentResponse = await fetch(
+                    "https://api.spotify.com/v1/me/player/recently-played?limit=1",
+                    { headers: { Authorization: "Bearer " + token.access_token } },
+                )
+
+                if (!recentResponse.ok) throw new Error("Spotify history unavailable")
+                const recent = await recentResponse.json()
+                const track = recent.items?.[0]?.track
+
+                if (!track) throw new Error("No recently played track found")
+
+                return Response.json(
+                    {
+                        title: track.name,
+                        artist: track.artists.map((artist) => artist.name).join(", "),
+                        cover: track.album.images?.[0]?.url,
+                        url: track.external_urls?.spotify,
+                    },
+                    {
+                        headers: {
+                            "Cache-Control": "public, max-age=60, s-maxage=60",
+                        },
+                    },
+                )
+            } catch {
+                return Response.json(
+                    { error: "Recently played is temporarily unavailable" },
+                    { status: 502 },
+                )
+            }
+        }
+
         return env.ASSETS.fetch(request)
     },
 }\n`,

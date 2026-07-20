@@ -78,6 +78,15 @@ body {
     gap: clamp(1rem, 2.4vw, 1.6rem);
 }
 
+.recently-played {
+    display: flex;
+    width: min(88vw, 980px);
+    margin: 0 auto;
+    padding: 0 0 5vh;
+    align-items: center;
+    gap: clamp(1rem, 2.4vw, 1.6rem);
+}
+
 .currently-reading-cover {
     width: clamp(5rem, 10vw, 7.5rem);
     aspect-ratio: 2 / 3;
@@ -89,13 +98,34 @@ body {
         box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.recently-played-cover {
+    width: clamp(5rem, 10vw, 7.5rem);
+    aspect-ratio: 1;
+    border-radius: 0.7rem;
+    box-shadow: 0 0.45rem 1.2rem rgb(23 23 20 / 12%);
+    object-fit: cover;
+    transform: rotate(2deg);
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .currently-reading:has(.currently-reading-copy > a:hover) .currently-reading-cover,
 .currently-reading:has(.currently-reading-copy > a:focus-visible) .currently-reading-cover {
     box-shadow: 0 0.7rem 1.7rem rgb(23 23 20 / 17%);
     transform: translateY(-0.2rem) rotate(1deg);
 }
 
+.recently-played:has(.recently-played-copy > a:hover) .recently-played-cover,
+.recently-played:has(.recently-played-copy > a:focus-visible) .recently-played-cover {
+    box-shadow: 0 0.7rem 1.7rem rgb(23 23 20 / 17%);
+    transform: translateY(-0.2rem) rotate(-1deg);
+}
+
 .currently-reading-copy {
+    min-width: 0;
+}
+
+.recently-played-copy {
     min-width: 0;
 }
 
@@ -106,6 +136,76 @@ body {
     font-size: clamp(0.78rem, 1.2vw, 0.92rem);
     font-weight: 540;
     letter-spacing: 0.01em;
+}
+
+.recently-played-label,
+.recently-played-artist {
+    margin: 0;
+    color: color-mix(in srgb, var(--ink) 56%, transparent);
+    font-size: clamp(0.78rem, 1.2vw, 0.92rem);
+    font-weight: 540;
+    letter-spacing: 0.01em;
+}
+
+.recently-played-label {
+    display: flex;
+    margin-bottom: 0.42rem;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.recently-played-label svg {
+    width: 1.08rem;
+    height: 1.08rem;
+}
+
+.recently-played-copy > a {
+    display: inline-flex;
+    position: relative;
+    max-width: 100%;
+    align-items: center;
+    gap: 0.22em;
+    color: var(--ink);
+    font-size: clamp(1.75rem, 4.35vw, 4.15rem);
+    font-weight: 520;
+    letter-spacing: -0.045em;
+    line-height: 1.28;
+    text-decoration: none;
+}
+
+.recently-played-copy > a::after {
+    position: absolute;
+    right: 0;
+    bottom: 0.02em;
+    left: 0;
+    height: 0.055em;
+    border-radius: 999px;
+    background: currentColor;
+    content: "";
+    transform: scaleX(1);
+    transform-origin: left center;
+    transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.recently-played-copy > a:hover::after,
+.recently-played-copy > a:focus-visible::after {
+    transform: scaleX(0.32);
+}
+
+.recently-played-copy > a svg {
+    width: 0.46em;
+    height: 0.46em;
+    flex: 0 0 auto;
+}
+
+.recently-played-copy > a:focus-visible {
+    border-radius: 0.12rem;
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+}
+
+.recently-played-artist {
+    margin-top: 0.62rem;
 }
 
 .currently-reading-label {
@@ -934,11 +1034,27 @@ body {
         gap: 1rem;
     }
 
+    .recently-played {
+        width: calc(100vw - 40px);
+        align-items: center;
+        gap: 1rem;
+    }
+
     .currently-reading-cover {
         width: 4.7rem;
     }
 
+    .recently-played-cover {
+        width: 4.7rem;
+    }
+
     .currently-reading-copy > a {
+        font-size: clamp(1.65rem, 8vw, 2.45rem);
+        letter-spacing: -0.04em;
+        line-height: 1.3;
+    }
+
+    .recently-played-copy > a {
         font-size: clamp(1.65rem, 8vw, 2.45rem);
         letter-spacing: -0.04em;
         line-height: 1.3;

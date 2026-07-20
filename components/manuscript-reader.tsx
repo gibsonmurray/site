@@ -78,11 +78,18 @@ const READING_REVEAL = {
     },
 }
 
-const CURRENTLY_READING = {
-    title: "Project Hail Mary",
-    author: "Andy Weir",
-    cover: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1764703833i/54493401.jpg",
-    url: "https://www.goodreads.com/book/show/54493401-project-hail-mary",
+type CurrentlyReading = {
+    title: string
+    author: string
+    cover: string
+    url: string
+}
+
+const CURRENTLY_READING_FALLBACK: CurrentlyReading = {
+    title: "Mr. Mercedes (Bill Hodges #1)",
+    author: "Stephen King",
+    cover: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1420938311l/21558901.jpg",
+    url: "https://www.goodreads.com/book/show/21558901-mr-mercedes",
 }
 
 function BookIcon() {
@@ -204,8 +211,25 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
     const tokens = useMemo(() => parseManuscript(manuscript), [manuscript])
     const { scrollY } = useScroll()
     const [manuscriptComplete, setManuscriptComplete] = useState(false)
+    const [currentlyReading, setCurrentlyReading] = useState(CURRENTLY_READING_FALLBACK)
     const lastWordIndex = tokens.filter((token) => !/^\s+$/.test(token.text)).length - 1
     let wordIndex = -1
+
+    useEffect(() => {
+        const controller = new AbortController()
+
+        fetch("/api/currently-reading", { signal: controller.signal })
+            .then((response) => {
+                if (!response.ok) throw new Error("Goodreads shelf unavailable")
+                return response.json() as Promise<CurrentlyReading>
+            })
+            .then(setCurrentlyReading)
+            .catch((error: unknown) => {
+                if (error instanceof DOMException && error.name === "AbortError") return
+            })
+
+        return () => controller.abort()
+    }, [])
 
     return (
         <main className="manuscript" aria-label="Manuscript">
@@ -318,8 +342,8 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
             >
                 <img
                     className="currently-reading-cover"
-                    src={CURRENTLY_READING.cover}
-                    alt={`Cover of ${CURRENTLY_READING.title} by ${CURRENTLY_READING.author}`}
+                    src={currentlyReading.cover}
+                    alt={`Cover of ${currentlyReading.title} by ${currentlyReading.author}`}
                 />
                 <div className="currently-reading-copy">
                     <motion.p
@@ -332,17 +356,17 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
                     </motion.p>
                     <motion.a
                         id="currently-reading-title"
-                        href={CURRENTLY_READING.url}
+                        href={currentlyReading.url}
                         target="_blank"
                         rel="noreferrer"
                         initial="hidden"
                         whileHover="visible"
                         whileFocus="visible"
                     >
-                        <span>{CURRENTLY_READING.title}</span>
+                        <span>{currentlyReading.title}</span>
                         <AnimatedExternalLinkIcon />
                     </motion.a>
-                    <p className="currently-reading-author">by {CURRENTLY_READING.author}</p>
+                    <p className="currently-reading-author">by {currentlyReading.author}</p>
                 </div>
             </motion.section>
             <footer className="site-copyright">© 2026 Gibson Murray</footer>

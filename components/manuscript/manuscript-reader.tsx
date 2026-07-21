@@ -15,8 +15,11 @@ export function ManuscriptReader({ manuscript }: { manuscript: string }) {
     const lastWordIndex = wordTokens.length - 1
 
     return (
-        <main className="manuscript" aria-label="Manuscript">
-            <article className="manuscript-text">
+        <main className="manuscript" aria-labelledby="page-title">
+            <h1 className="seo-heading" id="page-title">
+                Gibson Murray — Author, Programmer, and Storyteller
+            </h1>
+            <article className="manuscript-text" aria-label="A story about stories">
                 {tokens.map((token, tokenIndex) => {
                     if (isWhitespaceToken(token)) {
                         return token.text.split("").map((character, characterIndex) =>

@@ -38,6 +38,18 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+.seo-heading {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
 .manuscript {
     min-height: 100vh;
     overflow: clip;
@@ -1302,13 +1314,17 @@ body {
         transform: translateY(-50%);
     }
 
+    .signature-word {
+        padding-right: 1.25em;
+    }
+
     .signature-animation {
         top: 50%;
-        right: calc(100%);
+        right: 0;
         bottom: auto;
         left: auto;
-        width: 1.4em;
-        height: 1.4em;
+        width: 1.15em;
+        height: 1.15em;
         transform: translateY(-50%);
     }
 
@@ -1377,11 +1393,11 @@ body {
     }
 
     .school-animation {
-        top: 50%;
+        top: calc(100% + 0.12em);
         right: auto;
-        left: calc(100% + 5.55em + 10px);
-        font-size: 1em;
-        transform: translateY(-50%) rotate(-4deg);
+        left: 50%;
+        font-size: 0.78em;
+        transform: translateX(-50%) rotate(-4deg);
     }
 
     .nerd-animation {
@@ -1396,19 +1412,19 @@ body {
     .teacher-animation {
         top: calc(100% + 0.18em);
         right: auto;
-        left: 0;
+        left: 50%;
         width: 1em;
         height: 1em;
         transform: translateX(-50%);
     }
 
     .bible-animation {
-        top: 50%;
+        top: calc(100% + 0.12em);
         right: auto;
-        left: calc(100% + 5.65em);
+        left: 50%;
         width: 1.25em;
         height: 1.25em;
-        transform: translateY(-50%);
+        transform: translateX(-50%);
     }
 
     .plant-animation {

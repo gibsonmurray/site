@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import Lottie, { type LottieRefCurrentProps } from "lottie-react"
 import { motion, useReducedMotion, type Target } from "motion/react"
 
@@ -139,13 +139,23 @@ function isEmojiAccent(accent: AccentKind): accent is EmojiAccent {
 function LottieDecoration({ accent }: { accent: LottieAccent }) {
     const reduceMotion = useReducedMotion()
     const plantRef = useRef<LottieRefCurrentProps | null>(null)
+    const plantDirection = useRef<1 | -1>(1)
     const config = LOTTIE_CONFIG[accent]
 
     useEffect(() => {
         if (accent !== "plant" || reduceMotion) return
 
-        plantRef.current?.setDirection(-1)
-        plantRef.current?.goToAndPlay(99, true)
+        plantDirection.current = 1
+        plantRef.current?.setDirection(1)
+        plantRef.current?.goToAndPlay(0, true)
+    }, [accent, reduceMotion])
+
+    const handlePlantComplete = useCallback(() => {
+        if (accent !== "plant" || reduceMotion) return
+
+        plantDirection.current = plantDirection.current === 1 ? -1 : 1
+        plantRef.current?.setDirection(plantDirection.current)
+        plantRef.current?.play()
     }, [accent, reduceMotion])
 
     const animation = (
@@ -161,7 +171,8 @@ function LottieDecoration({ accent }: { accent: LottieAccent }) {
                 autoplay={!reduceMotion}
                 className={`${accent}-lottie`}
                 lottieRef={accent === "plant" ? plantRef : undefined}
-                loop
+                loop={accent !== "plant"}
+                onComplete={accent === "plant" ? handlePlantComplete : undefined}
                 renderer="svg"
             />
         </motion.span>

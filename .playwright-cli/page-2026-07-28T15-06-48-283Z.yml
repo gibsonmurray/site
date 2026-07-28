@@ -1,0 +1,48 @@
+- generic [ref=f6e1]:
+  - main [ref=f6e2]:
+    - generic [ref=f6e3]:
+      - link "Home" [ref=f6e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f6e7]:
+        - paragraph [ref=f6e8]: Design engineering experiments
+        - heading "Demos" [level=1] [ref=f6e9]
+        - paragraph [ref=f6e10]: A growing collection of small, tactile ideas for the web.
+    - region "Demo collection" [ref=f6e11]:
+      - article [ref=f6e12]:
+        - generic [ref=f6e13]:
+          - generic [ref=f6e14]:
+            - generic [ref=f6e18]: 9:41
+            - button "Expand Music activity" [ref=f6e93] [cursor=pointer]
+            - generic "Dynamic Island mode" [ref=f6e35]:
+              - button "Show Default mode" [ref=f6e36] [cursor=pointer]: Default
+              - button "Show Ring mode" [ref=f6e39] [cursor=pointer]: Ring
+              - button "Show Timer mode" [ref=f6e46] [cursor=pointer]: Timer
+              - button "Show Music mode" [active] [pressed] [ref=f6e51] [cursor=pointer]: Music
+          - heading "Interactive Dynamic Island" [level=2] [ref=f6e57]
+      - article [ref=f6e58]:
+        - generic [ref=f6e59]:
+          - paragraph [ref=f6e60]: Motion
+          - heading "Demo 02" [level=2] [ref=f6e61]
+        - generic [ref=f6e62]: Coming soon
+      - article [ref=f6e63]:
+        - generic [ref=f6e64]:
+          - paragraph [ref=f6e65]: Typography
+          - heading "Demo 03" [level=2] [ref=f6e66]
+        - generic [ref=f6e67]: Coming soon
+      - article [ref=f6e68]:
+        - generic [ref=f6e69]:
+          - paragraph [ref=f6e70]: Input
+          - heading "Demo 04" [level=2] [ref=f6e71]
+        - generic [ref=f6e72]: Coming soon
+      - article [ref=f6e73]:
+        - generic [ref=f6e74]:
+          - paragraph [ref=f6e75]: Physics
+          - heading "Demo 05" [level=2] [ref=f6e76]
+        - generic [ref=f6e77]: Coming soon
+      - article [ref=f6e78]:
+        - generic [ref=f6e79]:
+          - paragraph [ref=f6e80]: Canvas
+          - heading "Demo 06" [level=2] [ref=f6e81]
+        - generic [ref=f6e82]: Coming soon
+  - button "Open Next.js Dev Tools" [ref=f6e88] [cursor=pointer]
+  - alert [ref=f6e92]

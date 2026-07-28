@@ -1,0 +1,45 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - link "Home" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e7]:
+        - paragraph [ref=e8]: Design engineering experiments
+        - heading "Demos" [level=1] [ref=e9]
+        - paragraph [ref=e10]: A growing collection of small, tactile ideas for the web.
+    - region "Demo collection" [ref=e11]:
+      - article [ref=e12]:
+        - generic [ref=e13]:
+          - generic "Idle Dynamic Island" [ref=e15]
+          - generic "Dynamic Island mode" [ref=e19]:
+            - button "Show Idle mode" [pressed] [ref=e20] [cursor=pointer]: Idle
+            - button "Show Ring Mode mode" [ref=e21] [cursor=pointer]: Ring Mode
+            - button "Show Timer mode" [ref=e22] [cursor=pointer]: Timer
+            - button "Show Listening mode" [ref=e23] [cursor=pointer]: Listening
+          - heading "Interactive Dynamic Island" [level=2] [ref=e24]
+      - article [ref=e25]:
+        - generic [ref=e26]:
+          - paragraph [ref=e27]: Motion
+          - heading "Demo 02" [level=2] [ref=e28]
+        - generic [ref=e29]: Coming soon
+      - article [ref=e30]:
+        - generic [ref=e31]:
+          - paragraph [ref=e32]: Typography
+          - heading "Demo 03" [level=2] [ref=e33]
+        - generic [ref=e34]: Coming soon
+      - article [ref=e35]:
+        - generic [ref=e36]:
+          - paragraph [ref=e37]: Input
+          - heading "Demo 04" [level=2] [ref=e38]
+        - generic [ref=e39]: Coming soon
+      - article [ref=e40]:
+        - generic [ref=e41]:
+          - paragraph [ref=e42]: Physics
+          - heading "Demo 05" [level=2] [ref=e43]
+        - generic [ref=e44]: Coming soon
+      - article [ref=e45]:
+        - generic [ref=e46]:
+          - paragraph [ref=e47]: Canvas
+          - heading "Demo 06" [level=2] [ref=e48]
+        - generic [ref=e49]: Coming soon
+  - button "Open Next.js Dev Tools" [ref=e55] [cursor=pointer]

@@ -1,0 +1,59 @@
+- generic [ref=f4e1]:
+  - main [ref=f4e2]:
+    - generic [ref=f4e3]:
+      - link "Home" [ref=f4e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f4e7]:
+        - paragraph [ref=f4e8]: Design engineering experiments
+        - heading "Demos" [level=1] [ref=f4e9]
+        - paragraph [ref=f4e10]: A growing collection of small, tactile ideas for the web.
+    - region "Demo collection" [ref=f4e11]:
+      - article [ref=f4e12]:
+        - generic [ref=f4e13]:
+          - generic [ref=f4e14]:
+            - generic [ref=f4e18]: 9:41
+            - generic "Collapse Music activity" [ref=f4e32]:
+              - generic [ref=f4e34]:
+                - generic [ref=f4e40]:
+                  - strong [ref=f4e41]: Midnight City
+                  - generic [ref=f4e42]: M83
+                - generic [ref=f4e52]:
+                  - generic [ref=f4e53]: 1:37
+                  - generic [ref=f4e56]: −2:14
+                - generic [ref=f4e57]:
+                  - button "Previous track" [ref=f4e58] [cursor=pointer]
+                  - button "Play music" [active] [ref=f4e129] [cursor=pointer]
+                  - button "Next track" [ref=f4e65] [cursor=pointer]
+            - generic "Dynamic Island mode" [ref=f4e71]:
+              - button "Show Default mode" [ref=f4e72] [cursor=pointer]: Default
+              - button "Show Ring mode" [ref=f4e75] [cursor=pointer]: Ring
+              - button "Show Timer mode" [ref=f4e82] [cursor=pointer]: Timer
+              - button "Show Music mode" [pressed] [ref=f4e87] [cursor=pointer]: Music
+          - heading "Interactive Dynamic Island" [level=2] [ref=f4e93]
+      - article [ref=f4e94]:
+        - generic [ref=f4e95]:
+          - paragraph [ref=f4e96]: Motion
+          - heading "Demo 02" [level=2] [ref=f4e97]
+        - generic [ref=f4e98]: Coming soon
+      - article [ref=f4e99]:
+        - generic [ref=f4e100]:
+          - paragraph [ref=f4e101]: Typography
+          - heading "Demo 03" [level=2] [ref=f4e102]
+        - generic [ref=f4e103]: Coming soon
+      - article [ref=f4e104]:
+        - generic [ref=f4e105]:
+          - paragraph [ref=f4e106]: Input
+          - heading "Demo 04" [level=2] [ref=f4e107]
+        - generic [ref=f4e108]: Coming soon
+      - article [ref=f4e109]:
+        - generic [ref=f4e110]:
+          - paragraph [ref=f4e111]: Physics
+          - heading "Demo 05" [level=2] [ref=f4e112]
+        - generic [ref=f4e113]: Coming soon
+      - article [ref=f4e114]:
+        - generic [ref=f4e115]:
+          - paragraph [ref=f4e116]: Canvas
+          - heading "Demo 06" [level=2] [ref=f4e117]
+        - generic [ref=f4e118]: Coming soon
+  - button "Open Next.js Dev Tools" [ref=f4e124] [cursor=pointer]
+  - alert [ref=f4e128]

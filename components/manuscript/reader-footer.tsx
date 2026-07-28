@@ -3,7 +3,7 @@
 import { useEffect, useState, type ComponentType } from "react"
 import { motion, useReducedMotion } from "motion/react"
 import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa"
-import { LuBookOpen, LuMail } from "react-icons/lu"
+import { LuBookOpen, LuLayoutGrid, LuMail } from "react-icons/lu"
 import { SiSubstack } from "react-icons/si"
 
 const LINKS_REVEAL = {
@@ -119,6 +119,11 @@ const SITE_LINKS: SiteLink[] = [
         href: "mailto:hi@gibsonmurray.com",
         icon: LuMail,
         label: "Email",
+    },
+    {
+        href: "/demos",
+        icon: LuLayoutGrid,
+        label: "Demos",
     },
 ]
 

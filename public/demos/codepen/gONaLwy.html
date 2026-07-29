@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-f07739098a39bd4e74ddd974652dac904146f33fdc1ecab356e8c809a05faccb.js"></script>
+
+
+  <title>Trashy Photos</title>
+
+    <link rel="canonical" href="https://codepen.io/gibsonmurray/pen/gONaLwy">
+  
+  
+  
+  
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: #fdfdfc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.cards {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.card {
+  position: relative;
+  width: 160px;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+
+    .active,
+    .inactive {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      border-radius: 9999px;
+    }
+
+    .inactive {
+      border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .active {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000;
+      padding: 5px;
+      scale: 0;
+      opacity: 0;
+
+      .icon {
+        color: #fff;
+        stroke-width: 3px;
+      }
+    }
+  }
+}
+
+.menu {
+  position: fixed;
+  bottom: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  background-color: #fff;
+  border: solid 1px rgba(0, 0, 0, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  filter: blur(4px);
+  opacity: 0;
+
+  button {
+    border: none;
+    background-color: #f9f9f8;
+    border-radius: 14px;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    color: #8d8d86;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      stroke-width: 3px;
+    }
+  }
+
+  button:hover {
+    color: #232323;
+  }
+
+  .trash:hover {
+    color: #e5484d;
+    background-color: #fff7f7;
+  }
+}
+
+.trashcan {
+  display: none;
+  filter: blur(10px);
+  opacity: 0;
+}
+
+.trash-back {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  z-index: -1;
+}
+
+.trash-front {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  transform: translateY(-2px);
+  z-index: 1;
+}
+
+.trash-shadow {
+  display: none;
+  position: absolute;
+  height: 30px;
+  width: 140px;
+  background-color: rgba(0, 0, 0, 0.2);
+  filter: blur(20px);
+  border-radius: 9999px;
+  transform: translateY(80px);
+}
+
+.delete {
+  position: absolute;
+  color: white;
+  background-color: #ff3f40;
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 40px;
+  cursor: pointer;
+  font-weight: 500;
+  bottom: 95px;
+  scale: 1.1;
+  filter: blur(5px);
+  opacity: 0;
+  display: none;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div class="trash-shadow"></div>
+<div class="trash-back trashcan">
+  <svg viewBox="0 0 450 535" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#filter0_f_371_372)">
+      <ellipse cx="225" cy="412" rx="181" ry="79" fill="#475569" fill-opacity="0.18"></ellipse>
+    </g>
+    <g filter="url(#filter1_i_371_372)">
+      <ellipse cx="225" cy="41" rx="201" ry="37" fill="url(#paint0_radial_371_372)"></ellipse>
+    </g>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M225 80C340.98 80 435 62.5391 435 41H436L391.869 410.202C380 467.5 307.723 491 225 491C142.277 491 66.5 463 58.131 410.202L14 41H15C15 62.5391 109.02 80 225 80Z" fill="#E2E8F0"></path>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M225 80C340.98 80 435 62.5391 435 41H436L391.869 410.202C380 467.5 307.723 491 225 491C142.277 491 66.5 463 58.131 410.202L14 41H15C15 62.5391 109.02 80 225 80Z" fill="url(#paint1_linear_371_372)"></path>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M225 80C340.98 80 435 62.5391 435 41H436L391.869 410.202C380 467.5 307.723 491 225 491C142.277 491 66.5 463 58.131 410.202L14 41H15C15 62.5391 109.02 80 225 80Z" fill="url(#paint2_linear_371_372)" fill-opacity="0.2"></path>
+    <g filter="url(#filter2_i_371_372)">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M225 80C340.98 80 435 62.5391 435 41H436L391.869 410.202C380 467.5 307.723 491 225 491C142.277 491 66.5 463 58.131 410.202L14 41H15C15 62.5391 109.02 80 225 80Z" fill="#E2E8F0"></path>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M225 80C340.98 80 435 62.5391 435 41H436L391.869 410.202C380 467.5 307.723 491 225 491C142.277 491 66.5 463 58.131 410.202L14 41H15C15 62.5391 109.02 80 225 80Z" fill="url(#paint3_linear_371_372)"></path>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M225 80C340.98 80 435 62.5391 435 41H436L391.869 410.202C380 467.5 307.723 491 225 491C142.277 491 66.5 463 58.131 410.202L14 41H15C15 62.5391 109.02 80 225 80Z" fill="url(#paint4_linear_371_372)" fill-opacity="0.2"></path>
+    </g>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M225 82C282.798 82 335.177 77.6296 373.152 70.5432C392.123 67.0031 407.601 62.7672 418.383 58.0104C423.767 55.6351 428.092 53.0821 431.101 50.3377C434.107 47.5973 436 44.473 436 41C436 37.527 434.107 34.4027 431.101 31.6623C428.092 28.9179 423.767 26.3649 418.383 23.9896C407.601 19.2328 392.123 14.9969 373.152 11.4568C335.177 4.37045 282.798 0 225 0C167.202 0 114.823 4.37045 76.8478 11.4568C57.8765 14.9969 42.3991 19.2328 31.617 23.9896C26.233 26.3649 21.908 28.9179 18.8985 31.6623C15.8934 34.4027 14 37.527 14 41C14 44.473 15.8934 47.5973 18.8985 50.3377C21.908 53.0821 26.233 55.6351 31.617 58.0104C42.3991 62.7672 57.8765 67.0031 76.8478 70.5432C114.823 77.6296 167.202 82 225 82ZM422.095 41C422.095 42.7842 421.133 44.7926 418.702 47.0095C416.276 49.2225 412.583 51.4513 407.642 53.6313C397.773 57.9851 383.368 61.9539 365.414 65.3041C329.539 71.9985 279.894 76.1517 225 76.1517C170.106 76.1517 120.461 71.9985 84.5856 65.3041C66.6316 61.9539 52.227 57.9851 42.3584 53.6313C37.417 51.4513 33.7244 49.2225 31.2977 47.0095C28.8666 44.7926 27.9052 42.7842 27.9052 41C27.9052 39.2158 28.8666 37.2074 31.2977 34.9905C33.7244 32.7775 37.417 30.5487 42.3584 28.3687C52.227 24.0149 66.6316 20.0461 84.5856 16.6959C120.461 10.0015 170.106 5.84834 225 5.84834C279.894 5.84834 329.539 10.0015 365.414 16.6959C383.368 20.0461 397.773 24.0149 407.642 28.3687C412.583 30.5487 416.276 32.7775 418.702 34.9905C421.133 37.2074 422.095 39.2158 422.095 41Z" fill="url(#paint5_linear_371_372)"></path>
+    <defs>
+      <filter id="filter0_f_371_372" x="0" y="289" width="450" height="246" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+        <feGaussianBlur stdDeviation="22" result="effect1_foregroundBlur_371_372"></feGaussianBlur>
+      </filter>
+      <filter id="filter1_i_371_372" x="24" y="1" width="402" height="77" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+        <feOffset dy="-3"></feOffset>
+        <feGaussianBlur stdDeviation="5.5"></feGaussianBlur>
+        <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></feComposite>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.392157 0 0 0 0 0.454902 0 0 0 0 0.545098 0 0 0 0.5 0"></feColorMatrix>
+        <feBlend mode="normal" in2="shape" result="effect1_innerShadow_371_372"></feBlend>
+      </filter>
+      <filter id="filter2_i_371_372" x="14" y="41" width="422" height="454" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+        <feOffset dy="5"></feOffset>
+        <feGaussianBlur stdDeviation="2"></feGaussianBlur>
+        <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></feComposite>
+        <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"></feColorMatrix>
+        <feBlend mode="normal" in2="shape" result="effect1_innerShadow_371_372"></feBlend>
+      </filter>
+      <radialGradient id="paint0_radial_371_372" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(225 -36.3205) scale(246.725 324.919)">
+        <stop stop-color="white"></stop>
+        <stop offset="0.65" stop-color="#CBD5E1"></stop>
+        <stop offset="1" stop-color="#94A3B8"></stop>
+      </radialGradient>
+      <linearGradient id="paint1_linear_371_372" x1="436" y1="266" x2="14" y2="266" gradientUnits="userSpaceOnUse">
+        <stop stop-color="white" stop-opacity="0"></stop>
+        <stop offset="0.3" stop-color="white"></stop>
+        <stop offset="0.6999" stop-color="white"></stop>
+        <stop offset="1" stop-color="white" stop-opacity="0"></stop>
+      </linearGradient>
+      <linearGradient id="paint2_linear_371_372" x1="225" y1="84" x2="225" y2="491" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#F1F5F9"></stop>
+        <stop offset="1" stop-color="#64748B"></stop>
+      </linearGradient>
+      <linearGradient id="paint3_linear_371_372" x1="436" y1="266" x2="14" y2="266" gradientUnits="userSpaceOnUse">
+        <stop stop-color="white" stop-opacity="0"></stop>
+        <stop offset="0.3" stop-color="white"></stop>
+        <stop offset="0.6999" stop-color="white"></stop>
+        <stop offset="1" stop-color="white" stop-opacity="0"></stop>
+      </linearGradient>
+      <linearGradient id="paint4_linear_371_372" x1="225" y1="84" x2="225" y2="491" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#F1F5F9"></stop>
+        <stop offset="1" stop-color="#64748B"></stop>
+      </linearGradient>
+      <linearGradient id="paint5_linear_371_372" x1="225" y1="0" x2="225" y2="82" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#F8FAFC"></stop>
+        <stop offset="1" stop-color="white"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+</div>
+
+<div class="cards">
+  <div class="card c1">
+    <img src="https://images.unsplash.com/photo-1520962922320-2038eebab146?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+    <div class="toggle">
+      <div class="inactive"></div>
+      <div class="active">
+        <i class="icon" data-lucide="check"></i>
+      </div>
+    </div>
+  </div>
+  <div class="card c2">
+    <img src="https://images.unsplash.com/photo-1600375672973-3fb1067ef8b2?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+    <div class="toggle">
+      <div class="inactive"></div>
+      <div class="active">
+        <i class="icon" data-lucide="check"></i>
+      </div>
+    </div>
+  </div>
+  <div class="card c3">
+    <img src="https://images.unsplash.com/photo-1516739711484-6f80025660c6?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+    <div class="toggle">
+      <div class="inactive"></div>
+      <div class="active">
+        <i class="icon" data-lucide="check"></i>
+      </div>
+    </div>
+  </div>
+  <div class="card c4">
+    <img src="https://images.unsplash.com/photo-1608592077365-c6399182e63c?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+    <div class="toggle">
+      <div class="inactive"></div>
+      <div class="active">
+        <i class="icon" data-lucide="check"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="trash-front trashcan">
+  <svg viewBox="0 0 422 521" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <mask id="mask0_371_371" maskUnits="userSpaceOnUse" x="0" y="39" width="422" height="482" style="mask-type: alpha">
+      <path d="M422 521V39H0V521H422Z" fill="black"></path>
+    </mask>
+    <g mask="url(#mask0_371_371)">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M211 78C326.98 78 421 60.5391 421 39H422L377.869 408.202C366 465.5 293.723 489 211 489C128.277 489 52.5 461 44.131 408.202L0 39H1C1 60.5391 95.0202 78 211 78Z" fill="#E2E8F0"></path>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M211 78C326.98 78 421 60.5391 421 39H422L377.869 408.202C366 465.5 293.723 489 211 489C128.277 489 52.5 461 44.131 408.202L0 39H1C1 60.5391 95.0202 78 211 78Z" fill="url(#paint0_linear_371_371)"></path>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M211 78C326.98 78 421 60.5391 421 39H422L377.869 408.202C366 465.5 293.723 489 211 489C128.277 489 52.5 461 44.131 408.202L0 39H1C1 60.5391 95.0202 78 211 78Z" fill="url(#paint1_linear_371_371)" fill-opacity="0.2"></path>
+      <g filter="url(#filter0_i_371_371)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M211 78C326.98 78 421 60.5391 421 39H422L377.869 408.202C366 465.5 293.723 489 211 489C128.277 489 52.5 461 44.131 408.202L0 39H1C1 60.5391 95.0202 78 211 78Z" fill="#E2E8F0"></path>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M211 78C326.98 78 421 60.5391 421 39H422L377.869 408.202C366 465.5 293.723 489 211 489C128.277 489 52.5 461 44.131 408.202L0 39H1C1 60.5391 95.0202 78 211 78Z" fill="url(#paint2_linear_371_371)"></path>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M211 78C326.98 78 421 60.5391 421 39H422L377.869 408.202C366 465.5 293.723 489 211 489C128.277 489 52.5 461 44.131 408.202L0 39H1C1 60.5391 95.0202 78 211 78Z" fill="url(#paint3_linear_371_371)" fill-opacity="0.2"></path>
+      </g>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M211 80C268.798 80 321.177 75.6296 359.152 68.5432C378.123 65.0031 393.601 60.7672 404.383 56.0104C409.767 53.6351 414.092 51.0821 417.101 48.3377C420.107 45.5973 422 42.473 422 39C422 35.527 420.107 32.4027 417.101 29.6623C414.092 26.9179 409.767 24.3649 404.383 21.9896C393.601 17.2328 378.123 12.9969 359.152 9.45677C321.177 2.37045 268.798 -2 211 -2C153.202 -2 100.823 2.37045 62.8478 9.45677C43.8765 12.9969 28.3991 17.2328 17.617 21.9896C12.233 24.3649 7.90802 26.9179 4.89852 29.6623C1.89343 32.4027 0 35.527 0 39C0 42.473 1.89343 45.5973 4.89852 48.3377C7.90802 51.0821 12.233 53.6351 17.617 56.0104C28.3991 60.7672 43.8765 65.0031 62.8478 68.5432C100.823 75.6296 153.202 80 211 80ZM408.095 39C408.095 40.7842 407.133 42.7926 404.702 45.0095C402.276 47.2225 398.583 49.4513 393.642 51.6313C383.773 55.9851 369.368 59.9539 351.414 63.3041C315.539 69.9985 265.894 74.1517 211 74.1517C156.106 74.1517 106.461 69.9985 70.5856 63.3041C52.6316 59.9539 38.227 55.9851 28.3584 51.6313C23.417 49.4513 19.7244 47.2225 17.2977 45.0095C14.8666 42.7926 13.9052 40.7842 13.9052 39C13.9052 37.2158 14.8666 35.2074 17.2977 32.9905C19.7244 30.7775 23.417 28.5487 28.3584 26.3687C38.227 22.0149 52.6316 18.0461 70.5856 14.6959C106.461 8.00146 156.106 3.84834 211 3.84834C265.894 3.84834 315.539 8.00146 351.414 14.6959C369.368 18.0461 383.773 22.0149 393.642 26.3687C398.583 28.5487 402.276 30.7775 404.702 32.9905C407.133 35.2074 408.095 37.2158 408.095 39Z" fill="url(#paint4_linear_371_371)"></path>
+      <g filter="url(#filter1_f_371_371)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M70 449.713C100.53 475.549 154.529 489 211.865 489C269.194 489 321.506 477.713 352.171 451.712C320.007 475.576 268.288 486 211.865 486C155.47 486 102.199 473.592 70 449.713Z" fill="#94A3B8"></path>
+      </g>
+      <g filter="url(#filter2_f_371_371)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M70 449.713C100.53 475.549 154.529 489 211.865 489C269.194 489 321.506 477.713 352.171 451.712C320.007 475.576 268.288 486 211.865 486C155.47 486 102.199 473.592 70 449.713Z" fill="#94A3B8"></path>
+      </g>
+    </g>
+    <defs>
+      <filter id="filter0_i_371_371" x="0" y="39" width="422" height="454" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+        <feOffset dy="5"></feOffset>
+        <feGaussianBlur stdDeviation="2"></feGaussianBlur>
+        <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></feComposite>
+        <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"></feColorMatrix>
+        <feBlend mode="normal" in2="shape" result="effect1_innerShadow_371_371"></feBlend>
+      </filter>
+      <filter id="filter1_f_371_371" x="67" y="446.713" width="288.171" height="45.2868" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+        <feGaussianBlur stdDeviation="1.5" result="effect1_foregroundBlur_371_371"></feGaussianBlur>
+      </filter>
+      <filter id="filter2_f_371_371" x="60" y="439.713" width="302.171" height="59.2868" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+        <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_371_371"></feGaussianBlur>
+      </filter>
+      <linearGradient id="paint0_linear_371_371" x1="422" y1="264" x2="0" y2="264" gradientUnits="userSpaceOnUse">
+        <stop stop-color="white" stop-opacity="0"></stop>
+        <stop offset="0.3" stop-color="white"></stop>
+        <stop offset="0.6999" stop-color="white"></stop>
+        <stop offset="1" stop-color="white" stop-opacity="0"></stop>
+      </linearGradient>
+      <linearGradient id="paint1_linear_371_371" x1="211" y1="82" x2="211" y2="489" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#F1F5F9"></stop>
+        <stop offset="1" stop-color="#64748B"></stop>
+      </linearGradient>
+      <linearGradient id="paint2_linear_371_371" x1="422" y1="264" x2="0" y2="264" gradientUnits="userSpaceOnUse">
+        <stop stop-color="white" stop-opacity="0"></stop>
+        <stop offset="0.3" stop-color="white"></stop>
+        <stop offset="0.6999" stop-color="white"></stop>
+        <stop offset="1" stop-color="white" stop-opacity="0"></stop>
+      </linearGradient>
+      <linearGradient id="paint3_linear_371_371" x1="211" y1="82" x2="211" y2="489" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#F1F5F9"></stop>
+        <stop offset="1" stop-color="#64748B"></stop>
+      </linearGradient>
+      <linearGradient id="paint4_linear_371_371" x1="211" y1="-2" x2="211" y2="80" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#F8FAFC"></stop>
+        <stop offset="1" stop-color="white"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+</div>
+
+<div class="menu">
+  <button>
+    <i class="icon" data-lucide="move-left"></i>
+    <span class="label">Back</span>
+  </button>
+  <button class="trash">
+    <i class="icon" data-lucide="trash"></i>
+    <span class="label">Trash</span>
+  </button>
+  <button>
+    <i class="icon" data-lucide="triangle-alert"></i>
+    <span class="label">Report</span>
+  </button>
+</div>
+
+<button class="delete">Trash X Photos</button>
+  <script src='https://unpkg.com/gsap@3/dist/gsap.min.js'></script>
+<script src='https://unpkg.com/lucide@latest'></script>
+    <script id="rendered-js" >
+lucide.createIcons();
+
+const cards = document.querySelectorAll(".card");
+let selectedCards = [];
+const rotations = [12, -8, 20, -16];
+
+cards.forEach(card => {
+  card.addEventListener("click", () => {
+    const activeToggle = card.querySelector(".active");
+
+    if (!selectedCards.includes(card)) {
+      selectedCards.push(card);
+      card.classList.add("selected");
+      gsap.to(activeToggle, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.2,
+        ease: "elastic.out(0.9, 1)" });
+
+    } else {
+      selectedCards.splice(selectedCards.indexOf(card), 1);
+      card.classList.remove("selected");
+      gsap.to(activeToggle, {
+        opacity: 0,
+        scale: 0,
+        duration: 0.2,
+        ease: "elastic.in(0.9, 1)" });
+
+    }
+
+    if (selectedCards.length > 0) {
+      gsap.set(".menu", { display: "flex" });
+      gsap.to(".menu", {
+        opacity: 1,
+        filter: "blur(0px)",
+        duration: 0.3,
+        y: -30 });
+
+    } else {
+      gsap.to(".menu", {
+        opacity: 0,
+        filter: "blur(4px)",
+        duration: 0.3,
+        y: 0 });
+
+    }
+
+    const deleteBtn = document.querySelector(".delete");
+    deleteBtn.textContent = `Delete ${selectedCards.length} ${
+    selectedCards.length > 1 ? "Cards" : "Card"
+    }`;
+  });
+});
+
+const trashBtn = document.querySelector(".trash");
+trashBtn.addEventListener("click", () => {
+  gsap.
+  timeline().
+  to(
+  ".menu",
+  {
+    opacity: 0,
+    filter: "blur(4px)",
+    y: 0,
+    ease: "power2.out" },
+
+  0).
+
+  set(".menu", { display: "none" }).
+  set(".delete", { display: "block" }, 0).
+  to(
+  ".delete",
+  {
+    opacity: 1,
+    filter: "blur(0px)",
+    scale: 1,
+    duration: 0.3,
+    ease: "elastic.in(0.8, 0.8)" },
+
+  0).
+
+  set(
+  ".selected",
+  {
+    zIndex: 2 },
+
+  0).
+
+  set(
+  ".toggle",
+  {
+    opacity: 0 },
+
+  0).
+
+  set(
+  ".card:not(.selected)",
+  {
+    opacity: 0,
+    pointerEvents: "none" },
+
+  0).
+
+  set(
+  ".trashcan, .trash-shadow",
+  {
+    display: "block",
+    scale: 1.2 },
+
+  0).
+
+  to(
+  ".trashcan",
+  {
+    scale: 1,
+    opacity: 1,
+    filter: "blur(0px)",
+    duration: 0.2 },
+
+  0).
+
+  to(
+  ".selected",
+  {
+    scale: 0.65,
+    ease: "elastic.out(0.9, 1)",
+    cursor: "default",
+    duration: 0.5 },
+
+  0).
+
+  add(applyRotations, 0).
+  to(
+  ".selected.c1",
+  {
+    x: 90,
+    y: -60,
+    duration: 0.5,
+    ease: "elastic.out(1, 2)" },
+
+  0).
+
+  to(
+  ".selected.c2",
+  {
+    x: -90,
+    y: -60,
+    duration: 0.5,
+    ease: "elastic.out(1, 2)" },
+
+  0).
+
+  to(
+  ".selected.c3",
+  {
+    x: 90,
+    y: -250,
+    duration: 0.5,
+    ease: "elastic.out(1, 2)" },
+
+  0).
+
+  to(
+  ".selected.c4",
+  {
+    x: -90,
+    y: -250,
+    duration: 0.5,
+    ease: "elastic.out(1, 2)" },
+
+  0).
+
+  set(
+  ".selected",
+  {
+    zIndex: 0 },
+
+  "-=0.35").
+
+  to(
+  ".selected",
+  {
+    y: "+=95",
+    ease: "elastic.out(1, 0.7)",
+    duration: 0.5 },
+
+  "-=0.35");
+
+});
+
+function applyRotations() {
+  selectedCards.forEach((card, index) => {
+    gsap.to(card, {
+      rotate: rotations[index],
+      duration: 0.5,
+      ease: "elastic.out(1, 2)" });
+
+  });
+}
+
+const deleteBtn = document.querySelector(".delete");
+deleteBtn.addEventListener("click", () => {
+  gsap.
+  timeline().
+  to(".selected", {
+    y: "+=65",
+    ease: "elastic.in(1, 0.7)" }).
+
+  set(".selected", {
+    opacity: 0 }).
+
+  to(
+  ".trashcan, .trash-shadow, .delete",
+  {
+    opacity: 0,
+    scale: 1.2,
+    duration: 0.3,
+    ease: "power2.in" },
+
+  "+=1").
+
+  set(".trashcan, .trash-shadow, .delete", {
+    display: "none" }).
+
+  set(".selected", {
+    rotate: 0,
+    scale: 1,
+    x: 0,
+    y: 0,
+    zIndex: 0 }).
+
+  set(".card", {
+    cursor: "pointer",
+    pointerEvents: "auto",
+    filter: "blur(10px)" }).
+
+  add(reset).
+  to(".card, .toggle", {
+    filter: "blur(0px)",
+    opacity: 1,
+    duration: 0.3 });
+
+});
+
+function reset() {
+  selectedCards.forEach(card => {
+    card.classList.remove("selected");
+    const activeToggle = card.querySelector(".active");
+    gsap.set(activeToggle, {
+      opacity: 0,
+      scale: 0 });
+
+  });
+  selectedCards = [];
+}
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

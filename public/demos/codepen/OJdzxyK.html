@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-f07739098a39bd4e74ddd974652dac904146f33fdc1ecab356e8c809a05faccb.js"></script>
+
+
+  <title>Poppr Landing Page</title>
+
+    <link rel="canonical" href="https://codepen.io/gibsonmurray/pen/OJdzxyK">
+  
+  
+  
+  
+<style>
+@import url("https://fonts.cdnfonts.com/css/antique-olive-std");
+
+:root {
+  --yellow: #ffd074;
+  --purple: #a374ff;
+  --turquois: #15f0d1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* -- Background -- */
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background: #1d1d1f;
+  overflow: hidden;
+  font-family: "Antique Olive Std", sans-serif;
+}
+
+#background {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+}
+
+/* -- Blob -- */
+
+#blob {
+  position: absolute;
+  background-color: white;
+  height: 36vmax;
+  aspect-ratio: 1;
+  background: linear-gradient(to right, #785599, #9e8548);
+  border-radius: 50%;
+  opacity: 0.8;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+}
+
+#blur {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  backdrop-filter: blur(8vmax);
+  -webkit-backdrop-filter: blur(8vmax);
+}
+
+/* -- Video, Title, & Button -- */
+
+main {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 2000px;
+  user-select: none;
+}
+
+/* -- Video -- */
+
+#video-container {
+  width: 580px;
+  height: 520px;
+  overflow: hidden;
+  position: relative;
+  pointer-events: none;
+  border-radius: 40px;
+  transform-style: preserve-3d;
+  scale: 0;
+}
+
+#video-container > * {
+  width: 115%;
+  height: 115%;
+  position: absolute;
+  top: -7%;
+  left: -7%;
+  object-fit: cover;
+}
+
+/* -- Title Text -- */
+
+#title {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transform: translate3D(300px, 0, 0);
+  pointer-events: none;
+}
+
+.word {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fafaf5;
+  font-size: 120px;
+  font-weight: 900;
+  line-height: 103px;
+  letter-spacing: -7px;
+}
+
+.word:nth-child(2) {
+  transform: translateX(-180px);
+}
+
+.word:nth-child(3) {
+  transform: translateX(110px);
+}
+
+.char {
+  opacity: 0;
+}
+
+/* -- Button -- */
+
+#replay {
+  position: absolute;
+  overflow: hidden;
+  transform: translate3D(220px, -5px, 0) scale(0);
+  height: 50px;
+  width: 180px;
+  background: var(--yellow);
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#replay > .text {
+  font-weight: bold;
+  font-size: 15px;
+  pointer-events: none;
+  transform: translateY(10px);
+}
+
+#replay > #text-reveal {
+  opacity: 0;
+}
+
+#replay > #purple,
+#replay > #turquois,
+#replay > #yellow {
+  position: absolute;
+  width: 360px;
+  top: 40px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  z-index: -1;
+  transform: translateY(-60px);
+  pointer-events: none;
+}
+
+#replay > #purple {
+  background: var(--purple);
+}
+
+#replay > #turquois {
+  background: var(--turquois);
+}
+
+#replay > #yellow {
+  background: var(--yellow);
+}
+
+/* -- Link -- */
+
+a {
+  position: absolute;
+  bottom: 0;
+  margin: 8px;
+  color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  text-decoration: none;
+  padding: 10px 20px 7px 20px;
+  border-radius: 30px;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <section id="background">
+  <div id="blob"></div>
+  <div id="blur"></div>
+</section>
+
+<main>
+
+  <div id="video-container">
+    <video poster="/assets/general/_webpTransform/ezgif.com-gif-maker.webp" src="https://player.vimeo.com/progressive_redirect/playback/725952347/rendition/1080p/file.mp4?loc=external&amp;signature=57a7c3522f4c7c21f8123a490b67c603be4efaa02c9c70cfde99789ab3ea9a29" muted autoplay loop playsinline></video>
+  </div>
+
+  <div id="title">
+    <span class="word">
+      <span class="char">c</span>
+      <span class="char">o</span>
+      <span class="char">n</span>
+      <span class="char">v</span>
+      <span class="char">e</span>
+      <span class="char">r</span>
+      <span class="char">s</span>
+      <span class="char">i</span>
+      <span class="char">o</span>
+      <span class="char">n</span>
+    </span>
+    <span class="word">
+      <span class="char">t</span>
+      <span class="char">h</span>
+      <span class="char">r</span>
+      <span class="char">o</span>
+      <span class="char">u</span>
+      <span class="char">g</span>
+      <span class="char">h</span>
+    </span>
+    <span class="word">
+      <span class="char">i</span>
+      <span class="char">m</span>
+      <span class="char">m</span>
+      <span class="char">e</span>
+      <span class="char">r</span>
+      <span class="char">s</span>
+      <span class="char">i</span>
+      <span class="char">o</span>
+      <span class="char">n</span>
+    </span>
+  </div>
+
+  <button id="replay">
+    <span id="purple"></span>
+    <span id="turquois"></span>
+    <span id="yellow"></span>
+    <span class="text" id="text-static">Replay animation</span>
+    <span class="text" id="text-reveal">Replay animation</span>
+  </button>
+
+</main>
+
+<a href="https://www.poppr.be/en" target="_blank"> OG effect ↗</a>
+  <script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+    <script id="rendered-js" >
+// Blob and video react to mouse position
+
+let allowRotation = true;
+window.addEventListener("mousemove", mouseEvent => {
+  const { clientX, clientY } = mouseEvent;
+
+  blobFollowMouse(clientX, clientY); // Animation
+
+  const videoContainer = document.querySelector("#video-container");
+
+  const rect = videoContainer.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  const distanceX = (clientX - centerX) / rect.width;
+  const distanceY = (clientY - centerY) / rect.height;
+
+  if (allowRotation) {
+    // To prevent conflicting animations
+    rotateVideo3D(distanceX, distanceY); // Animation
+  }
+});
+
+// Button Reactivity
+let btnPlayed = false;
+const button = document.querySelector("#replay");
+
+button.addEventListener("mouseover", () => {
+  buttonGrow(button); // Animation
+  buttonTextIn();
+  if (!btnPlayed) {
+    buttonColorsWave();
+    btnPlayed = true;
+  }
+});
+
+button.addEventListener("mouseout", () => {
+  buttonShrink(button); // Animation
+  btnPlayed = false;
+});
+
+button.addEventListener("click", () => {
+  titleSlideIn(); // Animation
+  videoButtonPopIn(); // Animation
+});
+
+// initial animations
+titleSlideIn();
+videoButtonPopIn();
+
+/* -- GSAP ANIMATIONS -- */
+
+// Blob
+
+function blobRotate() {
+  const tl = gsap.
+  timeline({ repeat: -1, ease: "none" }).
+  to("#blob", { rotation: 180, scaleX: 1.6 }).
+  to("#blob", { rotation: 360, scaleX: 1 }).
+  totalDuration(17);
+  tl.play();
+}
+blobRotate();
+
+function blobFollowMouse(x, y) {
+  gsap.to("#blob", {
+    left: x,
+    top: y,
+    duration: 2 });
+
+}
+
+// 3D Video
+
+function rotateVideo3D(distanceX, distanceY) {
+  gsap.to("#video-container", {
+    rotateX: -20 * distanceY,
+    rotateY: 20 * distanceX,
+    duration: 0.5,
+    ease: "power1.out" });
+
+}
+
+function videoButtonPopIn() {
+  allowRotation = false;
+
+  gsap.fromTo(
+  "#replay, #video-container",
+  { scale: 0 },
+  {
+    scale: 1,
+    ease: "elastic.out(1, 0.8)",
+    duration: 0.8,
+    delay: 0.4,
+    onComplete: () => {
+      allowRotation = true;
+    } });
+
+
+}
+
+// Title Text
+
+function titleSlideIn() {
+  document.querySelectorAll(".word").forEach((word, wordIdx) => {
+    Array.from(word.children).forEach((char, charIdx) => {
+      gsap.fromTo(
+      char,
+      {
+        opacity: 0,
+        x: 0 },
+
+      {
+        opacity: 1,
+        x: -300,
+        ease: "elastic.out(1.1, 0.7)",
+        duration: 1.2,
+        delay: wordIdx * 0.2 + charIdx * 0.03 });
+
+
+    });
+  });
+}
+
+// Button
+
+function buttonColorsWave() {
+  gsap.fromTo(
+  "#purple",
+  {
+    scale: 0 },
+
+  {
+    scale: 1 });
+
+
+  gsap.fromTo(
+  "#turquois",
+  {
+    scale: 0 },
+
+  {
+    scale: 1,
+    delay: 0.1 });
+
+
+  gsap.fromTo(
+  "#yellow",
+  {
+    scale: 0 },
+
+  {
+    scale: 1,
+    delay: 0.2 });
+
+
+}
+
+function buttonTextIn() {
+  gsap.fromTo(
+  ".text",
+  {
+    y: 9 },
+
+  {
+    y: -8 });
+
+
+  gsap.fromTo(
+  "#text-static",
+  {
+    opacity: 1 },
+
+  {
+    opacity: 0 });
+
+
+  gsap.fromTo(
+  "#text-reveal",
+  {
+    opacity: 0 },
+
+  {
+    opacity: 1 });
+
+
+}
+
+function buttonGrow(button) {
+  gsap.to(button, {
+    width: 170,
+    height: 46 });
+
+}
+
+function buttonShrink(button) {
+  gsap.to(button, {
+    width: 180,
+    height: 50 });
+
+}
+
+/* 
+Notes: 
+  The use of fromTo tweens is for the replay button.
+  Much of the animation (if not all of it) can be done with pure CSS.
+  GSAP was chosen to make the code more concise and easier to read.
+  This pen could have been smoother with a preloaded video.
+*/
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

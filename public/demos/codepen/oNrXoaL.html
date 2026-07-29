@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-f07739098a39bd4e74ddd974652dac904146f33fdc1ecab356e8c809a05faccb.js"></script>
+
+
+  <title>Jumpy Cards</title>
+
+    <link rel="canonical" href="https://codepen.io/gibsonmurray/pen/oNrXoaL">
+  
+  
+  
+  
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+:root {
+  --gap: 85px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background-color: #eeeced;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Inter", sans-serif;
+}
+
+.card {
+  position: absolute;
+  width: 200px;
+  aspect-ratio: 1;
+  border: 8px solid #fff;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.card:nth-child(1) {
+  rotate: 10deg;
+  translate: calc(-2 * var(--gap));
+}
+
+.card:nth-child(2) {
+  rotate: 5deg;
+  translate: calc(-1 * var(--gap));
+}
+
+.card:nth-child(3) {
+  rotate: -3deg;
+}
+
+.card:nth-child(4) {
+  rotate: -10deg;
+  translate: var(--gap);
+}
+
+.card:nth-child(5) {
+  rotate: 2deg;
+  translate: calc(2 * var(--gap));
+}
+
+.links {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.6);
+  transition: 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px);
+    color: rgba(0, 0, 0, 1);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0px);
+    color: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
+  }
+
+  .icon {
+    height: 16px;
+    width: 16px;
+  }
+}
+
+#replay-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  border: none;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div class="card">
+  <img class="image" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+</div>
+<div class="card">
+  <img class="image" src="https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+</div>
+<div class="card">
+  <img class="image" src="https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+</div>
+<div class="card">
+  <img class="image" src="https://images.unsplash.com/photo-1452626212852-811d58933cae?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+</div>
+<div class="card">
+  <img class="image" src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+</div>
+
+<div class="links">
+  <a class="btn" href="https://x.com/GibsonSMurray/status/1811980098502787267" target="_blank" rel="noreferrer">
+    <span>Tutorial</span>
+    <i class="icon" data-lucide="link"></i>
+  </a>
+  <a class="btn" href="https://x.com/bartek_marzec/status/1798078019770482740/video/1" target="_blank" rel="noreferrer">
+    <span>Inspiration</span>
+    <i class="icon" data-lucide="sparkle"></i></a>
+</div>
+
+<!-- I KNOW ITS A DIV but i didn't feel like dealing with button styling -->
+<div id="replay-btn" class="btn">
+  <span>Replay</span>
+  <i class="icon" data-lucide="refresh-ccw"></i>
+</div>
+  <script src='https://unpkg.com/gsap@3/dist/gsap.min.js'></script>
+<script src='https://unpkg.com/lucide@latest'></script>
+    <script id="rendered-js" >
+lucide.createIcons();
+
+const playAnimation = () => {
+  gsap.fromTo(
+  ".card",
+  {
+    scale: 0 },
+
+  {
+    scale: 1,
+    stagger: 0.06,
+    ease: "elastic.out(1, 0.8)",
+    delay: 0.5 });
+
+
+};
+playAnimation();
+
+document.querySelector("#replay-btn").addEventListener("click", playAnimation);
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

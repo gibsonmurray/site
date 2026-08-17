@@ -336,6 +336,13 @@ body {
     transform-origin: center;
 }
 
+.site-links .goodreads-icon {
+    width: 0.46em;
+    height: 0.46em;
+    flex: 0 0 auto;
+    object-fit: contain;
+}
+
 .site-copyright {
     width: min(88vw, 980px);
     margin: 0 auto;

@@ -83,12 +83,31 @@ type SiteLink = {
     label: string
 }
 
+function GoodreadsIcon({ className }: { "aria-hidden": true; className?: string }) {
+    return (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+            aria-hidden="true"
+            alt=""
+            className={className}
+            src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/goodreads/default.svg"
+        />
+    )
+}
+
 const SITE_LINKS: SiteLink[] = [
     {
         external: true,
         href: "https://a.co/d/03Co6ZxH",
         icon: LuBookOpen,
         label: "Order Walls",
+    },
+    {
+        external: true,
+        href: "https://www.goodreads.com/user/show/196455087",
+        icon: GoodreadsIcon,
+        iconClassName: "goodreads-icon",
+        label: "Goodreads",
     },
     {
         external: true,

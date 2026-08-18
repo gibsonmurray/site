@@ -121,8 +121,8 @@ body {
         box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.currently-reading:has(.currently-reading-copy > a:hover) .currently-reading-cover,
-.currently-reading:has(.currently-reading-copy > a:focus-visible) .currently-reading-cover {
+.currently-reading:hover .currently-reading-cover,
+.currently-reading:focus-within .currently-reading-cover {
     box-shadow: 0 0.7rem 1.7rem rgb(23 23 20 / 17%);
     transform: translateY(-0.2rem) rotate(1deg);
 }
@@ -247,7 +247,7 @@ body {
     text-decoration: none;
 }
 
-.currently-reading-copy > a span {
+.currently-reading-copy > a > span:first-child {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -268,9 +268,33 @@ body {
     transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.currently-reading-copy > a:hover::after,
-.currently-reading-copy > a:focus-visible::after {
-    transform: scaleX(0.32);
+.currently-reading-copy > a[data-progress]:hover::after,
+.currently-reading-copy > a[data-progress]:focus-visible::after {
+    transform: scaleX(var(--reading-progress-scale));
+}
+
+.currently-reading-copy > a .currently-reading-progress {
+    position: absolute;
+    z-index: 2;
+    bottom: -0.28em;
+    left: calc(var(--reading-progress) + 0.38rem);
+    color: currentColor;
+    font-size: clamp(0.65rem, 1vw, 0.76rem);
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 1;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-0.25rem);
+    transition: opacity 180ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+
+.currently-reading-copy > a[data-progress]:hover .currently-reading-progress,
+.currently-reading-copy > a[data-progress]:focus-visible .currently-reading-progress {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 300ms;
 }
 
 .currently-reading-copy > a svg {
@@ -1304,7 +1328,7 @@ body {
         line-height: 1.22;
     }
 
-    .currently-reading-copy > a span,
+    .currently-reading-copy > a > span:first-child,
     .recently-played-copy > a span {
         min-width: 0;
         overflow: hidden;

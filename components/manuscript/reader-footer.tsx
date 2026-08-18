@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect, useState, type ComponentType } from "react"
-import { motion, useReducedMotion } from "motion/react"
+import { useEffect, useState, type ComponentType, type CSSProperties } from "react"
+import { motion } from "motion/react"
 import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa"
-import { LuBookOpen, LuMail } from "react-icons/lu"
+import { LuBookOpen, LuExternalLink, LuMail } from "react-icons/lu"
 import { SiSubstack } from "react-icons/si"
 
 const LINKS_REVEAL = {
@@ -51,6 +51,7 @@ type CurrentlyReading = {
     title: string
     author: string
     cover: string
+    progress: number | null
     url: string
 }
 
@@ -58,6 +59,7 @@ const CURRENTLY_READING_FALLBACK: CurrentlyReading = {
     title: "Mr. Mercedes (Bill Hodges #1)",
     author: "Stephen King",
     cover: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1420938311l/21558901.jpg",
+    progress: null,
     url: "https://www.goodreads.com/book/show/21558901-mr-mercedes",
 }
 
@@ -198,39 +200,6 @@ function MusicIcon() {
     )
 }
 
-function AnimatedExternalLinkIcon() {
-    const reduceMotion = useReducedMotion()
-
-    return (
-        <motion.svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <motion.g
-                animate={{
-                    x: reduceMotion ? 0 : [0, 2, 0],
-                    y: reduceMotion ? 0 : [0, -2, 0],
-                }}
-                transition={{
-                    duration: 0.7,
-                    ease: "easeInOut",
-                    repeat: reduceMotion ? 0 : Infinity,
-                    repeatDelay: 1.5,
-                }}
-            >
-                <path d="M15 3h6v6" />
-                <path d="M10 14 21 3" />
-            </motion.g>
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-        </motion.svg>
-    )
-}
-
 export function ReaderFooter({ visible }: { visible: boolean }) {
     const currentlyReading = useRemoteValue("/api/currently-reading", CURRENTLY_READING_FALLBACK)
     const recentlyPlayed = useRemoteValue("/api/recently-played", RECENTLY_PLAYED_FALLBACK)
@@ -284,9 +253,25 @@ export function ReaderFooter({ visible }: { visible: boolean }) {
                         initial="hidden"
                         whileHover="visible"
                         whileFocus="visible"
+                        data-progress={
+                            currentlyReading.progress === null
+                                ? undefined
+                                : `${currentlyReading.progress}%`
+                        }
+                        style={
+                            {
+                                "--reading-progress": `${currentlyReading.progress ?? 0}%`,
+                                "--reading-progress-scale": (currentlyReading.progress ?? 0) / 100,
+                            } as CSSProperties
+                        }
                     >
                         <span>{currentlyReading.title}</span>
-                        <AnimatedExternalLinkIcon />
+                        {currentlyReading.progress !== null && (
+                            <span className="currently-reading-progress" aria-hidden="true">
+                                {currentlyReading.progress}%
+                            </span>
+                        )}
+                        <LuExternalLink aria-hidden="true" />
                     </motion.a>
                     <p className="currently-reading-author">by {currentlyReading.author}</p>
                 </div>
@@ -320,7 +305,7 @@ export function ReaderFooter({ visible }: { visible: boolean }) {
                         whileFocus="visible"
                     >
                         <span>{recentlyPlayed.title}</span>
-                        <AnimatedExternalLinkIcon />
+                        <LuExternalLink aria-hidden="true" />
                     </motion.a>
                     <p className="recently-played-artist">by {recentlyPlayed.artist}</p>
                 </div>

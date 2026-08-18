@@ -1,4 +1,5 @@
 const CACHE_MAX_AGE = 3600
+const GOODREADS_PROFILE_URL = "https://www.goodreads.com/user/show/196455087"
 
 function readXmlTag(item: string, tag: string): string | undefined {
     const openingTag = `<${tag}>`
@@ -12,6 +13,38 @@ function readXmlTag(item: string, tag: string): string | undefined {
         .replace(/^<!\[CDATA\[/, "")
         .replace(/\]\]>$/, "")
         .trim()
+}
+
+async function readProgress(bookId: string): Promise<number | null> {
+    try {
+        const response = await fetch(GOODREADS_PROFILE_URL, {
+            headers: { "User-Agent": "Gibson Murray currently-reading widget" },
+            next: { revalidate: CACHE_MAX_AGE },
+        })
+
+        if (!response.ok) return null
+
+        const html = await response.text()
+        const escapedBookId = bookId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+        const progress = html.match(
+            new RegExp(
+                `is on page\\s+(\\d+)\\s+of\\s+(\\d+)\\s+of\\s+<a[^>]+book/show/${escapedBookId}(?:[-?\"/]|\\b)`,
+                "i",
+            ),
+        )
+
+        if (!progress) return null
+
+        const currentPage = Number(progress[1])
+        const totalPages = Number(progress[2])
+        if (!Number.isFinite(currentPage) || !Number.isFinite(totalPages) || totalPages <= 0) {
+            return null
+        }
+
+        return Math.min(100, Math.max(0, Math.round((currentPage / totalPages) * 100)))
+    } catch {
+        return null
+    }
 }
 
 export async function GET() {
@@ -39,11 +72,14 @@ export async function GET() {
             throw new Error("Goodreads response was incomplete")
         }
 
+        const progress = await readProgress(bookId)
+
         return Response.json(
             {
                 title,
                 author,
                 cover,
+                progress,
                 url: `https://www.goodreads.com/book/show/${bookId}`,
             },
             {

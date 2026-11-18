@@ -56,11 +56,11 @@ type CurrentlyReading = {
 }
 
 const CURRENTLY_READING_FALLBACK: CurrentlyReading = {
-    title: "Mr. Mercedes (Bill Hodges #1)",
-    author: "Stephen King",
-    cover: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1420938311l/21558901.jpg",
+    title: "Dune",
+    author: "Frank Herbert",
+    cover: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg",
     progress: null,
-    url: "https://www.goodreads.com/book/show/21558901-mr-mercedes",
+    url: "https://www.goodreads.com/book/show/44767458-dune",
 }
 
 type RecentlyPlayed = {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { parseCurrentlyReading } from "../lib/goodreads"
+import { parseCurrentlyReading } from "../lib/goodreads.ts"
 
 const shelf = `<div id="currentlyReadingReviews">
 <a href="/book/show/55077714-ender-s-game"><img src="https://example.com/cover.jpg" /></a>
